@@ -1,0 +1,8 @@
+<RCC>
+    <qresource prefix="/">
+        <file>ressources/levels.json</file>
+        <file>ressources/img/unit.png</file>
+        <file>ressources/levels/leveld/level.json</file>
+        <file>ressources/levels/leveld/tileset.png</file>
+    </qresource>
+</RCC>
