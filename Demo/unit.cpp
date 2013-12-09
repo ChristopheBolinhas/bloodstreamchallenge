@@ -50,31 +50,20 @@ void Unit::advance(int phase)
 
     if(currentSquare->getNext() != 0)
     {
-        /*if(x() == currentSquare->getNext()->getX()*40 && y() == currentSquare->getNext()->getY()*40)
-        {
-            currentSquare = currentSquare->getNext();
-            //Implémentation obstacles avec currentSquare
-            //TODO
-            calcultateNextMove();
-        }*/
+
         if(animation->state() == QPropertyAnimation::Stopped)
         {
 
 
 
-            animation->setDuration(500);
+            animation->setDuration(200);
             animation->setStartValue(QPoint(currentSquare->getX()*40,currentSquare->getY()*40));
             animation->setEndValue(QPoint(currentSquare->getNext()->getX()*40,currentSquare->getNext()->getY()*40));
-            animation->setEasingCurve(QEasingCurve::BezierSpline);
+            //animation->setEasingCurve(QEasingCurve::InBack);
 
             animation->start();
             currentSquare = currentSquare->getNext();
         }
-
-
-
-        //moveBy(xmove,ymove);
-        //qDebug() << xmove*2 << " & " << ymove*2;
     }
 }
 

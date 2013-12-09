@@ -112,77 +112,12 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
 }
 
 
-
-MapSquare* Render::generatePath(int currentX, int currentY, int* PathTab, int PathTabSize, int* SecondaryPathTab, int SecondaryPathTabSize, int map_width, int map_height)
-{
-
-    int tabPos = currentX+currentY*map_width;
-    int fleche = *(PathTab+tabPos);
-
-
-
-    //GESTION OBSTACLES
-        //TODO
-
-    int nextX, nextY;
-    //On analyse la flèche pour savoir quel est le suivante
-    switch(fleche)
-    {
-        case 381: //Fleche droite
-            nextX = currentX+1;
-            nextY = currentY;
-            break;
-        case 382: //Fleche gauche
-            nextX = currentX-1;
-            nextY = currentY;
-            break;
-        case 383: //Fleche bas
-            nextX = currentX;
-            nextY = currentY+1;
-            break;
-        case 384: //Fleche haut
-            nextX = currentX;
-            nextY = currentY-1;
-            break;
-        case 385: //Fleche bas-droite -> haut-gauche
-            nextX = currentX-1;
-            nextY = currentY-1;
-            break;
-        case 386: //Fleche bas-gauche -> haut-droite
-            nextX = currentX+1;
-            nextY = currentY-1;
-            break;
-        case 387: //Fleche haut-droite -> bas-gauche
-            nextX = currentX-1;
-            nextY = currentY+1;
-            break;
-        case 388: //Fleche haut-gauche -> bas-droite
-            nextX = currentX+1;
-            nextY = currentY+1;
-            break;
-        default:
-            return 0;
-    }
-
-    //On appele la case suivante
-    if(nextX >= 0 && nextY >= 0)
-    {
-        return new MapSquare(generatePath(nextX,nextY,PathTab,PathTabSize,SecondaryPathTab,SecondaryPathTabSize,map_width,map_height),nextX,nextY);
-    }
-    else
-    {
-        return new MapSquare(0,50,50);
-    }
-
-}
-
-
 void Render::updateCenter()
 {
 
     view->centerOn(mainUnit);
-    //scene->advance();
-    emit moveUnits();
+    scene->advance();
+    //emit moveUnits();
 }
 
 

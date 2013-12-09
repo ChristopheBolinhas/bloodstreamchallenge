@@ -19,7 +19,9 @@ SOURCES += main.cpp\
     unit.cpp \
     mapsquare.cpp \
     map.cpp \
-    render.cpp
+    render.cpp \
+    obstacle.cpp \
+    deviation.cpp
 
 HEADERS  += mainwindow.h \
     gui.h \
@@ -27,7 +29,9 @@ HEADERS  += mainwindow.h \
     unit.h \
     mapsquare.h \
     map.h \
-    render.h
+    render.h \
+    obstacle.h \
+    deviation.h
 
 RESOURCES += \
     temp.qrc
