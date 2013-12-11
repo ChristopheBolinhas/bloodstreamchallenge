@@ -1,12 +1,12 @@
 ﻿{   
-	"levelpath" : "/ressources/levels/",
-	"niveaux": 
+	"levelspath" : "/ressources/levels/",
+	"levels": 
 	[
 		{ 
-			"nom": "niveau d", 
+			"name": "niveau d", 
 			"score": 1500,
 			"path" : "leveld",
-			"order" : -1
+			"order" : 1
 		}
 	]    
 }

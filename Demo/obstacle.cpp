@@ -2,12 +2,16 @@
 
 Obstacle::Obstacle()
 {
-
-
-
+    enabled = true;
 }
 
-void Obstacle::traitement()
+bool Obstacle::isEnabled()
 {
-
+    return enabled;
 }
+
+EnumObstacle::TypeObstacle Obstacle::getTypeObstacle()
+{
+    return typeobstacle;
+}
+

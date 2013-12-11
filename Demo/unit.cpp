@@ -19,6 +19,8 @@ Unit::Unit(QList<QPixmap *> *_pixmapList, MapSquare *path, QGraphicsItem *parent
     animation = new QPropertyAnimation(this,"pos",this);
     calcultateNextMove();
 
+    //EN DUR
+    capaciteUnit = EnumObstacle::deviation;//Perma activation de la deviation
 }
 
 Unit::~Unit()
@@ -68,6 +70,18 @@ void Unit::advance(int phase)
 }
 
 
+void Unit::unlockObstacle()
+{
+    switch(capaciteUnit)
+    {
+        case EnumObstacle::deviation:
+            currentSquare->getNext()->removePrimary();
+            break;
+
+    }
+}
+
+
 
 void Unit::moveUnit()
 {
@@ -78,6 +92,13 @@ void Unit::moveUnit()
     {
         if(x() == currentSquare->getNext()->getX()*40 && y() == currentSquare->getNext()->getY()*40)
         {
+            //On test que le prochain n'ai pas d'obstacle
+            if(currentSquare->getNext()->hasObstacle())
+            {
+
+
+
+            }
             currentSquare = currentSquare->getNext();
             //Implémentation obstacles avec currentSquare
             //TODO

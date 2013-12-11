@@ -3,6 +3,8 @@
 #include "unit.h"
 #include "mapsquare.h"
 #include "level.h"
+#include "obstacle.h"
+#include "deviation.h"
 
 #include <QtGui>
 #include <QGraphicsScene>
@@ -54,11 +56,38 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
 {
     int tabPos = currentX+currentY*level->getMapWidth();
     int fleche = *(level->getMapRoad()+tabPos);
-
-
+    int obstacle = *(level->getMapObstacle()+tabPos);
+    Obstacle *SquareObstacle;
+    MapSquare *tempMapSquare;
 
     //GESTION OBSTACLES
-        //TODO
+    switch(obstacle)
+    {
+        case 389:
+            SquareObstacle = new Deviation(6);
+            break;
+        case 390:
+            SquareObstacle = new Deviation(4);
+            break;
+        case 391:
+            SquareObstacle = new Deviation(8);
+            break;
+        case 392:
+            SquareObstacle = new Deviation(2);
+            break;
+        case 393:
+            SquareObstacle = new Deviation(1);
+            break;
+        case 394:
+            SquareObstacle = new Deviation(3);
+            break;
+        case 395:
+            SquareObstacle = new Deviation(7);
+            break;
+        case 396:
+            SquareObstacle = new Deviation(9);
+            break;
+    }
 
     int nextX, nextY;
     //On analyse la flèche pour savoir quel est le suivante
@@ -103,12 +132,20 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
     //On appele la case suivante
     if(nextX >= 0 && nextY >= 0)
     {
-        return new MapSquare(generatePath(nextX,nextY,level),nextX,nextY);
+        tempMapSquare = new MapSquare(generatePath(nextX,nextY,level),nextX,nextY);
     }
     else
     {
-        return new MapSquare(0,50,50);
+        tempMapSquare = 0;
     }
+
+    if(SquareObstacle->getTypeObstacle() == EnumObstacle::deviation)
+    {
+
+    }
+
+
+    return tempMapSquare;
 }
 
 
@@ -116,8 +153,8 @@ void Render::updateCenter()
 {
 
     view->centerOn(mainUnit);
-    scene->advance();
-    //emit moveUnits();
+    //scene->advance();
+    emit moveUnits();
 }
 
 
