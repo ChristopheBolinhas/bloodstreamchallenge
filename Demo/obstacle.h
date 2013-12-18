@@ -1,19 +1,18 @@
 #ifndef OBSTACLE_H
 #define OBSTACLE_H
 
-#include "enumobstacle.h"
 
 class Obstacle
 {
 
 public:
-    explicit Obstacle();
+    Obstacle();
     bool isEnabled();
-    EnumObstacle::TypeObstacle getTypeObstacle();
+    virtual ~Obstacle();
+
 
 protected:
     bool enabled;
-    EnumObstacle::TypeObstacle typeobstacle;
 private:
 
 };

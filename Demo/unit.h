@@ -5,7 +5,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsObject>
 #include "mapsquare.h"
-#include "enumobstacle.h"
+
 class QPropertyAnimation;
 
 class Unit : public QGraphicsObject
@@ -26,7 +26,6 @@ private:
     qreal xmove;
     qreal ymove;
     void calcultateNextMove();
-    EnumObstacle::TypeObstacle capaciteUnit;
 
     void unlockObstacle();
 signals:

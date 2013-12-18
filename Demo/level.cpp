@@ -12,7 +12,7 @@ Level::Level(QString name, int score, QString path, int ordre)
     this->setName(name);
     this->setScore(score);
     this->pathJson = path+"/level.json";
-    qDebug() << path;
+    //qDebug() << path;
     this->setPathTileSet(path+"/tileset.png");
     this->setOrder(ordre);
 
@@ -37,13 +37,13 @@ QList<Level> Level::loadLevels()
         QTextStream fileStream(fileLevel);
         QString dataFromJson = fileStream.readAll();
         jsonLevels = QJsonDocument::fromJson(dataFromJson.toUtf8());
-        qDebug() << jsonLevels.toJson();
+        //qDebug() << jsonLevels.toJson();
         fileLevel->close();
     }
     else
     {
         fileLevel->close();
-        qDebug() << "Error: cannot load options !" << LEVELS_FILENAME;
+        //qDebug() << "Error: cannot load options !" << LEVELS_FILENAME;
         //return NULL;
     }
 
@@ -51,16 +51,14 @@ QList<Level> Level::loadLevels()
     QString levelsPath =  jObject.value("levelspath").toString();
     QJsonArray jArrayLevels = jObject.value("levels").toArray();
     int numberOfLevels = jArrayLevels.size();
-    qDebug() << numberOfLevels ;
     for(int i = 0; i < numberOfLevels; i++)
     {
         QJsonObject jLevel = jArrayLevels.at(i).toObject();
-         qDebug() << jLevel.value("name").toString() <<  jLevel.value("score").toDouble() << QApplication::applicationDirPath()+"/"+levelsPath+jLevel.value("path").toString() << (int)jLevel.value("order").toDouble();
+         //qDebug() << jLevel.value("name").toString() <<  jLevel.value("score").toDouble() << QApplication::applicationDirPath()+"/"+levelsPath+jLevel.value("path").toString() << (int)jLevel.value("order").toDouble();
         Level lvl(jLevel.value("name").toString(), jLevel.value("score").toDouble(),QApplication::applicationDirPath()+"/"+levelsPath+jLevel.value("path").toString(),(int)jLevel.value("order").toDouble());
         //if(lvl != 0)
         listLevels.append(lvl);
     }
-    qDebug() << "1.2";
     return listLevels;
 }
 
@@ -74,8 +72,6 @@ bool Level::parseJsonLevel()
 
     //QFile *fileLevel = new QFile(levelFilename);
     QFile *fileLevel = new QFile(this->pathJson);
-    qDebug() << pathJson;
-    qDebug() << "2";
     if(fileLevel->open(QIODevice::ReadOnly))
     {
         QTextStream fileStream(fileLevel);
@@ -91,7 +87,7 @@ bool Level::parseJsonLevel()
     else
     {
         //fileLevel->close();
-        qDebug() << "Error: cannot load level !";
+        //qDebug() << "Error: cannot load level !";
         return false;
     }
 
@@ -129,7 +125,6 @@ int* Level::parseJsonLayer(QString layerName, const QJsonDocument &jsonDocument)
             break;
         }
     }
-    qDebug() << "avant assert";
     Q_ASSERT(layerNumber >= 0); // Le layer doit exister
 
     jObj = jLayers.at(layerNumber).toObject();
@@ -142,7 +137,7 @@ int* Level::parseJsonLayer(QString layerName, const QJsonDocument &jsonDocument)
         data[i] = list.at(i).toInt();
         tmpShowData.append(QString::number(data[i])+" ");
     }
-    qDebug() << tmpShowData;
+    //qDebug() << tmpShowData;
     return data;
 
 }

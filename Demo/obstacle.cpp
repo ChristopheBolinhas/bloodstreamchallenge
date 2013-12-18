@@ -10,8 +10,9 @@ bool Obstacle::isEnabled()
     return enabled;
 }
 
-EnumObstacle::TypeObstacle Obstacle::getTypeObstacle()
+Obstacle::~Obstacle()
 {
-    return typeobstacle;
+
 }
+
 

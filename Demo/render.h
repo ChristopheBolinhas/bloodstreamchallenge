@@ -27,13 +27,14 @@ private slots:
 private:
     //QGraphicsItemGroup *units;
     MapSquare* generatePath(int currentX, int currentY, Level *level);
-    MapSquare* generatePath(int currentX, int currentY, int* PathTab, int PathTabSize, int* SecondaryPathTab, int SecondaryPathTabSize, int map_width, int map_height);
     Level *renderedLevel;
     QGraphicsScene *scene;
     QGraphicsView *view;
     QList<Unit*> *listUnit;
     Unit *mainUnit;
-
+    void keyPressEvent(QKeyEvent *event);
+    int xFromOrientation(int x, int orientation);
+    int yFromOrientation(int y, int orientation);
 };
 
 #endif // RENDER_H

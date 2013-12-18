@@ -1,42 +1,74 @@
 #include "mapsquare.h"
 #include "obstacle.h"
 #include <QList>
+#include <QDebug>
 
 MapSquare::MapSquare(MapSquare *_primary, int _x, int _y, Obstacle *_obstacle)
 {
-    listNext = new QList<MapSquare*>();
-    listNext->append(_primary);
     x = _x;
     y = _y;
+    if(_primary != 0)
+    {
+        primaryNext = _primary;
+        hasNext = true;
+    }
     setObstacle(_obstacle);
 }
 
 MapSquare::MapSquare(MapSquare *_primary, MapSquare *_secondary, int _x, int _y, Obstacle *_obstacle)
 {
-    MapSquare(_primary,_x,_y);
-    listNext->append(_secondary);
+    x = _x;
+    y = _y;
+    if(_primary != 0)
+    {
+        primaryNext = _primary;
+        hasNext = true;
+    }
+
+    if(_secondary != 0)    
+    {
+        secondaryNext = _secondary;
+        hasSecondary = true;
+
+    }
+    setObstacle(_obstacle);
 }
+
+MapSquare::MapSquare(int _x, int _y)
+{
+    x = _y;
+    y = _y;
+}
+
 
 void MapSquare::setObstacle(Obstacle *_obstacle)
 {
-    if(obstacle != 0)
+    if(_obstacle != 0)
         obstacle = _obstacle;
+    else
+    {
+        obstacle = 0;
+    }
 }
 
 
 MapSquare* MapSquare::getNext()
 {
-    return listNext->first();
-}
-
-MapSquare MapSquare::removePrimary()
-{
-    if(listNext->size() > 1)
+    if(takeSecondary)
     {
-        listNext->pop_front();
+        return secondaryNext;
+    }
+    else
+    {
+        return primaryNext;
     }
 }
 
+
+bool MapSquare::getHasNext()
+{
+    return hasNext;
+}
 int MapSquare::getX()
 {
     return x;
@@ -62,6 +94,6 @@ bool MapSquare::hasObstacle()
 
 void MapSquare::activateDeviation()
 {
-    if(listNext->size() > 1)
-        listNext->takeFirst();
+    if(hasSecondary)
+        takeSecondary = true;
 }

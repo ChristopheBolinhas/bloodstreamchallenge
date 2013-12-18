@@ -28,7 +28,7 @@ Map::Map(QGraphicsScene *scene, Level *level)
         painterBackground.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapBackground()+i)-1,level)));
         //painterBackground.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapDecors()+i)-1,level)));
         if(*(level->getMapForeground()+i)-1 > 0)
-            painterBackground.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapForeground()+i)-1,level)));
+            painterForeground.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapForeground()+i)-1,level)));
 
     }
 
@@ -41,7 +41,7 @@ Map::Map(QGraphicsScene *scene, Level *level)
     it->setZValue(2);*/
 
     it = scene->addPixmap(*finalForeground);
-    it->setZValue(5);
+    it->setZValue(4);
 
 }
 

@@ -12,15 +12,17 @@ Unit::Unit(QList<QPixmap *> *_pixmapList, MapSquare *path, QGraphicsItem *parent
     pixmapList = _pixmapList;
 
 
-
+    qDebug() << "Constructing unit";
     currentSquare = path;
+    qDebug() << "Path defined, next ? : " << currentSquare->getHasNext();
+
     setPos(path->getX()*40, path->getY()*40);
     setZValue(3);
     animation = new QPropertyAnimation(this,"pos",this);
     calcultateNextMove();
 
     //EN DUR
-    capaciteUnit = EnumObstacle::deviation;//Perma activation de la deviation
+    //capaciteUnit = EnumObstacle::deviation;//Perma activation de la deviation
 }
 
 Unit::~Unit()
@@ -42,11 +44,15 @@ void Unit::paint( QPainter *painter, const QStyleOptionGraphicsItem*,QWidget *)
 
 void Unit::calcultateNextMove()
 {
-    xmove = (currentSquare->getNext()->getX() - currentSquare->getX())*4;
-    ymove = (currentSquare->getNext()->getY() - currentSquare->getY())*4;
+    if(currentSquare->getHasNext())
+    {
+        xmove = (currentSquare->getNext()->getX() - currentSquare->getX())*4;
+        ymove = (currentSquare->getNext()->getY() - currentSquare->getY())*4;
+        qDebug() << currentSquare->getX() << " | "<< currentSquare->getY();
+    }
 }
 
-
+//non utilise
 void Unit::advance(int phase)
 {
 
@@ -72,13 +78,13 @@ void Unit::advance(int phase)
 
 void Unit::unlockObstacle()
 {
-    switch(capaciteUnit)
+    /*switch(capaciteUnit)
     {
         case EnumObstacle::deviation:
             currentSquare->getNext()->removePrimary();
             break;
 
-    }
+    }*/
 }
 
 
@@ -88,7 +94,7 @@ void Unit::moveUnit()
     /*int xmove;
     int ymove;
 */
-    if(currentSquare->getNext() != 0)
+    if(currentSquare->getNext()->getHasNext())
     {
         if(x() == currentSquare->getNext()->getX()*40 && y() == currentSquare->getNext()->getY()*40)
         {

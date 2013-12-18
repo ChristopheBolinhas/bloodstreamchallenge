@@ -8,7 +8,7 @@ class MapSquare
 public:
     MapSquare(MapSquare *_primary = 0, int _x = 0, int _y = 0, Obstacle *_obstacle = 0);
     MapSquare(MapSquare *_primary = 0, MapSquare *_secondary = 0, int x = 0, int y = 0, Obstacle *_obstacle = 0);
-
+    MapSquare(int _x, int _y);
 
 
     MapSquare* getNext();
@@ -17,12 +17,17 @@ public:
     Obstacle *getObstacle();
     bool hasObstacle();
     void activateDeviation();
-    MapSquare removePrimary();
+    bool getHasNext();
+
 private:
-    QList<MapSquare*> *listNext;
+    MapSquare *primaryNext;
+    MapSquare *secondaryNext;
+    bool hasSecondary = false;
+    bool takeSecondary = false;
     int x;
     int y;
     Obstacle *obstacle = 0;
+    bool hasNext = false;
     void setObstacle(Obstacle *_obstacle);
 };
 

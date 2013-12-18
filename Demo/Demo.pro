@@ -22,7 +22,7 @@ SOURCES += main.cpp\
     render.cpp \
     obstacle.cpp \
     deviation.cpp \
-    enumobstacle.cpp
+    hud.cpp
 
 HEADERS  += mainwindow.h \
     gui.h \
@@ -33,7 +33,7 @@ HEADERS  += mainwindow.h \
     render.h \
     obstacle.h \
     deviation.h \
-    enumobstacle.h
+    hud.h
 
 RESOURCES += \
     temp.qrc
