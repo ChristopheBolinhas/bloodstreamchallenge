@@ -1,6 +1,8 @@
 #include "unit.h"
 #include <QPropertyAnimation>
 #include <QDebug>
+#include <deviation.h>
+#include <typeinfo>
 
 Unit::Unit(QList<QPixmap *> *_pixmapList, MapSquare *path, QGraphicsItem *parent)
     : QGraphicsObject(parent)
@@ -48,9 +50,11 @@ void Unit::calcultateNextMove()
     {
         xmove = (currentSquare->getNext()->getX() - currentSquare->getX())*4;
         ymove = (currentSquare->getNext()->getY() - currentSquare->getY())*4;
-        qDebug() << currentSquare->getX() << " | "<< currentSquare->getY();
+
     }
 }
+
+
 
 //non utilise
 void Unit::advance(int phase)
@@ -86,6 +90,16 @@ void Unit::unlockObstacle()
 
     }*/
 }
+int Unit::getAbility() const
+{
+    return ability;
+}
+
+void Unit::setAbility(int value)
+{
+    ability = value;
+}
+
 
 
 
@@ -101,8 +115,17 @@ void Unit::moveUnit()
             //On test que le prochain n'ai pas d'obstacle
             if(currentSquare->getNext()->hasObstacle())
             {
+                qDebug() << "Bfore Devi yo";
+                //typeid(Deviation);
+                qDebug() << "Bfore Devi yo2";
+                //qDebug() << typeid(currentSquare->getObstacle()).name() << " | " << typeid(Deviation*);
 
-
+                //if(typeid(*currentSquare->getObstacle()) == typeid(Deviation))
+                //{
+                    qDebug() << "DEVIATION !";
+                    if(ability == 1)
+                        currentSquare->activateDeviation();
+                //}
 
             }
             currentSquare = currentSquare->getNext();

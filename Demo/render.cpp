@@ -18,33 +18,30 @@
 #include <QList>
 
 Render::Render(QGraphicsView *_view, Level *level, QWidget *parent) :
-    QWidget(parent)
+    QGraphicsScene(parent)
 {
     view = _view;
 
     MapSquare *path = generatePath(0,7,level);
-    qDebug() << "Path generated" ;
 
-    QRectF *sceneRect = new QRectF(0,0,level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
-    scene = new QGraphicsScene(*sceneRect,this);
+    //QRectF *sceneRect = new QRectF(0,0,level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
+    //scene = new QGraphicsScene(*sceneRect,this);
     //scene->setSceneRect(0,0,960,540);
     //Scene générale
-    view->setScene(scene);
+    view->setScene(this);
 
     //Génération de la map (Layer 1)
-    Map m(scene,level);
+    Map m(this,level);
     QList<QPixmap*> *pixmapList = new QList<QPixmap*>();
     pixmapList->append(new QPixmap(":/ressources/img/unit.png"));
     listUnit = new QList<Unit*>();
     for(int i = 0;i < 1;i++)
     {
         Unit *unit = new Unit(pixmapList,path);
-        qDebug() << "Unit " << i << " generated";
-        scene->addItem(dynamic_cast<QGraphicsItem*>(unit));
+        this->addItem(dynamic_cast<QGraphicsItem*>(unit));
         connect(this,SIGNAL(moveUnits()),dynamic_cast<QObject*>(unit),SLOT(moveUnit()));
         listUnit->append(unit);
     }
-    qDebug() << "Unit placed";
     mainUnit = listUnit->first();
     //connect(this,SIGNAL(moveUnits()),dynamic_cast<QObject*>(u),SLOT(moveUnit()));
     //view->show();
@@ -60,14 +57,11 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
 {
     if(currentX >= 0 && currentY >=0 && currentY < level->getMapHeight() && currentX < level->getMapWidth())
     {
-        static int cases = 0;
-        //static QList<MapSquare*> existingSquares;
+
         int tabPos = currentX+currentY*level->getMapWidth();
         int fleche = *(level->getMapRoad()+tabPos);
         int orientationPrimary = 0;
         int obstacle = *(level->getMapObstacle()+tabPos);
-
-        //qDebug() << "Square : " << currentX << " | " << currentY;
 
         Obstacle *SquareObstacle = 0;
         MapSquare *PrimaryNextSquare = 0;
@@ -161,8 +155,6 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
                 //qDebug() << "DEVIATION YES !";
                 //Vu que l'objet est une déviation, il faut traiter le chemin secondaire
                 //On génére donc le chemin alternatif que l'on génère ici
-                qDebug() << "Square : "<< cases << " Orientation !" << dynamic_cast<Deviation*>(SquareObstacle)->getOrientation();
-                cases++;
                 SecondaryNextSquare = generatePath(xFromOrientation(currentX,dynamic_cast<Deviation*>(SquareObstacle)->getOrientation()),yFromOrientation(currentY,dynamic_cast<Deviation*>(SquareObstacle)->getOrientation()),level);
 
             }
@@ -171,20 +163,16 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
 
         //Il faut maintenant lancer la generation récursive du principal et retourner l'objet actuel MapSquare
 
-            cases++;
             PrimaryNextSquare = generatePath(xFromOrientation(currentX,orientationPrimary),yFromOrientation(currentY,orientationPrimary),level);
             MapSquare *square;
             if(SecondaryNextSquare != 0)
             {
                 square = new MapSquare(PrimaryNextSquare,SecondaryNextSquare,currentX,currentY,SquareObstacle);
-                qDebug() << "Creating square P&S at (" << currentX << ";" << currentY << ")";
             }
             else
             {
                 square = new MapSquare(PrimaryNextSquare,currentX,currentY,SquareObstacle);
-                qDebug() << "Creating square P at (" << currentX << ";" << currentY << ")";
-                //existingSquares.append(square);
-                //qDebug() << "Return " << currentX << " | " << currentY;
+
             }
 
             return square;
@@ -192,7 +180,6 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
 
 
     }
-    qDebug() << "Returning OUT OF BOUNDS";
     return 0;
 }
 
@@ -204,7 +191,7 @@ void Render::keyPressEvent(QKeyEvent *event)
     switch(event->key())
     {
             case Qt::Key_1:
-            qDebug() << "Yolo";
+                mainUnit->setAbility(1);
             break;
     }
 
@@ -256,7 +243,7 @@ int Render::yFromOrientation(int y, int orientation)
 void Render::updateCenter()
 {
 
-    //view->centerOn(mainUnit);
+    view->centerOn(mainUnit);
     //scene->advance();
     emit moveUnits();
 }

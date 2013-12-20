@@ -19,6 +19,9 @@ public:
     QRectF boundingRect() const override;
 
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    int getAbility() const;
+    void setAbility(int value);
+
 private:
     MapSquare *currentSquare;
     QPropertyAnimation *animation;
@@ -26,8 +29,8 @@ private:
     qreal xmove;
     qreal ymove;
     void calcultateNextMove();
-
     void unlockObstacle();
+    int ability;
 signals:
 
 public slots:

@@ -5,6 +5,7 @@
 #include <QRect>
 #include <QGraphicsItem>
 #include <QPainter>
+#include <QDebug>
 
 Map::Map(QGraphicsScene *scene, Level *level)
 {
@@ -28,8 +29,13 @@ Map::Map(QGraphicsScene *scene, Level *level)
         painterBackground.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapBackground()+i)-1,level)));
         //painterBackground.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapDecors()+i)-1,level)));
         if(*(level->getMapForeground()+i)-1 > 0)
+        {
             painterForeground.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapForeground()+i)-1,level)));
-
+        }
+        if(*(level->getMapDecors()+i)-1 > 0)
+        {
+            painterDecors.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapDecors()+i)-1,level)));
+        }
     }
 
     //Generation du foreground Z = 5
@@ -61,5 +67,5 @@ QRect* Map::getRect(int id, Level *level)
     int x = id%(level->getTileSetWidth()/level->getTileWidth())*level->getTileWidth();
     int y = id/(level->getTileSetWidth()/level->getTileWidth())*level->getTileHeight();
 
-    return new QRect(x,y,level->getTileSetWidth(),level->getTileHeight());
+    return new QRect(x,y,level->getTileWidth(),level->getTileHeight());
 }

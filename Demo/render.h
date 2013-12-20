@@ -2,14 +2,14 @@
 #define RENDER_H
 
 #include <QWidget>
-class QGraphicsScene;
+#include <QGraphicsScene>
 class QGraphicsView;
 class QGraphicsItemGroup;
 class QTimer;
 class MapSquare;
 class Level;
 class Unit;
-class Render : public QWidget
+class Render : public QGraphicsScene
 {
     Q_OBJECT
 
@@ -28,7 +28,6 @@ private:
     //QGraphicsItemGroup *units;
     MapSquare* generatePath(int currentX, int currentY, Level *level);
     Level *renderedLevel;
-    QGraphicsScene *scene;
     QGraphicsView *view;
     QList<Unit*> *listUnit;
     Unit *mainUnit;
