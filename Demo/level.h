@@ -42,7 +42,7 @@ public:
     int getMapWidth() const;
     int getMapHeight() const;
 
-    static QList<Level> loadLevels();
+    static QList<Level *> loadLevels();
 
     int FLECHE_ROAD_1;
     int FLECHE_ROAD_2;

@@ -4,5 +4,8 @@
         <file>ressources/img/unit.png</file>
         <file>ressources/levels/leveld/level.json</file>
         <file>ressources/levels/leveld/tileset.png</file>
+        <file>ressources/img/button.png</file>
+        <file>ressources/img/disc.png</file>
+        <file>ressources/img/logo.png</file>
     </qresource>
 </RCC>

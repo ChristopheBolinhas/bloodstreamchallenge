@@ -3,6 +3,7 @@
 
 #include <QtWidgets>
 #include "level.h"
+#include "menucontainer.h"
 
 class Level;
 class QGraphicsScene;
@@ -16,9 +17,12 @@ private:
     QList<Level> *levels;
     void startLevel(Level *level);
     QGraphicsView *view;
+
+    MenuContainer *menuContainer;
 signals:
 
 public slots:
+    void loadLevel(Level* lvl);
 
 };
 

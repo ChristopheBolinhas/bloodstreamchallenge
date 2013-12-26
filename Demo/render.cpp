@@ -26,7 +26,7 @@ Render::Render(QGraphicsView *_view, Level *level, QWidget *parent) :
 
     //QRectF *sceneRect = new QRectF(0,0,level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
     //scene = new QGraphicsScene(*sceneRect,this);
-    //scene->setSceneRect(0,0,960,540);
+    //this->setSceneRect(0,0,960,540);
     //Scene générale
     view->setScene(this);
 
@@ -242,7 +242,6 @@ int Render::yFromOrientation(int y, int orientation)
 
 void Render::updateCenter()
 {
-
     view->centerOn(mainUnit);
     //scene->advance();
     emit moveUnits();

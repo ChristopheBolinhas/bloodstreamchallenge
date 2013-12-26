@@ -22,12 +22,13 @@ Level::Level(QString name, int score, QString path, int ordre)
     this->parseJsonLevel();
 }
 
-QList<Level> Level::loadLevels()
+QList<Level*> Level::loadLevels()
 {
-    QList<Level> listLevels;
+    QList<Level*> listLevels;
     //TODO: changer le nom du chemin$
 
     const QString LEVELS_FILENAME = QApplication::applicationDirPath() + "/ressources/levels.json"; //TODO: trouver une solution pour récupérer ce nom en relatif
+    qDebug() << "Chemin des niveaux: " << LEVELS_FILENAME;
     QJsonDocument jsonLevels;
 
     //Lecture du fichier levels.json
@@ -55,7 +56,7 @@ QList<Level> Level::loadLevels()
     {
         QJsonObject jLevel = jArrayLevels.at(i).toObject();
          //qDebug() << jLevel.value("name").toString() <<  jLevel.value("score").toDouble() << QApplication::applicationDirPath()+"/"+levelsPath+jLevel.value("path").toString() << (int)jLevel.value("order").toDouble();
-        Level lvl(jLevel.value("name").toString(), jLevel.value("score").toDouble(),QApplication::applicationDirPath()+"/"+levelsPath+jLevel.value("path").toString(),(int)jLevel.value("order").toDouble());
+        Level *lvl = new Level(jLevel.value("name").toString(), jLevel.value("score").toDouble(),QApplication::applicationDirPath()+"/"+levelsPath+jLevel.value("path").toString(),(int)jLevel.value("order").toDouble());
         //if(lvl != 0)
         listLevels.append(lvl);
     }

@@ -22,7 +22,10 @@ SOURCES += main.cpp\
     render.cpp \
     obstacle.cpp \
     deviation.cpp \
-    hud.cpp
+    hud.cpp \
+    menucontainer.cpp \
+    menulevelbutton.cpp \
+    menubutton.cpp
 
 HEADERS  += mainwindow.h \
     gui.h \
@@ -33,7 +36,10 @@ HEADERS  += mainwindow.h \
     render.h \
     obstacle.h \
     deviation.h \
-    hud.h
+    hud.h \
+    menucontainer.h \
+    menubutton.h \
+    menulevelbutton.h
 
 RESOURCES += \
     temp.qrc
