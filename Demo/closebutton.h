@@ -1,0 +1,18 @@
+#ifndef CLOSEBUTTON_H
+#define CLOSEBUTTON_H
+
+#include <QPushButton>
+
+class CloseButton : public QPushButton
+{
+    Q_OBJECT
+public:
+    explicit CloseButton(QWidget *parent = 0);
+    void paintEvent(QPaintEvent *);
+signals:
+
+public slots:
+
+};
+
+#endif // CLOSEBUTTON_H

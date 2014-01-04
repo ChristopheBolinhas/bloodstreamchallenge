@@ -13,6 +13,8 @@ public:
 
 protected:
     bool enabled;
+
+
 private:
 
 };

@@ -4,10 +4,12 @@
 #include <QtWidgets>
 #include "level.h"
 #include "menucontainer.h"
+#include "gameview.h"
 
 class Level;
 class QGraphicsScene;
 class QGraphicsView;
+class Render;
 class Gui : public QWidget
 {
     Q_OBJECT
@@ -17,12 +19,14 @@ private:
     QList<Level> *levels;
     void startLevel(Level *level);
     QGraphicsView *view;
-
+    GameView *view2;
     MenuContainer *menuContainer;
+    Render *render;
 signals:
 
 public slots:
     void loadLevel(Level* lvl);
+    void closeRender();
 
 };
 

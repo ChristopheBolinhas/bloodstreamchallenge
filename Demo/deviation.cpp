@@ -1,6 +1,6 @@
 #include "deviation.h"
 
-Deviation::Deviation(int dev) : Obstacle()
+Deviation::Deviation(int dev)
 {
 
     setOrientation(dev);

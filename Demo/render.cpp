@@ -5,6 +5,11 @@
 #include "level.h"
 #include "obstacle.h"
 #include "deviation.h"
+#include "caillot.h"
+#include "chute.h"
+#include "boost.h"
+#include "abilitybutton.h"
+#include "gameview.h"
 
 #include <typeinfo>
 #include <QtGui>
@@ -16,12 +21,14 @@
 #include <QGraphicsItemGroup>
 #include <QDebug>
 #include <QList>
+#include <QLabel>
+#include <QGraphicsProxyWidget>
 
-Render::Render(QGraphicsView *_view, Level *level, QWidget *parent) :
+Render::Render(GameView *_view, Level *level, QWidget *parent) :
     QGraphicsScene(parent)
 {
     view = _view;
-
+    connect(view,SIGNAL(sendAbility(int)),this,SLOT(setAbilitySlot(int)));
     MapSquare *path = generatePath(0,7,level);
 
     //QRectF *sceneRect = new QRectF(0,0,level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
@@ -47,10 +54,23 @@ Render::Render(QGraphicsView *_view, Level *level, QWidget *parent) :
     //view->show();
 
 
+    QGraphicsTextItem *test = new QGraphicsTextItem();
+    test->setPlainText("QGraphicsTextItem");
+    addItem(test);
+
+    view->centerOn(mainUnit);
+    startTimer = new QTimer(this);
+    connect(startTimer,SIGNAL(timeout()),this,SLOT(startGame()));
     //Initialisation du timer
-    QTimer *timer = new QTimer(this);
-    connect(timer,SIGNAL(timeout()),this,SLOT(updateCenter()));
-    timer->start(1000/120);//60fps
+    mainTimer = new QTimer(this);
+    connect(mainTimer,SIGNAL(timeout()),this,SLOT(updateCenter()));
+    startTimer->start(1000);
+}
+
+void Render::setAbilitySlot(int id)
+{
+    qDebug() << "ABILITY YO" << id;
+    mainUnit->setAbility(id);
 }
 
 MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
@@ -118,6 +138,15 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
 
         switch(obstacle)
         {
+            case 361:
+                SquareObstacle = new Caillot();
+                break;
+            case 362:
+                SquareObstacle = new Chute();
+                break;
+            case 363:
+                SquareObstacle = new Boost();
+            break;
             case 389:
                 SquareObstacle = new Deviation(6);
                 break;
@@ -158,6 +187,12 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
                 SecondaryNextSquare = generatePath(xFromOrientation(currentX,dynamic_cast<Deviation*>(SquareObstacle)->getOrientation()),yFromOrientation(currentY,dynamic_cast<Deviation*>(SquareObstacle)->getOrientation()),level);
 
             }
+            else if(typeid(*SquareObstacle) == typeid(Caillot))
+            {
+                addItem(dynamic_cast<Caillot*>(SquareObstacle));
+                dynamic_cast<Caillot*>(SquareObstacle)->setPos(currentX*level->getTileWidth(),currentY*level->getTileHeight());
+                dynamic_cast<Caillot*>(SquareObstacle)->setZValue(5);
+            }
             //TODO Implémentation des autres obstacles
         }
 
@@ -193,6 +228,9 @@ void Render::keyPressEvent(QKeyEvent *event)
             case Qt::Key_1:
                 mainUnit->setAbility(1);
             break;
+            case Qt::Key_2:
+                mainUnit->setAbility(2);
+                break;
     }
 
 
@@ -242,10 +280,32 @@ int Render::yFromOrientation(int y, int orientation)
 
 void Render::updateCenter()
 {
+
     view->centerOn(mainUnit);
     //scene->advance();
     emit moveUnits();
 }
+
+void Render::startGame()
+{
+    if(startCountDown <= 0)
+    {
+
+        mainTimer->start(1000/120);//60fps
+        startTimer->stop();
+    }
+    else
+    {
+        startCountDown--;
+    }
+}
+
+void Render::toggleGame()
+{
+
+}
+
+
 
 
 

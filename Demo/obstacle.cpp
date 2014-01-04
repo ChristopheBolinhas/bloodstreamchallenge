@@ -3,6 +3,7 @@
 Obstacle::Obstacle()
 {
     enabled = true;
+
 }
 
 bool Obstacle::isEnabled()
@@ -14,5 +15,7 @@ Obstacle::~Obstacle()
 {
 
 }
+
+
 
 

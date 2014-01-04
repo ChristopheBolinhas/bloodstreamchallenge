@@ -25,7 +25,15 @@ SOURCES += main.cpp\
     hud.cpp \
     menucontainer.cpp \
     menulevelbutton.cpp \
-    menubutton.cpp
+    menubutton.cpp \
+    caillot.cpp \
+    chute.cpp \
+    boost.cpp \
+    gameview.cpp \
+    abilitybutton.cpp \
+    volumebutton.cpp \
+    playpausebutton.cpp \
+    closebutton.cpp
 
 HEADERS  += mainwindow.h \
     gui.h \
@@ -39,7 +47,15 @@ HEADERS  += mainwindow.h \
     hud.h \
     menucontainer.h \
     menubutton.h \
-    menulevelbutton.h
+    menulevelbutton.h \
+    caillot.h \
+    chute.h \
+    boost.h \
+    gameview.h \
+    abilitybutton.h \
+    volumebutton.h \
+    playpausebutton.h \
+    closebutton.h
 
 RESOURCES += \
     temp.qrc

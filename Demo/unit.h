@@ -31,6 +31,8 @@ private:
     void calcultateNextMove();
     void unlockObstacle();
     int ability;
+    bool isAlive = true;
+    void die();
 signals:
 
 public slots:

@@ -7,5 +7,11 @@
         <file>ressources/img/button.png</file>
         <file>ressources/img/disc.png</file>
         <file>ressources/img/logo.png</file>
+        <file>ressources/img/1.png</file>
+        <file>ressources/img/volumemute.png</file>
+        <file>ressources/img/volumeunmute.png</file>
+        <file>ressources/img/pause.png</file>
+        <file>ressources/img/play.png</file>
+        <file>ressources/img/close.png</file>
     </qresource>
 </RCC>

@@ -2,6 +2,8 @@
 #include <QPropertyAnimation>
 #include <QDebug>
 #include <deviation.h>
+#include <obstacle.h>
+#include <caillot.h>
 #include <typeinfo>
 
 Unit::Unit(QList<QPixmap *> *_pixmapList, MapSquare *path, QGraphicsItem *parent)
@@ -23,8 +25,6 @@ Unit::Unit(QList<QPixmap *> *_pixmapList, MapSquare *path, QGraphicsItem *parent
     animation = new QPropertyAnimation(this,"pos",this);
     calcultateNextMove();
 
-    //EN DUR
-    //capaciteUnit = EnumObstacle::deviation;//Perma activation de la deviation
 }
 
 Unit::~Unit()
@@ -39,8 +39,8 @@ QRectF Unit::boundingRect() const
 
 void Unit::paint( QPainter *painter, const QStyleOptionGraphicsItem*,QWidget *)
 {
-
-    painter->drawPixmap(0,0,40,40,*pixmapList->first());
+    if(isAlive)
+        painter->drawPixmap(0,0,40,40,*pixmapList->first());
 }
 
 
@@ -100,6 +100,11 @@ void Unit::setAbility(int value)
     ability = value;
 }
 
+void Unit::die()
+{
+    //setVisible(false);
+    isAlive = false;
+}
 
 
 
@@ -108,30 +113,34 @@ void Unit::moveUnit()
     /*int xmove;
     int ymove;
 */
-    if(currentSquare->getNext()->getHasNext())
+    if(currentSquare->getNext()->getHasNext() && isAlive)
     {
         if(x() == currentSquare->getNext()->getX()*40 && y() == currentSquare->getNext()->getY()*40)
         {
-            //On test que le prochain n'ai pas d'obstacle
-            if(currentSquare->getNext()->hasObstacle())
-            {
-                qDebug() << "Bfore Devi yo";
-                //typeid(Deviation);
-                qDebug() << "Bfore Devi yo2";
-                //qDebug() << typeid(currentSquare->getObstacle()).name() << " | " << typeid(Deviation*);
-
-                //if(typeid(*currentSquare->getObstacle()) == typeid(Deviation))
-                //{
-                    qDebug() << "DEVIATION !";
-                    if(ability == 1)
-                        currentSquare->activateDeviation();
-                //}
-
-            }
             currentSquare = currentSquare->getNext();
             //Implémentation obstacles avec currentSquare
             //TODO
             calcultateNextMove();
+            //On test que le prochain n'ai pas d'obstacle
+            if(currentSquare->getNext()->hasObstacle())
+            {
+                if(currentSquare->getNext()->getObstacle()->isEnabled())
+                {
+                    if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Deviation))
+                    {
+                        if(ability == 1)
+                            currentSquare->activateDeviation();
+                    }
+                    else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Caillot))
+                    {
+                        if(ability == 2)
+                             dynamic_cast<Caillot*>(currentSquare->getNext()->getObstacle())->destroy();
+                        else
+                            die();
+                    }
+                }
+            }
+
         }
 
 
