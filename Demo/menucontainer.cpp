@@ -2,16 +2,21 @@
 #include "menubutton.h"
 #include "menulevelbutton.h"
 #include "level.h"
+#include "menucheckbox.h"
+#include "menuradiobutton.h"
+#include "menuslidercircle.h"
+#include "option.h"
 #include <QGraphicsView>
 #include <QGraphicsScene>
 #include <QRectF>
 #include <QGraphicsPixmapItem>
 #include <QPropertyAnimation>
-
 #include <QDebug>
 
-MenuContainer::MenuContainer(QGraphicsView *m_view)
+MenuContainer::MenuContainer(QGraphicsView *_view, Option *_option)
 {
+    this->option = _option;
+
     setupScene();
 
     addGameLogo();
@@ -23,7 +28,7 @@ MenuContainer::MenuContainer(QGraphicsView *m_view)
 
     addMenuOptions();
 
-    setupView(m_view);
+    setupView(_view);
 
     initializationAnimation();
 }
@@ -52,6 +57,59 @@ void MenuContainer::moveViewToMenuPrincipal()
     animation->setEndValue(QRect(0,0,SCENE_SIZE_X/2,SCENE_SIZE_Y));
     //animation->setEasingCurve(QEasingCurve::InBack);
     animation->start();
+}
+
+void MenuContainer::cancelOption()
+{
+    this->resetOption();
+    this->moveViewToMenuPrincipal();
+}
+
+void MenuContainer::resetOption()
+{
+    // on recharge les dernières options sauvegardées
+    this->option->loadOption();
+
+    int defaultVolume = this->option->getVolume();
+    bool defaultMute = this->option->isMute();
+
+    this->mscVolume->setValue(defaultVolume);
+    this->mcbxMute->setChecked(defaultMute);
+
+    switch(this->option->getLanguage())
+    {
+    case Option::french:
+        this->setChecked(mrbtnLangueFrancais);
+        break;
+    case Option::english:
+        this->setChecked(mrbtnLangueAnglais);
+        break;
+    }
+}
+
+void MenuContainer::saveOption()
+{
+    this->option->setVolume(mscVolume->getValue());
+    this->option->setMute(mcbxMute->getChecked());
+
+
+    if(mrbtnLangueAnglais->getChecked())
+        this->option->setLanguage(Option::english);
+    else if(mrbtnLangueFrancais->getChecked())
+        this->option->setLanguage(Option::french);
+
+    this->option->saveOption();
+
+    moveViewToMenuPrincipal();
+}
+
+void MenuContainer::setChecked(MenuRadioButton *mrbtn)
+{
+    foreach (MenuRadioButton *item, listMenuRadioButton) {
+        item->setChecked(false);
+        item->update();
+    }
+    mrbtn->setChecked(true);
 }
 
 void MenuContainer::addGameLogo()
@@ -97,14 +155,71 @@ void MenuContainer::addMenuOptions()
     labelOptionTitle->setFont(QFont("Comic Sans MS", 24));
     labelOptionTitle->moveBy(960,50);
 
+    btnValider = new MenuButton(new QRectF((SCENE_SIZE_X/2)+80,480,MENU_BUTTON_WIDTH,MENU_BUTTON_HEIGHT), tr("Valider"));
+    btnAnnuler = new MenuButton(new QRectF((SCENE_SIZE_X/2)+380,480,MENU_BUTTON_WIDTH,MENU_BUTTON_HEIGHT), tr("Annuler"));
+    btnReset = new MenuButton(new QRectF((SCENE_SIZE_X/2)+680,480,MENU_BUTTON_WIDTH,MENU_BUTTON_HEIGHT), tr("Réinitialiser"));
 
-    btnAnnuler = new MenuButton(new QRectF((SCENE_SIZE_X/2)+410,480,MENU_BUTTON_WIDTH,MENU_BUTTON_HEIGHT), tr("Annuler"));
-    //TODO: btnValider, btnReset,...
+    labelOptionLangue = new QGraphicsTextItem(tr("Langue:"));
+    labelOptionLangue->setFont(QFont("Comic Sans MS", 14));
+    labelOptionLangue->moveBy(980,90);
 
-    connect(btnAnnuler, SIGNAL(clicked()), this, SLOT(moveViewToMenuPrincipal()));
+    // Langues
+    mrbtnLangueFrancais = new MenuRadioButton(QRect(1000,120,32,32),true);
 
+    labelOptionLangueFrancais = new QGraphicsTextItem(tr("Français"));
+    labelOptionLangueFrancais->setFont(QFont("Comic Sans MS", 14));
+    labelOptionLangueFrancais->moveBy(1040,120);
+
+    mrbtnLangueAnglais = new MenuRadioButton(QRect(1000,160,32,32),false);
+
+    labelOptionLangueAnglais = new QGraphicsTextItem(tr("Anglais"));
+    labelOptionLangueAnglais->setFont(QFont("Comic Sans MS", 14));
+    labelOptionLangueAnglais->moveBy(1040,160);
+
+    // Volume
+    mscVolume = new MenuSliderCircle(QPoint(1000,240),32,0,100,2);
+    mscVolume->setValue(option->getVolume());
+
+    labelOptionVolume = new QGraphicsTextItem(tr("Volume"));
+    labelOptionVolume->setFont(QFont("Comic Sans MS", 14));
+    labelOptionVolume->moveBy(980,200);
+
+    mcbxMute = new MenuCheckBox(QRect(1040,280,32,32),option->isMute());
+
+    labelOptionMute = new QGraphicsTextItem(tr("Muet: "));
+    labelOptionMute->setFont(QFont("Comic Sans MS", 14));
+    labelOptionMute->moveBy(980,280);
+
+    connect(btnAnnuler, SIGNAL(clicked()), this, SLOT(cancelOption()));
+    connect(btnValider, SIGNAL(clicked()), this, SLOT(saveOption()));
+    connect(btnReset, SIGNAL(clicked()), this, SLOT(resetOption()));
+
+    connect(mrbtnLangueFrancais,SIGNAL(checkStateChanged(MenuRadioButton*)), this, SLOT(setChecked(MenuRadioButton*)));
+    connect(mrbtnLangueAnglais,SIGNAL(checkStateChanged(MenuRadioButton*)), this, SLOT(setChecked(MenuRadioButton*)));
+
+    listMenuRadioButton = QList<MenuRadioButton*>();
+    listMenuRadioButton.append(mrbtnLangueFrancais);
+    listMenuRadioButton.append(mrbtnLangueAnglais);
+
+    for(int i=0; i < listMenuRadioButton.size(); i++)
+    {
+        scene->addItem(listMenuRadioButton.at(i));
+    }
+    scene->addItem(mscVolume);
+    scene->addItem(mrbtnLangueFrancais);
+    scene->addItem(mrbtnLangueAnglais);
+    scene->addItem(mcbxMute);
     scene->addItem(labelOptionTitle);
+    scene->addItem(labelOptionLangueFrancais);
+    scene->addItem(labelOptionLangueAnglais);
+    scene->addItem(labelOptionLangue);
+    scene->addItem(labelOptionVolume);
+    scene->addItem(labelOptionMute);
+    scene->addItem(btnReset);
+    scene->addItem(btnValider);
     scene->addItem(btnAnnuler);
+
+    resetOption(); // met les valeurs par defaut a la fin de la construction du menu option
 }
 
 void MenuContainer::setupView(QGraphicsView *m_view)

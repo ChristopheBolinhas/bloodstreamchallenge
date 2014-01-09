@@ -27,6 +27,10 @@ class QGraphicsScene;
 class QPixmap;
 class Level;
 class QPropertyAnimation;
+class MenuRadioButton;
+class MenuSliderCircle;
+class MenuCheckBox;
+class Option;
 #include <QList>
 #include <QObject>
 #include <QPoint>
@@ -37,7 +41,7 @@ class MenuContainer : public QObject
 {
     Q_OBJECT
 public:
-    MenuContainer(QGraphicsView *m_view);
+    MenuContainer(QGraphicsView *m_view, Option *_option);
     virtual ~MenuContainer();
 
     QGraphicsScene *getScene() const;
@@ -53,6 +57,7 @@ public:
 private:
     QGraphicsView *view;
     QGraphicsScene *scene;
+    Option *option;
 
     //Menu principal
     QPixmap *gameLogo;
@@ -65,7 +70,21 @@ private:
     MenuButton *btnValider;
     MenuButton *btnAnnuler;
     MenuButton *btnReset;
+
+    QList<MenuRadioButton*> listMenuRadioButton;
+    MenuRadioButton *mrbtnLangueFrancais;
+    MenuRadioButton *mrbtnLangueAnglais;
+
+    MenuSliderCircle *mscVolume;
+    MenuCheckBox *mcbxMute;
+
+
     QGraphicsTextItem *labelOptionTitle;
+    QGraphicsTextItem *labelOptionLangue;
+    QGraphicsTextItem *labelOptionLangueFrancais;
+    QGraphicsTextItem *labelOptionLangueAnglais;
+    QGraphicsTextItem *labelOptionVolume;
+    QGraphicsTextItem *labelOptionMute;
 
     static const int CENTER_MENU_PRINCIPAL_X = 0;
     static const int CENTER_MENU_PRINCIPAL_Y = 270;
@@ -95,6 +114,10 @@ signals:
 public slots:
     void moveViewToMenuOptions();
     void moveViewToMenuPrincipal();
+    void cancelOption();
+    void resetOption();
+    void saveOption();
+    void setChecked(MenuRadioButton*radioButton);
 
 };
 

@@ -10,6 +10,7 @@ class Level;
 class QGraphicsScene;
 class QGraphicsView;
 class Render;
+class Option;
 class Gui : public QWidget
 {
     Q_OBJECT
@@ -18,6 +19,7 @@ public:
 private:
     QList<Level> *levels;
     void startLevel(Level *level);
+    Option *option;
     QGraphicsView *view;
     GameView *view2;
     MenuContainer *menuContainer;

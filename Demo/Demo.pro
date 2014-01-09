@@ -33,7 +33,11 @@ SOURCES += main.cpp\
     abilitybutton.cpp \
     volumebutton.cpp \
     playpausebutton.cpp \
-    closebutton.cpp
+    closebutton.cpp \
+    menuradiobutton.cpp \
+    menucheckbox.cpp \
+    menuslidercircle.cpp \
+    option.cpp
 
 HEADERS  += mainwindow.h \
     gui.h \
@@ -55,7 +59,11 @@ HEADERS  += mainwindow.h \
     abilitybutton.h \
     volumebutton.h \
     playpausebutton.h \
-    closebutton.h
+    closebutton.h \
+    menuradiobutton.h \
+    menucheckbox.h \
+    menuslidercircle.h \
+    option.h
 
 RESOURCES += \
     temp.qrc

@@ -12,6 +12,7 @@
 #include <QBrush>
 #include <QGraphicsItem>
 #include <QGraphicsItemGroup>
+#include "option.h"
 
 Gui::Gui(QWidget *parent) :
     QWidget(parent)
@@ -32,7 +33,9 @@ Gui::Gui(QWidget *parent) :
     //view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     //view->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 
-    menuContainer = new MenuContainer(view2);
+
+    option = new Option();
+    menuContainer = new MenuContainer(view2, option);
     connect(menuContainer, SIGNAL(startLevel(Level*)), this, SLOT(loadLevel(Level*)));
     connect(view2,SIGNAL(closeRender()),this,SLOT(closeRender()));
     /*
@@ -72,7 +75,7 @@ void Gui::loadLevel(Level *lvl)
 
 void Gui::closeRender()
 {
-    menuContainer = new MenuContainer(view2);
+    menuContainer = new MenuContainer(view2, option);
     connect(menuContainer, SIGNAL(startLevel(Level*)), this, SLOT(loadLevel(Level*)));
     view2->setMode(0);
     destroy(render);
