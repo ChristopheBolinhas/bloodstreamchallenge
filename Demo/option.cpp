@@ -16,6 +16,7 @@ bool Option::loadOption()
 {
     QJsonDocument jsonDocument;
 
+    qDebug() << jsonFilename;
     fileOption = new QFile(this->jsonFilename);
     if(fileOption->open(QIODevice::ReadOnly))
     {

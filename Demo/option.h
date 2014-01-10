@@ -31,9 +31,7 @@ private:
     QFile *fileOption;
     Language language;
 
-    //TODO: a modifier pour le vrai chemin
-    const QString jsonFilename = "C:/.config";
-
+    const QString jsonFilename = QApplication::applicationDirPath() + "/options.json";
 };
 
 #endif // OPTION_H

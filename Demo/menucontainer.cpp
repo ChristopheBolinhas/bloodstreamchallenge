@@ -11,6 +11,8 @@
 #include <QRectF>
 #include <QGraphicsPixmapItem>
 #include <QPropertyAnimation>
+#include <QFontDatabase>
+
 #include <QDebug>
 
 MenuContainer::MenuContainer(QGraphicsView *_view, Option *_option)
@@ -152,7 +154,9 @@ void MenuContainer::addQuitOptionsButtons()
 void MenuContainer::addMenuOptions()
 {
     labelOptionTitle = new QGraphicsTextItem(tr("Menu des options"));
-    labelOptionTitle->setFont(QFont("Comic Sans MS", 24));
+    //FIXME: voici comment ajouter des font personalisées en Qt. faire une méthode pour init toutes les polices
+    qDebug() << "Font importée ?: " << QFontDatabase::addApplicationFont("://ressources/font/SnackerComic.ttf");
+    labelOptionTitle->setFont(QFont("Snacker Comic Personal Use Only", 24));
     labelOptionTitle->moveBy(960,50);
 
     btnValider = new MenuButton(new QRectF((SCENE_SIZE_X/2)+80,480,MENU_BUTTON_WIDTH,MENU_BUTTON_HEIGHT), tr("Valider"));
@@ -219,7 +223,7 @@ void MenuContainer::addMenuOptions()
     scene->addItem(btnValider);
     scene->addItem(btnAnnuler);
 
-    resetOption(); // met les valeurs par defaut a la fin de la construction du menu option
+    resetOption(); // met les valeurs par defaut à la fin de la construction du menu option
 }
 
 void MenuContainer::setupView(QGraphicsView *m_view)

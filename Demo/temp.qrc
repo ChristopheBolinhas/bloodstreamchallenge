@@ -13,6 +13,7 @@
         <file>ressources/img/pause.png</file>
         <file>ressources/img/play.png</file>
         <file>ressources/img/close.png</file>
+		<file>ressources/font/SnackerComic.ttf</file>
     </qresource>
     <qresource prefix="/boost">
         <file>ressources/img/Boost/trap_anim1.png</file>
