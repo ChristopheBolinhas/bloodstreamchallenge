@@ -14,7 +14,7 @@ class Unit : public QGraphicsObject
 
 public:
     explicit Unit(QList<QPixmap*> *_pixmapList, MapSquare *path,QGraphicsItem *parent = 0);
-    void advance (int phase);
+    //void advance (int phase);
     virtual ~Unit();
     QRectF boundingRect() const override;
 
@@ -31,6 +31,8 @@ private:
     void calcultateNextMove();
     void unlockObstacle();
     int ability;
+    int speed = 0;
+
     bool isAlive = true;
     void die();
 signals:

@@ -1,13 +1,15 @@
 #include "chute.h"
+#include "level.h"
 
-Chute::Chute()
+Chute::Chute(int _x, int _y, int _orientation, QList<QPixmap*> *_images, Level *level) : Obstacle(_x,_y,_orientation)
 {
 }
 
-QRectF Chute::boundingRect() const
+Chute::~Chute()
 {
-    return QRectF (0,0,40, 40);
+
 }
+
 void Chute::destroy()
 {
     enabled = false;

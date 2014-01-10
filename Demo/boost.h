@@ -6,15 +6,23 @@
 #include <QtGui>
 #include <QGraphicsItem>
 #include <QGraphicsObject>
-
-class Boost : public Obstacle, public QGraphicsObject
+class Level;
+class Boost : public Obstacle
 {
+
+    Q_OBJECT
 public:
-    Boost();
-    QRectF boundingRect() const override;
+    Boost(int _x, int _y, int _orientation, QList<QPixmap *> *_images, Level *level);
+    ~Boost();
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
-
+    void disable();
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
+public slots:
+    void disableAnim();
+private:
+    QList<QPixmap*> *images;
+    int etat = 0;
+    QTimer *timerAnim;
 };
 
 #endif // BOOST_H

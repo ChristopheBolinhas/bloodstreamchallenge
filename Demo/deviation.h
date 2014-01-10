@@ -2,18 +2,19 @@
 #define DEVIATION_H
 #include "obstacle.h"
 #include "mapsquare.h"
+#include "level.h"
+#include <QtGui>
+#include <QGraphicsItem>
+#include <QGraphicsObject>
 
-class Deviation : public Obstacle
+class Deviation : public Obstacle//, public QGraphicsObject
 {
 public:
-    Deviation(int dev);
+    Deviation(int _x, int _y, int _orientation, QList<QPixmap *> *_images, Level *level);
     //void traitement(MapSquare *square);
     void switchPath(MapSquare *currentSquare);
-    int getOrientation();
-private:
-    int orientation;
-    void setOrientation(int _orientation);
 
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 };
 
 

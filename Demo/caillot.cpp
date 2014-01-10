@@ -1,14 +1,11 @@
 #include "caillot.h"
+#include "level.h"
 
-Caillot::Caillot()
+Caillot::Caillot(int _x, int _y, int _orientation, QList<QPixmap*> *_images, Level *level) : Obstacle(_x,_y,_orientation)
 {
 
 }
 
-QRectF Caillot::boundingRect() const
-{
-    return QRectF (0,0,40, 40);
-}
 void Caillot::destroy()
 {
     enabled = false;

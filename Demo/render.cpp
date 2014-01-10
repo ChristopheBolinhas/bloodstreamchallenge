@@ -29,18 +29,18 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
 {
     view = _view;
     connect(view,SIGNAL(sendAbility(int)),this,SLOT(setAbilitySlot(int)));
+    loadImages();
+
     MapSquare *path = generatePath(0,7,level);
 
-    //QRectF *sceneRect = new QRectF(0,0,level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
-    //scene = new QGraphicsScene(*sceneRect,this);
-    //this->setSceneRect(0,0,960,540);
-    //Scene générale
     view->setScene(this);
 
     //Génération de la map (Layer 1)
     Map m(this,level);
+
     QList<QPixmap*> *pixmapList = new QList<QPixmap*>();
     pixmapList->append(new QPixmap(":/ressources/img/unit.png"));
+
     listUnit = new QList<Unit*>();
     for(int i = 0;i < 1;i++)
     {
@@ -58,7 +58,7 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
     test->setPlainText("QGraphicsTextItem");
     addItem(test);
 
-    view->centerOn(mainUnit);
+
     startTimer = new QTimer(this);
     connect(startTimer,SIGNAL(timeout()),this,SLOT(startGame()));
     //Initialisation du timer
@@ -66,6 +66,26 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
     connect(mainTimer,SIGNAL(timeout()),this,SLOT(updateCenter()));
     startTimer->start(1000);
 }
+
+Render::~Render()
+{
+
+}
+
+void Render::loadImages()
+{
+    //Boost images
+    boostImages = new QList<QPixmap*>();
+    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/trap_on.png"));
+    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/trap_anim1.png"));
+    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/trap_anim2.png"));
+    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/trap_anim3.png"));
+
+
+}
+
+
+
 
 void Render::setAbilitySlot(int id)
 {
@@ -135,41 +155,45 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
         {
             return PrimaryNextSquare;
         }
+        //Boost - Rouge - 361
+        //Caillot - Jaune - 362
+        //Bacterie - Vert - 363
+        //Pont - Bleu - 364
 
         switch(obstacle)
         {
             case 361:
-                SquareObstacle = new Caillot();
+                SquareObstacle = new Boost(currentX, currentY,orientationPrimary,boostImages, level);
                 break;
             case 362:
-                SquareObstacle = new Chute();
+                SquareObstacle = new Chute(currentX,currentY,orientationPrimary,0,level);
                 break;
             case 363:
-                SquareObstacle = new Boost();
+                SquareObstacle = new Caillot(currentX,currentY,orientationPrimary,0,level);
             break;
             case 389:
-                SquareObstacle = new Deviation(6);
+                SquareObstacle = new Deviation(currentX,currentY, 6, 0, level);
                 break;
             case 390:
-                SquareObstacle = new Deviation(4);
+                SquareObstacle = new Deviation(currentX,currentY, 4, 0, level);
                 break;
             case 391:
-                SquareObstacle = new Deviation(8);
+                SquareObstacle = new Deviation(currentX,currentY, 8, 0, level);
                 break;
             case 392:
-                SquareObstacle = new Deviation(2);
+                SquareObstacle = new Deviation(currentX,currentY, 2, 0, level);
                 break;
             case 393:
-                SquareObstacle = new Deviation(1);
+                SquareObstacle = new Deviation(currentX,currentY, 1, 0, level);
                 break;
             case 394:
-                SquareObstacle = new Deviation(3);
+                SquareObstacle = new Deviation(currentX,currentY, 3, 0, level);
                 break;
             case 395:
-                SquareObstacle = new Deviation(7);
+                SquareObstacle = new Deviation(currentX,currentY, 7, 0, level);
                 break;
             case 396:
-                SquareObstacle = new Deviation(9);
+                SquareObstacle = new Deviation(currentX,currentY, 9, 0, level);
                 break;
         }
 
@@ -192,6 +216,10 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
                 addItem(dynamic_cast<Caillot*>(SquareObstacle));
                 dynamic_cast<Caillot*>(SquareObstacle)->setPos(currentX*level->getTileWidth(),currentY*level->getTileHeight());
                 dynamic_cast<Caillot*>(SquareObstacle)->setZValue(5);
+            }
+            else if(typeid(*SquareObstacle) == typeid(Boost))
+            {
+                addItem(dynamic_cast<Boost*>(SquareObstacle));
             }
             //TODO Implémentation des autres obstacles
         }
@@ -282,16 +310,18 @@ void Render::updateCenter()
 {
 
     view->centerOn(mainUnit);
-    //scene->advance();
-    emit moveUnits();
+    //advance();
+    //emit moveUnits();
 }
 
 void Render::startGame()
 {
+    view->centerOn(mainUnit);
     if(startCountDown <= 0)
     {
 
-        mainTimer->start(1000/120);//60fps
+        mainTimer->start(1000/60);//60fps
+        emit moveUnits();
         startTimer->stop();
     }
     else

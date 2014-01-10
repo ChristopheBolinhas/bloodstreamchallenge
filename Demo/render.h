@@ -18,7 +18,7 @@ class Render : public QGraphicsScene
 
 public:
     explicit Render(GameView *_view, Level *level, QWidget *parent = 0);
-
+    ~Render();
 signals:
     void moveUnits();
 public slots:
@@ -41,6 +41,15 @@ private:
     void keyPressEvent(QKeyEvent *event);
     int xFromOrientation(int x, int orientation);
     int yFromOrientation(int y, int orientation);
+
+    //Tableaux des images des composants
+    QList<QPixmap*> *unitImages;
+    QList<QPixmap*> *boostImages;
+    QList<QPixmap*> *caillotImages;
+    QList<QPixmap*> *deviationImages;
+
+
+    void loadImages();
 };
 
 #endif // RENDER_H
