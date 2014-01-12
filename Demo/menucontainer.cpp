@@ -33,6 +33,7 @@ MenuContainer::MenuContainer(QGraphicsView *_view, Option *_option)
     setupView(_view);
 
     initializationAnimation();
+
 }
 
 MenuContainer::~MenuContainer()
@@ -87,6 +88,7 @@ void MenuContainer::resetOption()
         this->setChecked(mrbtnLangueAnglais);
         break;
     }
+    this->scene->update();
 }
 
 void MenuContainer::saveOption()
@@ -116,23 +118,22 @@ void MenuContainer::setChecked(MenuRadioButton *mrbtn)
 
 void MenuContainer::addGameLogo()
 {
-    QGraphicsPixmapItem *itemLogo = this->scene->addPixmap(QPixmap("://ressources/img/logo.png"));
-    itemLogo->moveBy(50,0);
+    this->scene->addPixmap(QPixmap(":/menu/ressources/img/menu/background.png"));
 }
 
 void MenuContainer::addLevelButtons(QList<Level *> listLevels)
 {
     labelChooseLevel = new QGraphicsTextItem(tr("Choix du niveau: "));
-    labelChooseLevel->setFont(QFont("Comic Sans MS", 16));
-    labelChooseLevel->moveBy(50,200);
+    labelChooseLevel->setFont(QFont("LetterOMatic!", 14));
+    labelChooseLevel->moveBy(50,220);
 
     scene->addItem(labelChooseLevel);
 
     for (int i = 0; i < listLevels.size(); i++)
     {
-        QRectF *rectangleLevel = new QRectF(MENU_LEVEL_BUTTON_COOR_X+i%LEVEL_BY_LINE*MENU_LEVEL_BUTTON_MARGE_X,MENU_LEVEL_BUTTON_COOR_Y+i/LEVEL_BY_LINE*MENU_LEVEL_BUTTON_MARGE_Y,MENU_LEVEL_BUTTON_WIDTH,MENU_LEVEL_BUTTON_HEIGHT);
+        QPointF positionLevel = QPointF(MENU_LEVEL_BUTTON_COOR_X+i%LEVEL_BY_LINE*MENU_LEVEL_BUTTON_MARGE_X,MENU_LEVEL_BUTTON_COOR_Y+i/LEVEL_BY_LINE*MENU_LEVEL_BUTTON_MARGE_Y);
         Level *lvl = listLevels.at(i);
-        MenuLevelButton *btn = new MenuLevelButton(rectangleLevel, lvl);
+        MenuLevelButton *btn = new MenuLevelButton(positionLevel, lvl);
 
         connect(btn, SIGNAL(startLevel(Level*)), this, SIGNAL(startLevel(Level*)));
         scene->addItem(btn);
@@ -141,8 +142,8 @@ void MenuContainer::addLevelButtons(QList<Level *> listLevels)
 
 void MenuContainer::addQuitOptionsButtons()
 {
-    btnQuitter = new MenuButton(new QRectF(70,480,MENU_BUTTON_WIDTH,MENU_BUTTON_HEIGHT),"Quitter");
-    btnOption = new MenuButton(new QRectF(370,480,MENU_BUTTON_WIDTH,MENU_BUTTON_HEIGHT),"Options");
+    btnQuitter = new MenuButton(QPointF(125,MENU_BUTTON_Y),"Quitter");
+    btnOption = new MenuButton(QPointF(510,MENU_BUTTON_Y),"Options");
 
     connect(btnQuitter, SIGNAL(clicked()), qApp, SLOT(quit()));
     connect(btnOption, SIGNAL(clicked()), this, SLOT(moveViewToMenuOptions()));
@@ -153,46 +154,40 @@ void MenuContainer::addQuitOptionsButtons()
 
 void MenuContainer::addMenuOptions()
 {
-    labelOptionTitle = new QGraphicsTextItem(tr("Menu des options"));
-    //FIXME: voici comment ajouter des font personalisées en Qt. faire une méthode pour init toutes les polices
-    qDebug() << "Font importée ?: " << QFontDatabase::addApplicationFont("://ressources/font/SnackerComic.ttf");
-    labelOptionTitle->setFont(QFont("Snacker Comic Personal Use Only", 24));
-    labelOptionTitle->moveBy(960,50);
-
-    btnValider = new MenuButton(new QRectF((SCENE_SIZE_X/2)+80,480,MENU_BUTTON_WIDTH,MENU_BUTTON_HEIGHT), tr("Valider"));
-    btnAnnuler = new MenuButton(new QRectF((SCENE_SIZE_X/2)+380,480,MENU_BUTTON_WIDTH,MENU_BUTTON_HEIGHT), tr("Annuler"));
-    btnReset = new MenuButton(new QRectF((SCENE_SIZE_X/2)+680,480,MENU_BUTTON_WIDTH,MENU_BUTTON_HEIGHT), tr("Réinitialiser"));
+    btnValider = new MenuButton(QPointF((SCENE_SIZE_X/2)+40,MENU_BUTTON_Y), tr("Valider"));
+    btnAnnuler = new MenuButton(QPointF((SCENE_SIZE_X/2)+340,MENU_BUTTON_Y), tr("Annuler"));
+    btnReset = new MenuButton(QPointF((SCENE_SIZE_X/2)+640,MENU_BUTTON_Y), tr("Reinitialiser"));
 
     labelOptionLangue = new QGraphicsTextItem(tr("Langue:"));
-    labelOptionLangue->setFont(QFont("Comic Sans MS", 14));
-    labelOptionLangue->moveBy(980,90);
+    labelOptionLangue->setFont(QFont("LetterOMatic!", 12));
+    labelOptionLangue->moveBy(MENU_OPTION_TOP_LEFT_X+MENU_OPTION_MARGIN_LEFT,90);
 
     // Langues
-    mrbtnLangueFrancais = new MenuRadioButton(QRect(1000,120,32,32),true);
+    mrbtnLangueFrancais = new MenuRadioButton(QRect(MENU_OPTION_TOP_LEFT_X+MENU_OPTION_MARGIN_LEFT+20,120,32,32),true);
 
-    labelOptionLangueFrancais = new QGraphicsTextItem(tr("Français"));
-    labelOptionLangueFrancais->setFont(QFont("Comic Sans MS", 14));
-    labelOptionLangueFrancais->moveBy(1040,120);
+    labelOptionLangueFrancais = new QGraphicsTextItem(tr("Francais"));
+    labelOptionLangueFrancais->setFont(QFont("LetterOMatic!", 12));
+    labelOptionLangueFrancais->moveBy(MENU_OPTION_TOP_LEFT_X+MENU_OPTION_MARGIN_LEFT+60,120);
 
-    mrbtnLangueAnglais = new MenuRadioButton(QRect(1000,160,32,32),false);
+    mrbtnLangueAnglais = new MenuRadioButton(QRect(MENU_OPTION_TOP_LEFT_X+MENU_OPTION_MARGIN_LEFT+20,160,32,32),false);
 
     labelOptionLangueAnglais = new QGraphicsTextItem(tr("Anglais"));
-    labelOptionLangueAnglais->setFont(QFont("Comic Sans MS", 14));
-    labelOptionLangueAnglais->moveBy(1040,160);
+    labelOptionLangueAnglais->setFont(QFont("LetterOMatic!", 12));
+    labelOptionLangueAnglais->moveBy(MENU_OPTION_TOP_LEFT_X+MENU_OPTION_MARGIN_LEFT+60,160);
 
     // Volume
-    mscVolume = new MenuSliderCircle(QPoint(1000,240),32,0,100,2);
+    mscVolume = new MenuSliderCircle(QPoint(MENU_OPTION_TOP_LEFT_X+MENU_OPTION_MARGIN_LEFT+20,240),32,0,100,2,this->scene);
     mscVolume->setValue(option->getVolume());
 
     labelOptionVolume = new QGraphicsTextItem(tr("Volume"));
-    labelOptionVolume->setFont(QFont("Comic Sans MS", 14));
-    labelOptionVolume->moveBy(980,200);
+    labelOptionVolume->setFont(QFont("LetterOMatic!", 12));
+    labelOptionVolume->moveBy(MENU_OPTION_TOP_LEFT_X+MENU_OPTION_MARGIN_LEFT,200);
 
-    mcbxMute = new MenuCheckBox(QRect(1040,280,32,32),option->isMute());
+    mcbxMute = new MenuCheckBox(QRect(MENU_OPTION_TOP_LEFT_X+MENU_OPTION_MARGIN_LEFT+80,280,32,32),option->isMute());
 
     labelOptionMute = new QGraphicsTextItem(tr("Muet: "));
-    labelOptionMute->setFont(QFont("Comic Sans MS", 14));
-    labelOptionMute->moveBy(980,280);
+    labelOptionMute->setFont(QFont("LetterOMatic!", 12));
+    labelOptionMute->moveBy(MENU_OPTION_TOP_LEFT_X+MENU_OPTION_MARGIN_LEFT,280);
 
     connect(btnAnnuler, SIGNAL(clicked()), this, SLOT(cancelOption()));
     connect(btnValider, SIGNAL(clicked()), this, SLOT(saveOption()));
@@ -213,7 +208,6 @@ void MenuContainer::addMenuOptions()
     scene->addItem(mrbtnLangueFrancais);
     scene->addItem(mrbtnLangueAnglais);
     scene->addItem(mcbxMute);
-    scene->addItem(labelOptionTitle);
     scene->addItem(labelOptionLangueFrancais);
     scene->addItem(labelOptionLangueAnglais);
     scene->addItem(labelOptionLangue);
@@ -244,4 +238,5 @@ void MenuContainer::initializationAnimation()
 void MenuContainer::setupScene()
 {
     scene = new QGraphicsScene();
+    qDebug() << "Font importée ?: " << QFontDatabase::addApplicationFont(":/font/ressources/font/ltromatic.ttf");
 }

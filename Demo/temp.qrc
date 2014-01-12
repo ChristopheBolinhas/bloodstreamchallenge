@@ -13,12 +13,26 @@
         <file>ressources/img/pause.png</file>
         <file>ressources/img/play.png</file>
         <file>ressources/img/close.png</file>
-		<file>ressources/font/SnackerComic.ttf</file>
+        <file>ressources/font/SnackerComic.ttf</file>
     </qresource>
     <qresource prefix="/boost">
         <file>ressources/img/Boost/trap_anim1.png</file>
         <file>ressources/img/Boost/trap_anim2.png</file>
         <file>ressources/img/Boost/trap_anim3.png</file>
         <file>ressources/img/Boost/trap_on.png</file>
+    </qresource>
+    <qresource prefix="/menu">
+        <file>ressources/img/menu/background.png</file>
+        <file>ressources/img/menu/bouton.png</file>
+        <file>ressources/img/menu/Combo_off.png</file>
+        <file>ressources/img/menu/Combo_on.png</file>
+        <file>ressources/img/menu/Slider_bar.png</file>
+        <file>ressources/img/menu/Slider_dot.png</file>
+        <file>ressources/img/menu/checked.png</file>
+        <file>ressources/img/menu/unchecked.png</file>
+        <file>ressources/img/menu/level.png</file>
+    </qresource>
+    <qresource prefix="/font">
+        <file>ressources/font/ltromatic.ttf</file>
     </qresource>
 </RCC>

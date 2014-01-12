@@ -6,7 +6,7 @@
 
 #include <QDebug>
 
-MenuSliderCircle::MenuSliderCircle(QPoint position, int size, int minimum, int maximum, int lenght = 1)
+MenuSliderCircle::MenuSliderCircle(QPoint position, int size, int minimum, int maximum, int lenght, QGraphicsScene *scene)
 {
     setFlags(ItemIsMovable|ItemSendsGeometryChanges);
     this->position = position;
@@ -14,6 +14,7 @@ MenuSliderCircle::MenuSliderCircle(QPoint position, int size, int minimum, int m
     this->minimum = minimum;
     this->maximum = maximum;
     this->lenght = lenght;
+    this->scene = scene;
 }
 
 MenuSliderCircle::~MenuSliderCircle()
@@ -23,16 +24,13 @@ MenuSliderCircle::~MenuSliderCircle()
 
 QRectF MenuSliderCircle::boundingRect() const
 {
-    return QRectF(position,QSize(size,size));
+    return QRectF(position,QSize(100*lenght,size));
 }
 
 void MenuSliderCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QRectF rect = boundingRect();
-    painter->drawEllipse(rect.center(),size/2,size/2);
-    //TODO: a remplacer par une image, le plus vite possible bug d'affichage uniquement
-    painter->drawLine(position.x()+(size/2)-this->pos().x(),position.y()+size/2,position.x()+(size/2)+maximum*lenght/*+size/2*/,position.y()+size/2);
-    painter->drawRect(position.x()-this->pos().x(),position.y(),maximum*lenght+size,size);
+    painter->drawPixmap(position.x()-pos().x()+size/2,position.y()-pos().y(),QPixmap(":/menu/ressources/img/menu/Slider_bar.png"));
+    painter->drawPixmap(position.x(), position.y()-size/4,QPixmap(":/menu/ressources/img/menu/Slider_dot.png"));
 }
 
 int MenuSliderCircle::getValue() const
@@ -54,6 +52,7 @@ QVariant MenuSliderCircle::itemChange(QGraphicsItem::GraphicsItemChange change, 
         int xValue = newPos.x();
         newPos.setX(qMax(qMin(maximum*lenght,xValue),minimum));
         newPos.setY(0);
+        this->scene->update();
         return QGraphicsItem::itemChange(change, newPos);
     }
     return QGraphicsItem::itemChange(change, value);

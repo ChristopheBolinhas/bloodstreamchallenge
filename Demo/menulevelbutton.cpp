@@ -6,15 +6,15 @@
 #include <QRect>
 #include <QPainter>
 
-MenuLevelButton::MenuLevelButton(QRectF *rectangle, Level *lvl)
+MenuLevelButton::MenuLevelButton(QPointF &position, Level *lvl)
 {
     this->level = lvl;
-    this->image = new QPixmap("://ressources/img/disc.png");
-    this->rectImage = rectangle;
-    createRectImageMargin(MARGE_TOP_BOTTOM);
+    this->image = new QPixmap(":/menu/ressources/img/menu/level.png");
+    this->position = position;
+    this->rectImage = new QRectF(position,QSize(this->image->width(),this->image->height()));
 
+    this->labelLevelOrder = QString::number(level->getOrder());
     this->labelScore = QString::number(level->getScore());
-    this->labelLevelName = level->getName();
 
     //Permet la gestion du clic relaché
     setFlags(QGraphicsItem::ItemIsSelectable);
@@ -23,13 +23,6 @@ MenuLevelButton::MenuLevelButton(QRectF *rectangle, Level *lvl)
 MenuLevelButton::~MenuLevelButton()
 {
 
-}
-
-void MenuLevelButton::createRectImageMargin(int marge)
-{
-    rectImageMargin = new QRectF(*rectImage);
-    rectImageMargin->setHeight(rectImageMargin->height()+2*marge);
-    rectImageMargin->translate(0,-marge);
 }
 
 QPixmap *MenuLevelButton::getImage() const
@@ -44,16 +37,27 @@ void MenuLevelButton::setImage(QPixmap *value)
 
 QRectF MenuLevelButton::boundingRect() const
 {
-    return *rectImageMargin;
+    //return *rectImageMargin;
+    return this->rectImage->toRect();
 }
 
 void MenuLevelButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(rectImage->toRect(),*image);
-    painter->drawRect(rectImageMargin->toRect());
+    //Level image
+    painter->drawPixmap(position,*image);
 
-    painter->drawText(*rectImageMargin,Qt::AlignHCenter,labelLevelName);
-    painter->drawText(*rectImageMargin,Qt::AlignHCenter|Qt::AlignBottom,labelScore);
+    // Level order
+    painter->setFont(QFont("LetterOMatic!",24));
+    int heightWithoutBlackRegion = this->rectImage->height()-27.0;
+    QRectF rectOrange(position, QSizeF(this->image->rect().width(),heightWithoutBlackRegion));
+    painter->drawText(rectOrange,Qt::AlignCenter,labelLevelOrder);
+
+    // Level score
+    int heightWithoutOrangeRegion = this->rectImage->height() - heightWithoutBlackRegion;
+    painter->setPen(QColor::fromRgb(255,255,255));
+    painter->setFont(QFont("LetterOMatic!",10));
+    QRectF rectBlack(position.x(),position.y()+heightWithoutBlackRegion, this->image->rect().width(),heightWithoutOrangeRegion);
+    painter->drawText(rectBlack,Qt::AlignCenter,labelScore);
 }
 
 void MenuLevelButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -78,5 +82,5 @@ void MenuLevelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 
 bool MenuLevelButton::isMouseReleaseInRectImage(QPointF downPos)
 {
-    return downPos.x() >= rectImageMargin->x() && downPos.x() <= rectImageMargin->x()+rectImageMargin->width() &&  downPos.y() >= rectImageMargin->y() && downPos.y() <= rectImageMargin->y()+rectImageMargin->height();
+    return downPos.x() >= rectImage->x() && downPos.x() <= rectImage->x()+rectImage->width() &&  downPos.y() >= rectImage->y() && downPos.y() <= rectImage->y()+rectImage->height();
 }

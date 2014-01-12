@@ -22,13 +22,10 @@ QRectF MenuRadioButton::boundingRect() const
 void MenuRadioButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     QRectF rect = boundingRect();
-    painter->drawEllipse(rect.center(),rect.width()/2,rect.height()/2);
-
     if(checked)
-        drawChecked(painter, rect);
+        painter->drawPixmap(rect.toRect(), QPixmap(":/menu/ressources/img/menu/Combo_on.png"));
     else
-        drawUnchecked(painter);
-
+        painter->drawPixmap(rect.toRect(), QPixmap(":/menu/ressources/img/menu/Combo_off.png"));
 }
 
 void MenuRadioButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
@@ -52,17 +49,4 @@ bool MenuRadioButton::getChecked() const
 void MenuRadioButton::setChecked(bool value)
 {
     checked = value;
-}
-
-
-void MenuRadioButton::drawChecked(QPainter *painter, QRectF &rect)
-{
-    painter->setBrush(QBrush(Qt::black));
-    painter->drawEllipse(rect.center(),rect.width()/6,rect.height()/6);
-
-}
-
-void MenuRadioButton::drawUnchecked(QPainter *painter)
-{
-
 }

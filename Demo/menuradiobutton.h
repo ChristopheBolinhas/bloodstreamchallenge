@@ -24,8 +24,6 @@ protected:
 private:
     QRectF rect;
     bool checked;
-    void drawChecked(QPainter *painter, QRectF &rect);
-    void drawUnchecked(QPainter *painter);
 
 signals:
     void checkStateChanged(MenuRadioButton *mrbtn);

@@ -6,7 +6,7 @@
 class MenuSliderCircle : public QGraphicsItem
 {
 public:
-    MenuSliderCircle(QPoint position, int size, int minimum, int maximum, int lenght);
+    MenuSliderCircle(QPoint position, int size, int minimum, int maximum, int lenght, QGraphicsScene *scene);
     virtual ~MenuSliderCircle();
 
     QRectF boundingRect() const;
@@ -42,9 +42,7 @@ private:
     int size;
     int lenght;
     QPoint position;
-
-
-
+    QGraphicsScene *scene;
 };
 
 #endif // MENUSLIDERCIRCLE_H

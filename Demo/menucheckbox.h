@@ -22,9 +22,6 @@ protected:
 private:
     QRectF rect;
     bool checked;
-    void drawChecked(QPainter *painter, const QRectF &rect);
-    void drawUnchecked(QPainter *painter, const QRectF &rect);
-
 };
 
 #endif // MENUCHECKBOX_H

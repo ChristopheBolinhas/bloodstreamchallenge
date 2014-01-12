@@ -79,7 +79,7 @@ private:
     MenuCheckBox *mcbxMute;
 
 
-    QGraphicsTextItem *labelOptionTitle;
+    //QGraphicsTextItem *labelOptionTitle;
     QGraphicsTextItem *labelOptionLangue;
     QGraphicsTextItem *labelOptionLangueFrancais;
     QGraphicsTextItem *labelOptionLangueAnglais;
@@ -93,7 +93,7 @@ private:
     static const int SCENE_SIZE_X = 1920;
     static const int SCENE_SIZE_Y = 560;
 
-    static const int LEVEL_BY_LINE = 7;
+    static const int LEVEL_BY_LINE = 10;
     static const int MENU_LEVEL_BUTTON_COOR_X = 70;
     static const int MENU_LEVEL_BUTTON_COOR_Y = 250;
     static const int MENU_LEVEL_BUTTON_MARGE_X = 100;
@@ -101,11 +101,12 @@ private:
     static const int MENU_LEVEL_BUTTON_WIDTH = 64;
     static const int MENU_LEVEL_BUTTON_HEIGHT = 64;
 
-    static const int MENU_BUTTON_HEIGHT = 50;
-    static const int MENU_BUTTON_WIDTH = 270;
+    static const int MENU_BUTTON_Y = 420;
 
     static const int MENU_OPTION_TOP_LEFT_X = 960;
     static const int MENU_OPTION_TOP_LEFT_Y = 0;
+
+    static const int MENU_OPTION_MARGIN_LEFT = 200;
 
     QPropertyAnimation *animation;
 

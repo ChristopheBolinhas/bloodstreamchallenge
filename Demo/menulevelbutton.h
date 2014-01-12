@@ -12,7 +12,7 @@ class MenuLevelButton : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    MenuLevelButton(QRectF *rectImage, Level *level);
+    MenuLevelButton(QPointF &position, Level *level);
     virtual ~MenuLevelButton();
     QPixmap *getImage() const;
     void setImage(QPixmap *value);
@@ -23,11 +23,11 @@ public:
 
 private:
     QPixmap *image;
+    QPointF position;
     QRectF *rectImage;
-    QRectF *rectImageMargin; // Rectangle avec une marge en haut et en bas pour afficher le nom et le score
     static const int MARGE_TOP_BOTTOM = 15;
     QString labelScore;
-    QString labelLevelName;
+    QString labelLevelOrder;
 
     Level* level;
 

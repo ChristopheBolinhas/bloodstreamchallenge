@@ -4,11 +4,11 @@
 
 #include <QDebug>
 
-MenuButton::MenuButton(QRectF *rectImage, QString label, QObject *parent) :
+MenuButton::MenuButton(QPointF position, QString label, QObject *parent) :
     QObject(parent)
 {
-    this->image = new QPixmap("://ressources/img/button.png");
-    this->rectImage = rectImage;
+    this->image = new QPixmap(":/menu/ressources/img/menu/bouton.png");
+    this->rectImage = new QRectF(position.x(),position.y(), this->image->width(),this->image->height());
     this->label = label;
 
     //Permet la gestion du clic relaché
@@ -28,7 +28,7 @@ QRectF MenuButton::boundingRect() const
 void MenuButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     painter->drawPixmap(rectImage->toRect(),*image);
-    painter->setFont(QFont("Comic Sans MS",20));
+    painter->setFont(QFont("LetterOMatic!", 20));
     painter->drawText(*rectImage,Qt::AlignCenter,this->getLabel());
 }
 QString MenuButton::getLabel() const

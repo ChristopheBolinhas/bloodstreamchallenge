@@ -23,9 +23,9 @@ void MenuCheckBox::paint(QPainter *painter, const QStyleOptionGraphicsItem *opti
 {
     QRectF rect = boundingRect();
     if(checked)
-        drawChecked(painter, rect);
+        painter->drawPixmap(rect.toRect(), QPixmap(":/menu/ressources/img/menu/checked.png"));
     else
-        drawUnchecked(painter, rect);
+        painter->drawPixmap(rect.toRect(), QPixmap(":/menu/ressources/img/menu/unchecked.png"));
 
 }
 
@@ -50,17 +50,4 @@ void MenuCheckBox::setChecked(bool value)
 {
     checked = value;
     update();
-}
-
-
-void MenuCheckBox::drawChecked(QPainter *painter, const QRectF &rect)
-{
-    painter->drawRect(rect);
-    painter->drawLine(rect.topLeft(), rect.bottomRight());
-    painter->drawLine(rect.topRight(), rect.bottomLeft());
-}
-
-void MenuCheckBox::drawUnchecked(QPainter *painter, const QRectF &rect)
-{
-    painter->drawRect(rect);
 }

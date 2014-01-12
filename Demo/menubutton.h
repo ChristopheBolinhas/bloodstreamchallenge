@@ -8,7 +8,7 @@ class MenuButton : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    explicit MenuButton(QRectF *rectImage, QString label, QObject *parent = 0);
+    explicit MenuButton(QPointF position, QString label, QObject *parent = 0);
     virtual ~MenuButton();
     QPixmap *getImage() const;
     void setImage(QPixmap *value);
