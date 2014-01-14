@@ -15,6 +15,20 @@ MapSquare::MapSquare(MapSquare *_primary, int _x, int _y, Obstacle *_obstacle)
     setObstacle(_obstacle);
 }
 
+MapSquare::MapSquare(MapSquare *_primary, int _x, int _y, Obstacle *_obstacle, bool _isEnd)
+{
+    x = _x;
+    y = _y;
+    if(_primary != 0)
+    {
+        primaryNext = _primary;
+        hasNext = true;
+    }
+    setObstacle(_obstacle);
+    isEnd = _isEnd;
+}
+
+
 MapSquare::MapSquare(MapSquare *_primary, MapSquare *_secondary, int _x, int _y, Obstacle *_obstacle)
 {
     x = _x;
@@ -68,6 +82,11 @@ MapSquare* MapSquare::getNext()
 bool MapSquare::getHasNext()
 {
     return hasNext;
+}
+
+bool MapSquare::getIsEnd()
+{
+    return isEnd;
 }
 int MapSquare::getX()
 {

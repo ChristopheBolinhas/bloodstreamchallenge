@@ -30,35 +30,42 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
     view = _view;
     connect(view,SIGNAL(sendAbility(int)),this,SLOT(setAbilitySlot(int)));
     loadImages();
+    view->scale(0.8,0.8);
 
-    MapSquare *path = generatePath(0,7,level);
-
-    view->setScene(this);
 
     //Génération de la map (Layer 1)
     Map m(this,level);
+    MapSquare *path = generatePath(m.getStartPoint()->x(),m.getStartPoint()->y(),level);
+
+    view->setScene(this);
 
     QList<QPixmap*> *pixmapList = new QList<QPixmap*>();
     pixmapList->append(new QPixmap(":/ressources/img/unit.png"));
-
+    //unitCount = level.getNbUnits();
+    unitCount = 5;
+    unitToInit = unitCount;
+    unitMinima = 1;
     listUnit = new QList<Unit*>();
-    for(int i = 0;i < 1;i++)
+    for(int i = 0;i < unitCount;i++)
     {
         Unit *unit = new Unit(pixmapList,path);
         this->addItem(dynamic_cast<QGraphicsItem*>(unit));
-        connect(this,SIGNAL(moveUnits()),dynamic_cast<QObject*>(unit),SLOT(moveUnit()));
         listUnit->append(unit);
+        qDebug() << "units2";
+        connect(unit,SIGNAL(killUnit(Unit*)),this,SLOT(unitDie(Unit*)));
+        connect(unit,SIGNAL(useUnit(Unit*)),this,SLOT(unitUse(Unit*)));
     }
+
     mainUnit = listUnit->first();
     //connect(this,SIGNAL(moveUnits()),dynamic_cast<QObject*>(u),SLOT(moveUnit()));
     //view->show();
-
-
+    connect(this, SIGNAL(updateScore(QString)),view,SIGNAL(setScore(QString)));
+    connect(this, SIGNAL(updateUnitCount(QString)),view,SIGNAL(setUnitCount(QString)));
     QGraphicsTextItem *test = new QGraphicsTextItem();
     test->setPlainText("QGraphicsTextItem");
     addItem(test);
 
-
+    qDebug() << "yolo3";
     startTimer = new QTimer(this);
     connect(startTimer,SIGNAL(timeout()),this,SLOT(startGame()));
     //Initialisation du timer
@@ -71,6 +78,12 @@ Render::~Render()
 {
 
 }
+
+void Render::initializeGame()
+{
+    //connect(this,SIGNAL(moveUnits()),dynamic_cast<QObject*>(unit),SLOT(moveUnit()));
+}
+
 
 void Render::loadImages()
 {
@@ -89,7 +102,6 @@ void Render::loadImages()
 
 void Render::setAbilitySlot(int id)
 {
-    qDebug() << "ABILITY YO" << id;
     mainUnit->setAbility(id);
 }
 
@@ -102,6 +114,7 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
         int fleche = *(level->getMapRoad()+tabPos);
         int orientationPrimary = 0;
         int obstacle = *(level->getMapObstacle()+tabPos);
+        bool isEndSquare = false;
 
         Obstacle *SquareObstacle = 0;
         MapSquare *PrimaryNextSquare = 0;
@@ -159,6 +172,9 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
         //Caillot - Jaune - 362
         //Bacterie - Vert - 363
         //Pont - Bleu - 364
+        //Start - Blanc - 365
+        //End - Violet - 366
+
 
         switch(obstacle)
         {
@@ -166,11 +182,17 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
                 SquareObstacle = new Boost(currentX, currentY,orientationPrimary,boostImages, level);
                 break;
             case 362:
-                SquareObstacle = new Chute(currentX,currentY,orientationPrimary,0,level);
+                SquareObstacle = new Caillot(currentX,currentY,orientationPrimary,0,level);
                 break;
             case 363:
-                SquareObstacle = new Caillot(currentX,currentY,orientationPrimary,0,level);
+
             break;
+            case 364:
+                SquareObstacle = new Chute(currentX,currentY,orientationPrimary,0,level);
+                break;
+            case 366:
+                isEndSquare = true;
+                break;
             case 389:
                 SquareObstacle = new Deviation(currentX,currentY, 6, 0, level);
                 break;
@@ -205,17 +227,15 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
 
             if(typeid(*SquareObstacle) == typeid(Deviation))
             {
-                //qDebug() << "DEVIATION YES !";
                 //Vu que l'objet est une déviation, il faut traiter le chemin secondaire
                 //On génére donc le chemin alternatif que l'on génère ici
                 SecondaryNextSquare = generatePath(xFromOrientation(currentX,dynamic_cast<Deviation*>(SquareObstacle)->getOrientation()),yFromOrientation(currentY,dynamic_cast<Deviation*>(SquareObstacle)->getOrientation()),level);
-
+                addItem(dynamic_cast<Deviation*>(SquareObstacle));
             }
             else if(typeid(*SquareObstacle) == typeid(Caillot))
             {
                 addItem(dynamic_cast<Caillot*>(SquareObstacle));
-                dynamic_cast<Caillot*>(SquareObstacle)->setPos(currentX*level->getTileWidth(),currentY*level->getTileHeight());
-                dynamic_cast<Caillot*>(SquareObstacle)->setZValue(5);
+                //dynamic_cast<Caillot*>(SquareObstacle)->setPos(currentX*level->getTileWidth(),currentY*level->getTileHeight());
             }
             else if(typeid(*SquareObstacle) == typeid(Boost))
             {
@@ -234,10 +254,15 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
             }
             else
             {
-                square = new MapSquare(PrimaryNextSquare,currentX,currentY,SquareObstacle);
-
+                if(!isEndSquare)
+                {
+                    square = new MapSquare(PrimaryNextSquare,currentX,currentY,SquareObstacle);
+                }
+                else
+                {
+                    square = new MapSquare(PrimaryNextSquare,currentX,currentY,SquareObstacle,true);
+                }
             }
-
             return square;
 
 
@@ -250,19 +275,24 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
 
 void Render::keyPressEvent(QKeyEvent *event)
 {
-       qDebug() << "key pressed !";
     switch(event->key())
     {
-            case Qt::Key_1:
-                mainUnit->setAbility(1);
+        case Qt::Key_1:
+            mainUnit->setAbility(1);
+        break;
+        case Qt::Key_2:
+            mainUnit->setAbility(2);
             break;
-            case Qt::Key_2:
-                mainUnit->setAbility(2);
-                break;
+        case Qt::Key_3:
+            mainUnit->setAbility(3);
+        break;
+        case Qt::Key_4:
+            mainUnit->setAbility(4);
+            break;
+        case Qt::Key_5:
+            mainUnit->setAbility(5);
+            break;
     }
-
-
-
 }
 
 int Render::xFromOrientation(int x, int orientation)
@@ -305,27 +335,78 @@ int Render::yFromOrientation(int y, int orientation)
     return 0;
 }
 
+void Render::calculateScore()
+{
+    int scoreCalc = ((unitCount-unitMinima)/(unitCount-unitUsed-unitDead))*1000 - 50 * unitDead;
+    emit updateScore(QString::number(scoreCalc));
+}
+
+
+void Render::unitUse(Unit *unit)
+{
+    unitCount--;
+    unitUsed++;
+    listUnit->removeOne(unit);
+    //listUnit->removeFirst();
+    if(listUnit->size() >0)
+    {
+        mainUnit = listUnit->first();
+    }
+
+    calculateScore();
+}
+
+void Render::unitDie(Unit *unit)
+{
+    unitCount--;
+    unitDead++;
+    listUnit->removeOne(unit);
+    //listUnit->removeFirst();
+    if(listUnit->size() > 0)
+    {
+        mainUnit = listUnit->first();
+    }
+    calculateScore();
+
+}
+
+
 
 void Render::updateCenter()
 {
-
-    view->centerOn(mainUnit);
-    //advance();
-    //emit moveUnits();
+    if(listUnit->size() > 0)
+    {
+        view->centerOn(mainUnit);
+        //advance();
+        emit moveUnits();
+    }
 }
 
 void Render::startGame()
 {
     view->centerOn(mainUnit);
-    if(startCountDown <= 0)
+    if(startCountDown == 0)
     {
 
         mainTimer->start(1000/60);//60fps
-        emit moveUnits();
-        startTimer->stop();
+
+        startCountDown--;
+    }
+    else if(startCountDown < 0)
+    {
+        if(unitToInit > 0)
+        {
+            connect(this,SIGNAL(moveUnits()),dynamic_cast<QObject*>(listUnit->at(unitCount-unitToInit)),SLOT(moveUnit()));
+            unitToInit--;
+        }
+        else
+        {
+            startTimer->stop();
+        }
     }
     else
     {
+        //view->scale(3,3);
         startCountDown--;
     }
 }

@@ -4,9 +4,8 @@
 VolumeButton::VolumeButton(QWidget *parent) :
     QPushButton(parent)
 {
-    setGeometry(0,0,50,50);
-    muteImg = new QPixmap("://ressources/img/volumemute.png");
-    unmuteImg = new QPixmap("://ressources/img/volumeunmute.png");
+    muteImg = new QPixmap(":/hud/ressources/img/HUD_Icon/volume_off.png");
+    unmuteImg = new QPixmap(":/hud/ressources/img/HUD_Icon/volume_on.png");
 }
 
 void VolumeButton::paintEvent(QPaintEvent *)
@@ -14,12 +13,12 @@ void VolumeButton::paintEvent(QPaintEvent *)
     QPainter painter(this);
     if(sound)
     {
-        painter.drawPixmap(0,0,50,50,*muteImg);
+        painter.drawPixmap(0,0,40,40,*muteImg);
 
     }
     else
     {
-        painter.drawPixmap(0,0,50,50,*unmuteImg);
+        painter.drawPixmap(0,0,40,40,*unmuteImg);
     }
 
 }

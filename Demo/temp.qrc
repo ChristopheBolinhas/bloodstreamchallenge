@@ -35,4 +35,21 @@
     <qresource prefix="/font">
         <file>ressources/font/ltromatic.ttf</file>
     </qresource>
+    <qresource prefix="/hud">
+        <file>ressources/img/HUD_Icon/acid_1.png</file>
+        <file>ressources/img/HUD_Icon/acid_2.png</file>
+        <file>ressources/img/HUD_Icon/bridge_1.png</file>
+        <file>ressources/img/HUD_Icon/bridge_2.png</file>
+        <file>ressources/img/HUD_Icon/deviation_1.png</file>
+        <file>ressources/img/HUD_Icon/deviation_2.png</file>
+        <file>ressources/img/HUD_Icon/exit.png</file>
+        <file>ressources/img/HUD_Icon/ice_1.png</file>
+        <file>ressources/img/HUD_Icon/ice_2.png</file>
+        <file>ressources/img/HUD_Icon/pause.png</file>
+        <file>ressources/img/HUD_Icon/spike_1.png</file>
+        <file>ressources/img/HUD_Icon/spike_2.png</file>
+        <file>ressources/img/HUD_Icon/start.png</file>
+        <file>ressources/img/HUD_Icon/volume_off.png</file>
+        <file>ressources/img/HUD_Icon/volume_on.png</file>
+    </qresource>
 </RCC>

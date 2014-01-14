@@ -4,17 +4,23 @@
 #include <QGraphicsObject>
 #include <QGraphicsItem>
 
+class Level;
 class Obstacle : public QGraphicsObject
 {
     Q_OBJECT
 public:
-    Obstacle(int _x, int _y, int _orientation);
+    Obstacle(int _x, int _y, int _orientation, QList<QPixmap *> *_images, Level *level);
     bool isEnabled();
     virtual ~Obstacle();
 
     int getOrientation();
     QRectF boundingRect() const;
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
+    void disable();
+public slots:
+    void disableAnim();
+
+
 protected:
     bool enabled;
     int x;
@@ -23,6 +29,9 @@ protected:
     int width;
     int height;
     int rotation; //0 - 0, 1-45°, 2-90°, 3-135°
+    QList<QPixmap*> *images;
+    int etat = 0;
+    QTimer *timerAnim;
 
 private:
 

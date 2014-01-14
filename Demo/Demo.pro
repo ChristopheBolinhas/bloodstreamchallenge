@@ -37,7 +37,8 @@ SOURCES += main.cpp\
     menuradiobutton.cpp \
     menucheckbox.cpp \
     menuslidercircle.cpp \
-    option.cpp
+    option.cpp \
+    bacterie.cpp
 
 HEADERS  += mainwindow.h \
     gui.h \
@@ -63,7 +64,8 @@ HEADERS  += mainwindow.h \
     menuradiobutton.h \
     menucheckbox.h \
     menuslidercircle.h \
-    option.h
+    option.h \
+    bacterie.h
 
 RESOURCES += \
     temp.qrc

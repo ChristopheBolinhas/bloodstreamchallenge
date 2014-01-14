@@ -10,6 +10,6 @@ CloseButton::CloseButton(QWidget *parent) :
 void CloseButton::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    QPixmap closeImg("://ressources/img/close.png");
-    painter.drawPixmap(0,0,50,50,closeImg);
+    QPixmap closeImg(":/hud/ressources/img/HUD_Icon/exit.png");
+    painter.drawPixmap(0,0,40,40,closeImg);
 }

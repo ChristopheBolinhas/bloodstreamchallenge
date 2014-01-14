@@ -14,7 +14,6 @@ public:
     //void traitement(MapSquare *square);
     void switchPath(MapSquare *currentSquare);
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
 };
 
 

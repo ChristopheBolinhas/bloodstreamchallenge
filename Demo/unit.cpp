@@ -1,10 +1,12 @@
 #include "unit.h"
 #include <QPropertyAnimation>
 #include <QDebug>
-#include <deviation.h>
-#include <obstacle.h>
-#include <caillot.h>
-#include <boost.h>
+#include "deviation.h"
+#include "obstacle.h"
+#include "caillot.h"
+#include "boost.h"
+#include "bacterie.h"
+#include "chute.h"
 #include <typeinfo>
 
 Unit::Unit(QList<QPixmap *> *_pixmapList, MapSquare *path, QGraphicsItem *parent)
@@ -67,29 +69,73 @@ void Unit::moveUnit()
         {
             if(currentSquare->getNext()->getObstacle()->isEnabled())
             {
-                if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Deviation))
+
+                if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Caillot))
                 {
                     if(ability == 1)
                     {
+                        currentSquare->getNext()->getObstacle()->disable();
+                        ability = 0;
+
+                    }
+                    else
+                    {
+                        die();
+                        qDebug() << "Caillot BOOM";
+                    }
+                }
+                else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Bacterie))
+                {
+                    if(ability == 2)
+                    {
+                        use();
+                        currentSquare->getNext()->getObstacle()->disable();
+                        //currentSquare->activateDeviation();
+                        ability = 0;
+                    }
+                    else
+                    {
+                        die();
+                        qDebug() << "Bacterie BOOM";
+                    }
+                }
+                else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Deviation))
+                {
+                    if(ability == 3)
+                    {
+                        use();
                         currentSquare->activateDeviation();
                         ability = 0;
                     }
                 }
-                else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Caillot))
-                {
-                    if(ability == 2)
-                    {
-                        dynamic_cast<Caillot*>(currentSquare->getNext()->getObstacle())->destroy();
-                        ability = 0;
-                        speed++;//TEMP
-                    }
-                    /*else
-                        die();*/
-                }
                 else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Boost))
                 {
-                    dynamic_cast<Boost*>(currentSquare->getNext()->getObstacle())->disable();
-                    //speed++;
+                    if(ability == 4)
+                    {
+                        use();
+                        currentSquare->getNext()->getObstacle()->disable();
+                        ability = 0;
+                    }
+                    else
+                    {
+                        speed++;
+                    }
+
+                }
+                else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Chute))
+                {
+                    if(ability == 5)
+                    {
+                        use();
+                        currentSquare->getNext()->getObstacle()->disable();
+                        ability = 0;
+                    }
+                    else
+                    {
+                        die();
+                        qDebug() << "Chute BOOM";
+                    }
+
                 }
             }
         }
@@ -128,8 +174,15 @@ void Unit::setAbility(int value)
 
 void Unit::die()
 {
-    //setVisible(false);
+
     isAlive = false;
+    emit killUnit(this);
+}
+void Unit::use()
+{
+
+    isAlive = false;
+    emit useUnit(this);
 }
 
 

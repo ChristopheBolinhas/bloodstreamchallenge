@@ -28,6 +28,7 @@ Gui::Gui(QWidget *parent) :
     view2->setAlignment(Qt::AlignLeft | Qt::AlignTop);
     view2->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     view2->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    //view2->setSceneRect(0,0,960,540);
     view2->setMode(0);
     //view->setSi
     //view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
@@ -70,6 +71,7 @@ void Gui::loadLevel(Level *lvl)
     view2->setFixedSize(960,540);
     view2->setSceneRect(0,0,0,0); // FILS DE PUTE DE QT !!! 4 heures a debug cette merde ! // Reset la taille de la view au minimum à cause des animations du menu
     view2->setMode(1);
+
     startLevel(lvl);
 }
 
@@ -78,5 +80,6 @@ void Gui::closeRender()
     menuContainer = new MenuContainer(view2, option);
     connect(menuContainer, SIGNAL(startLevel(Level*)), this, SLOT(loadLevel(Level*)));
     view2->setMode(0);
+    view2->scale((qreal)10/8,(qreal)10/8);
     destroy(render);
 }

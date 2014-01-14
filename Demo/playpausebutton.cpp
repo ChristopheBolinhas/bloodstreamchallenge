@@ -5,8 +5,8 @@
 PlayPauseButton::PlayPauseButton(QWidget *parent) :
     QPushButton(parent)
 {
-    playImg = new QPixmap("://ressources/img/play.png");
-    pauseImg = new QPixmap("://ressources/img/pause.png");
+    playImg = new QPixmap(":/hud/ressources/img/HUD_Icon/start.png");
+    pauseImg = new QPixmap(":/hud/ressources/img/HUD_Icon/pause.png");
 
 }
 
@@ -15,11 +15,11 @@ void PlayPauseButton::paintEvent(QPaintEvent *)
     QPainter painter(this);
     if(play)
     {
-        painter.drawPixmap(0,0,50,50,*pauseImg);
+        painter.drawPixmap(0,0,40,40,*pauseImg);
     }
     else
     {
-        painter.drawPixmap(0,0,50,50,*playImg);
+        painter.drawPixmap(0,0,40,40,*playImg);
     }
 
 }

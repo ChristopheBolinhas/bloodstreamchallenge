@@ -19,10 +19,15 @@ class Render : public QGraphicsScene
 public:
     explicit Render(GameView *_view, Level *level, QWidget *parent = 0);
     ~Render();
+
 signals:
     void moveUnits();
+    void updateScore(QString score);
+    void updateUnitCount(QString count);
 public slots:
     void setAbilitySlot(int id);
+    void unitUse(Unit *unit);
+    void unitDie(Unit *unit);
 private slots:
     void updateCenter();
     void startGame();
@@ -42,14 +47,25 @@ private:
     int xFromOrientation(int x, int orientation);
     int yFromOrientation(int y, int orientation);
 
+    //Configuration partie
+    int unitCount;
+    int unitDead = 0;
+    int unitUsed = 0;
+    int unitMinima;
+    int unitToInit;
+
+    int score; //Score = (total-minima / survivants) *1000 - 50*deces
+              //Score initial
+
     //Tableaux des images des composants
     QList<QPixmap*> *unitImages;
     QList<QPixmap*> *boostImages;
     QList<QPixmap*> *caillotImages;
     QList<QPixmap*> *deviationImages;
 
-
+    void calculateScore();
     void loadImages();
+    void initializeGame();
 };
 
 #endif // RENDER_H

@@ -35,8 +35,10 @@ private:
 
     bool isAlive = true;
     void die();
+    void use();
 signals:
-
+    void useUnit(Unit *unit);
+    void killUnit(Unit *unit);
 public slots:
     void moveUnit();
 

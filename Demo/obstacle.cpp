@@ -1,10 +1,12 @@
 #include "obstacle.h"
+#include "level.h"
 #include <QtGui>
 
-Obstacle::Obstacle(int _x, int _y, int _orientation)
+Obstacle::Obstacle(int _x, int _y, int _orientation, QList<QPixmap *> *_images, Level *level)
 {
     enabled = true;
     orientation = _orientation;
+    images = _images;
     switch(_orientation)
     {
 
@@ -37,11 +39,24 @@ Obstacle::Obstacle(int _x, int _y, int _orientation)
             width = 40;
             break;
     }
+    timerAnim = new QTimer(this);
+    timerAnim->setInterval(200);
+    connect(timerAnim, SIGNAL(timeout()),this,SLOT(disableAnim()));
+    setPos(x*level->getTileWidth(),y*level->getTileHeight());
+    setZValue(3);
+
 }
 
 bool Obstacle::isEnabled()
 {
     return enabled;
+}
+
+void Obstacle::disable()
+{
+    timerAnim->start();
+    enabled = false;
+
 }
 
 Obstacle::~Obstacle()
@@ -62,13 +77,31 @@ QRectF Obstacle::boundingRect() const
 
 void Obstacle::paint( QPainter *painter, const QStyleOptionGraphicsItem*,QWidget *)
 {
-    //QPixmap *currentPixmap = images->at(etat);
+    if(images != 0)
+    {
+        QPixmap *currentPixmap = images->at(etat);
+        painter->drawPixmap(0,0,width,height, *currentPixmap);
+    }
+    else
+    {
+        painter->fillRect(0,0,40,40,Qt::red);
+    }
 
-    //painter->rotate(45*Obstacle::rotation);
-    //currentPixmap->transformed(t);
-    //painter->drawPixmap(0,0,width,height, *currentPixmap);
-    painter->fillRect(0,0,40,40,Qt::red);
+}
 
+void Obstacle::disableAnim()
+{
+    if(enabled)
+    {
+        etat = 0;
+    }
+    else
+    {
+        if(etat < 3) etat++;
+        update(this->boundingRect());
+        if(etat >= 3) timerAnim->stop();
+
+    }
 }
 
 
