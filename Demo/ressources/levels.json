@@ -3,9 +3,9 @@
 	"levels": 
 	[
 		{ 
-			"name": "niveau d", 
+			"name": "niveau 1", 
 			"score": 1500,
-			"path" : "leveld",
+			"path" : "level1",
 			"order" : 1
 		}
 	]    

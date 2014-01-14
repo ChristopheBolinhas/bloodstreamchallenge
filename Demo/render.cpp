@@ -30,8 +30,8 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
     view = _view;
     connect(view,SIGNAL(sendAbility(int)),this,SLOT(setAbilitySlot(int)));
     loadImages();
-    view->scale(0.8,0.8);
-
+    //view->scale(0.8,0.8);
+    play = true;
 
     //Génération de la map (Layer 1)
     Map m(this,level);
@@ -51,7 +51,6 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
         Unit *unit = new Unit(pixmapList,path);
         this->addItem(dynamic_cast<QGraphicsItem*>(unit));
         listUnit->append(unit);
-        qDebug() << "units2";
         connect(unit,SIGNAL(killUnit(Unit*)),this,SLOT(unitDie(Unit*)));
         connect(unit,SIGNAL(useUnit(Unit*)),this,SLOT(unitUse(Unit*)));
     }
@@ -61,22 +60,37 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
     //view->show();
     connect(this, SIGNAL(updateScore(QString)),view,SIGNAL(setScore(QString)));
     connect(this, SIGNAL(updateUnitCount(QString)),view,SIGNAL(setUnitCount(QString)));
+    connect(view,SIGNAL(pauseGame(bool)),this,SLOT(toggleGame(bool)));
+    emit updateUnitCount(QString::number(unitCount));
     QGraphicsTextItem *test = new QGraphicsTextItem();
     test->setPlainText("QGraphicsTextItem");
     addItem(test);
 
-    qDebug() << "yolo3";
     startTimer = new QTimer(this);
     connect(startTimer,SIGNAL(timeout()),this,SLOT(startGame()));
     //Initialisation du timer
     mainTimer = new QTimer(this);
-    connect(mainTimer,SIGNAL(timeout()),this,SLOT(updateCenter()));
+    connect(mainTimer,SIGNAL(timeout()),this,SLOT(gameTimer()));
     startTimer->start(1000);
 }
 
 Render::~Render()
 {
+    deleteUnits(listUnit);
+    delete(listUnit);
 
+    delete(mainTimer);
+
+    deleteImages(unitImages);
+    delete(unitImages);
+    deleteImages(boostImages);
+    delete(boostImages);
+    deleteImages(caillotImages);
+    delete(caillotImages);
+    deleteImages(deviationImages);
+    delete(deviationImages);
+
+    delete(this);
 }
 
 void Render::initializeGame()
@@ -84,16 +98,49 @@ void Render::initializeGame()
     //connect(this,SIGNAL(moveUnits()),dynamic_cast<QObject*>(unit),SLOT(moveUnit()));
 }
 
+void Render::deleteImages(QList<QPixmap *> *list)
+{
+    for(int i=0;i<list->count();i++)
+    {
+        delete(list->takeAt(0));
+    }
 
+}
+
+void Render::deleteUnits(QList<Unit *> *list)
+{
+    for(int i=0;i<list->count();i++)
+    {
+        delete(list->takeAt(0));
+    }
+
+}
+
+
+/**********************************
+ *  void loadImages()
+ *  Cette fonction s'occupe de charger les images en mémoire pour leur utilisation dans les parties
+ *
+ *  Note importante : Images 0-3 doivent concerne l'affichage vertical (affichage de haut en bas) puis 4-7
+ * concernent l'affichage horizontal (gauche à droite)
+ *
+ * *******************************/
 void Render::loadImages()
 {
+
+
     //Boost images
     boostImages = new QList<QPixmap*>();
-    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/trap_on.png"));
-    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/trap_anim1.png"));
-    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/trap_anim2.png"));
-    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/trap_anim3.png"));
+    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/updown/trap_on.png"));
+    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/updown/trap_anim1.png"));
+    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/updown/trap_anim2.png"));
+    boostImages->append(new QPixmap(":/boost/ressources/img/Boost/updown/trap_anim3.png"));
 
+    caillotImages = new QList<QPixmap*>();
+    caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/updown/trap_on.png"));
+    caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/updown/trap_anim1.png"));
+    caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/updown/trap_anim2.png"));
+    caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/updown/trap_anim3.png"));
 
 }
 
@@ -182,7 +229,7 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
                 SquareObstacle = new Boost(currentX, currentY,orientationPrimary,boostImages, level);
                 break;
             case 362:
-                SquareObstacle = new Caillot(currentX,currentY,orientationPrimary,0,level);
+                SquareObstacle = new Caillot(currentX,currentY,orientationPrimary,caillotImages,level);
                 break;
             case 363:
 
@@ -348,6 +395,7 @@ void Render::unitUse(Unit *unit)
     unitUsed++;
     listUnit->removeOne(unit);
     //listUnit->removeFirst();
+    emit updateUnitCount(QString::number(unitCount));
     if(listUnit->size() >0)
     {
         mainUnit = listUnit->first();
@@ -361,7 +409,7 @@ void Render::unitDie(Unit *unit)
     unitCount--;
     unitDead++;
     listUnit->removeOne(unit);
-    //listUnit->removeFirst();
+    emit updateUnitCount(QString::number(unitCount));
     if(listUnit->size() > 0)
     {
         mainUnit = listUnit->first();
@@ -372,13 +420,16 @@ void Render::unitDie(Unit *unit)
 
 
 
-void Render::updateCenter()
+void Render::gameTimer()
 {
-    if(listUnit->size() > 0)
+    if(play)
     {
-        view->centerOn(mainUnit);
-        //advance();
-        emit moveUnits();
+        if(listUnit->size() > 0)
+        {
+            view->centerOn(mainUnit);
+            //advance();
+            emit moveUnits();
+        }
     }
 }
 
@@ -411,9 +462,9 @@ void Render::startGame()
     }
 }
 
-void Render::toggleGame()
+void Render::toggleGame(bool _play)
 {
-
+    play = _play;
 }
 
 

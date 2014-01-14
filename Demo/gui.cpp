@@ -39,24 +39,6 @@ Gui::Gui(QWidget *parent) :
     menuContainer = new MenuContainer(view2, option);
     connect(menuContainer, SIGNAL(startLevel(Level*)), this, SLOT(loadLevel(Level*)));
     connect(view2,SIGNAL(closeRender()),this,SLOT(closeRender()));
-    /*
-
-    //QRect r(0,0,960,540);
-    view->setFixedSize(960,540);
-    //view->setViewport(this);
-    view->show();
-    if(!leveltest.isEmpty())
-    {
-    Level *first = &leveltest.first();
-    startLevel(first);
-    }
-    else
-    {
-        qDebug() << "Pas de levels dispo";
-    }
-
-    */
-
 }
 void Gui::startLevel(Level *level)
 {
@@ -78,8 +60,9 @@ void Gui::loadLevel(Level *lvl)
 void Gui::closeRender()
 {
     menuContainer = new MenuContainer(view2, option);
+    //view->centerOn(menuContainer->);
     connect(menuContainer, SIGNAL(startLevel(Level*)), this, SLOT(loadLevel(Level*)));
     view2->setMode(0);
-    view2->scale((qreal)10/8,(qreal)10/8);
+    //view2->scale((qreal)10/8,(qreal)10/8);
     destroy(render);
 }

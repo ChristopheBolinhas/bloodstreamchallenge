@@ -28,11 +28,11 @@ private:
     QList<QPixmap*> *pixmapList;
     qreal xmove;
     qreal ymove;
-    void calcultateNextMove();
+    void calcultateNextMove(int _speed, int _paces);
     void unlockObstacle();
     int ability;
-    int speed = 0;
-
+    int speed;
+    int paces;
     bool isAlive = true;
     void die();
     void use();

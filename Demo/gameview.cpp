@@ -11,26 +11,44 @@ GameView::GameView(QWidget *parent) :
 {
 
     loadHudImages();
+    loadHudElements();
 
-    scoreInfo = new QLabel(tr("Score :"),this);
-    scoreInfo->setGeometry(10,10,100,50);
-
-    score = new QLabel(this);
-    score->setGeometry(110,10,100,50);
+    //Connexion des signaux
     connect(this, SIGNAL(setScore(QString)),score,SLOT(setText(QString)));
-
-    unitsCount = new QLabel(this);
-    unitsCount->setGeometry(10,60,100,50);
     connect(this, SIGNAL(setUnitCount(QString)),unitsCount,SLOT(setText(QString)));
 
-    unitInfo = new QLabel(tr("Unités restantes : "),this);
-    unitInfo->setGeometry(10,60,100,50);
-    //QGridLayout *grid = new QGridLayout(this);
-    //QRect geo(240,410,480,130);
-    //grid->setGeometry(geo);
+    connect(playButton,SIGNAL(setPlayPause(bool)),SIGNAL(pauseGame(bool)));
+    connect(closeButton, SIGNAL(clicked()),this,SIGNAL(closeRender()));
+    connect(abi1,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
+    connect(abi2,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
+    connect(abi3,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
+    connect(abi4,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
+    connect(abi5,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
+    setMode(0);
+}
+
+void GameView::loadHudElements()
+{
+
+    //Element coin supérieur gauche
+        //Label d'affichages
+    scoreInfo = new QLabel(tr("Score :"),this);
+    scoreInfo->setGeometry(10,10,100,50);
+    scoreInfo->setFont(QFont("LetterOMatic!", 10));
+    unitInfo = new QLabel(tr("Unites restantes : "),this);
+    unitInfo->setFont(QFont("LetterOMatic!", 10));
+    unitInfo->setGeometry(10,60,200,50);
+
+        //Labels d'information
+    score = new QLabel(this);
+    score->setFont(QFont("LetterOMatic!", 10));
+    score->setGeometry(110,10,100,50);
+    unitsCount = new QLabel(this);
+    unitsCount->setGeometry(10,60,100,50);
+    unitsCount->setFont(QFont("LetterOMatic!", 10));
 
 
-
+    //Element d'abilités
     abi1 = new AbilityButton(1,acidImg,this);
     abi1->setGeometry(290,467,68,68);
 
@@ -46,24 +64,17 @@ GameView::GameView(QWidget *parent) :
     abi5 = new AbilityButton(1,bridgeImg,this);
     abi5->setGeometry(602,467,68,68);
 
+
+    //Boutons de contrôle coin supérieur droit
     playButton = new PlayPauseButton(this);
     playButton->setGeometry(825,5,40,40);
-
     volume = new VolumeButton(this);
     volume->setGeometry(870,5,40,40);
-
     closeButton = new CloseButton(this);
     closeButton->setGeometry(915,5,40,40);
-
-    connect(closeButton, SIGNAL(clicked()),this,SIGNAL(closeRender()));
-    connect(abi1,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
-    connect(abi2,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
-    connect(abi3,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
-    connect(abi4,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
-    connect(abi5,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
-    //grid->addWidget(abi1,0,0);
-    setMode(0);
 }
+
+
 
 void GameView::paintEvent(QPaintEvent *event)
 {
@@ -105,7 +116,9 @@ void GameView::setMode(int mode)
         abi4->show();
         abi5->show();
         volume->show();
+        volume->setMode(true); //TODO
         playButton->show();
+        playButton->setMode(true);
         closeButton->show();
         score->show();
         scoreInfo->show();

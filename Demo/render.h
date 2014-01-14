@@ -29,9 +29,9 @@ public slots:
     void unitUse(Unit *unit);
     void unitDie(Unit *unit);
 private slots:
-    void updateCenter();
+    void gameTimer();
     void startGame();
-    void toggleGame();
+    void toggleGame(bool _play);
 
 private:
     //QGraphicsItemGroup *units;
@@ -54,6 +54,8 @@ private:
     int unitMinima;
     int unitToInit;
 
+    bool play;
+
     int score; //Score = (total-minima / survivants) *1000 - 50*deces
               //Score initial
 
@@ -66,6 +68,8 @@ private:
     void calculateScore();
     void loadImages();
     void initializeGame();
+    void deleteImages(QList<QPixmap*> *list);
+    void deleteUnits(QList<Unit *> *list);
 };
 
 #endif // RENDER_H

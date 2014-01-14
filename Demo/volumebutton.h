@@ -9,12 +9,13 @@ public:
     explicit VolumeButton(QWidget *parent = 0);
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *e);
+    void setMode(bool _sound);
 signals:
     void setSound(bool sound);
 public slots:
 
 private:
-    bool sound = true;
+    bool sound;
     QPixmap *muteImg;
     QPixmap *unmuteImg;
 

@@ -22,6 +22,7 @@ public:
 signals:
     void sendAbility(int id);
     void closeRender();
+    void pauseGame(bool pause);
     void setScore(QString score);
     void setUnitCount(QString count);
 public slots:
@@ -50,6 +51,7 @@ private:
 
 
     void loadHudImages();
+    void loadHudElements();
 };
 
 #endif // GAMEVIEW_H

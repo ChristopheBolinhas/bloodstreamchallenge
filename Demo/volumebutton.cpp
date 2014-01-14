@@ -6,6 +6,12 @@ VolumeButton::VolumeButton(QWidget *parent) :
 {
     muteImg = new QPixmap(":/hud/ressources/img/HUD_Icon/volume_off.png");
     unmuteImg = new QPixmap(":/hud/ressources/img/HUD_Icon/volume_on.png");
+    setMode(true);
+}
+
+void VolumeButton::setMode(bool _sound)
+{
+    sound = _sound;
 }
 
 void VolumeButton::paintEvent(QPaintEvent *)

@@ -7,7 +7,12 @@ PlayPauseButton::PlayPauseButton(QWidget *parent) :
 {
     playImg = new QPixmap(":/hud/ressources/img/HUD_Icon/start.png");
     pauseImg = new QPixmap(":/hud/ressources/img/HUD_Icon/pause.png");
+    setMode(true);
+}
 
+void PlayPauseButton::setMode(bool _play)
+{
+    play = _play;
 }
 
 void PlayPauseButton::paintEvent(QPaintEvent *)

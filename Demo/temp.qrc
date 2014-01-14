@@ -2,8 +2,6 @@
     <qresource prefix="/">
         <file>ressources/levels.json</file>
         <file>ressources/img/unit.png</file>
-        <file>ressources/levels/leveld/level.json</file>
-        <file>ressources/levels/leveld/tileset.png</file>
         <file>ressources/img/button.png</file>
         <file>ressources/img/disc.png</file>
         <file>ressources/img/logo.png</file>
@@ -16,10 +14,10 @@
         <file>ressources/font/SnackerComic.ttf</file>
     </qresource>
     <qresource prefix="/boost">
-        <file>ressources/img/Boost/trap_anim1.png</file>
-        <file>ressources/img/Boost/trap_anim2.png</file>
-        <file>ressources/img/Boost/trap_anim3.png</file>
-        <file>ressources/img/Boost/trap_on.png</file>
+        <file>ressources/img/Boost/updown/trap_anim1.png</file>
+        <file>ressources/img/Boost/updown/trap_anim2.png</file>
+        <file>ressources/img/Boost/updown/trap_anim3.png</file>
+        <file>ressources/img/Boost/updown/trap_on.png</file>
     </qresource>
     <qresource prefix="/menu">
         <file>ressources/img/menu/background.png</file>
@@ -51,5 +49,11 @@
         <file>ressources/img/HUD_Icon/start.png</file>
         <file>ressources/img/HUD_Icon/volume_off.png</file>
         <file>ressources/img/HUD_Icon/volume_on.png</file>
+    </qresource>
+    <qresource prefix="/caillot">
+        <file>ressources/img/Caillot/updown/trap_anim1.png</file>
+        <file>ressources/img/Caillot/updown/trap_anim2.png</file>
+        <file>ressources/img/Caillot/updown/trap_anim3.png</file>
+        <file>ressources/img/Caillot/updown/trap_on.png</file>
     </qresource>
 </RCC>

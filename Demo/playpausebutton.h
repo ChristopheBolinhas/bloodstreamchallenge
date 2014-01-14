@@ -10,12 +10,13 @@ public:
     explicit PlayPauseButton(QWidget *parent = 0);
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *e);
+    void setMode(bool _play);
 signals:
     void setPlayPause(bool play);
 public slots:
 
 private:
-    bool play = true;
+    bool play;
     QPixmap *playImg;
     QPixmap *pauseImg;
 };
