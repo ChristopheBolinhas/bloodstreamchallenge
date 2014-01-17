@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+QT       += multimedia
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -40,7 +41,8 @@ SOURCES += main.cpp\
     option.cpp \
     bacterie.cpp \
     endgamescreen.cpp \
-    endgamebutton.cpp
+    endgamebutton.cpp \
+    gamesoundplayer.cpp
 
 HEADERS  += mainwindow.h \
     gui.h \
@@ -69,7 +71,11 @@ HEADERS  += mainwindow.h \
     option.h \
     bacterie.h \
     endgamescreen.h \
-    endgamebutton.h
+    endgamebutton.h \
+    gamesoundplayer.h
 
 RESOURCES += \
     temp.qrc
+
+TRANSLATIONS = traduction_fr.ts \
+traduction_en.ts

@@ -5,6 +5,7 @@
 #include "level.h"
 #include "menucontainer.h"
 #include "gameview.h"
+#include "gamesoundplayer.h"
 
 class Level;
 class QGraphicsScene;
@@ -28,11 +29,14 @@ private:
     Render *render;
     EndGameScreen *endGameInfos;
     Level *currentLevel;
+	void initTraduction();
+    QString fichierTraduction;
+    QTranslator translator;
 
 signals:
 
 public slots:
-    void loadLevel(Level* lvl);
+    void loadLevel(Level* lvl, GameSoundPlayer *player);
     void closeRender(); 
     void retryLevel();
     void endLevel(QString score, bool victory);

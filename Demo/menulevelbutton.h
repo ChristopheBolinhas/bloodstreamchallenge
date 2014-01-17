@@ -7,6 +7,7 @@ class QGraphicsItem;
 class QGraphicsPixmapItem;
 class QRectF;
 class Level;
+class GameSoundPlayer;
 
 class MenuLevelButton : public QObject, public QGraphicsItem
 {
@@ -23,6 +24,7 @@ public:
 
 private:
     QPixmap *image;
+    QPixmap *imageLocked;
     QPointF position;
     QRectF *rectImage;
     static const int MARGE_TOP_BOTTOM = 15;

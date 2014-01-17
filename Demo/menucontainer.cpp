@@ -5,6 +5,7 @@
 #include "menucheckbox.h"
 #include "menuradiobutton.h"
 #include "menuslidercircle.h"
+#include "gamesoundplayer.h"
 #include "option.h"
 #include <QGraphicsView>
 #include <QGraphicsScene>
@@ -12,6 +13,7 @@
 #include <QGraphicsPixmapItem>
 #include <QPropertyAnimation>
 #include <QFontDatabase>
+#include <QMessageBox>
 
 #include <QDebug>
 
@@ -19,6 +21,9 @@ MenuContainer::MenuContainer(QGraphicsView *_view, Option *_option)
 {
     this->option = _option;
 
+    player = new GameSoundPlayer(GameSoundPlayer::SOUND_MENU,option,true);
+    player->play();
+	
     setupScene();
 
     addGameLogo();
@@ -26,6 +31,10 @@ MenuContainer::MenuContainer(QGraphicsView *_view, Option *_option)
     QList<Level*> listLevels = Level::loadLevels();
     addLevelButtons(listLevels);
 
+    //listLevels.at(0)->setName("popopo");
+    Level *lvl = listLevels.at(0);
+    lvl->setScore(1230);
+    Level::saveLevels(listLevels);
     addQuitOptionsButtons();
 
     addMenuOptions();
@@ -104,6 +113,7 @@ void MenuContainer::saveOption()
 
     this->option->saveOption();
 
+	QMessageBox::information(NULL,tr("Modification de la langue"),tr("Si vous avez changer la langue, veuillez relancer le jeu."),QMessageBox::Ok);
     moveViewToMenuPrincipal();
 }
 
@@ -116,6 +126,10 @@ void MenuContainer::setChecked(MenuRadioButton *mrbtn)
     mrbtn->setChecked(true);
 }
 
+void MenuContainer::startLevelFromButton(Level *lvl)
+{
+    emit startLevelToGUI(lvl, this->player);
+}
 void MenuContainer::addGameLogo()
 {
     this->scene->addPixmap(QPixmap(":/menu/ressources/img/menu/background.png"));
@@ -135,15 +149,15 @@ void MenuContainer::addLevelButtons(QList<Level *> listLevels)
         Level *lvl = listLevels.at(i);
         MenuLevelButton *btn = new MenuLevelButton(positionLevel, lvl);
 
-        connect(btn, SIGNAL(startLevel(Level*)), this, SIGNAL(startLevel(Level*)));
+        connect(btn, SIGNAL(startLevel(Level*)), this, SLOT(startLevelFromButton(Level*)));
         scene->addItem(btn);
     }
 }
 
 void MenuContainer::addQuitOptionsButtons()
 {
-    btnQuitter = new MenuButton(QPointF(125,MENU_BUTTON_Y),"Quitter");
-    btnOption = new MenuButton(QPointF(510,MENU_BUTTON_Y),"Options");
+    btnQuitter = new MenuButton(QPointF(125,MENU_BUTTON_Y),tr("Quitter"));
+    btnOption = new MenuButton(QPointF(510,MENU_BUTTON_Y),tr("Options"));
 
     connect(btnQuitter, SIGNAL(clicked()), qApp, SLOT(quit()));
     connect(btnOption, SIGNAL(clicked()), this, SLOT(moveViewToMenuOptions()));

@@ -29,6 +29,7 @@
         <file>ressources/img/menu/checked.png</file>
         <file>ressources/img/menu/unchecked.png</file>
         <file>ressources/img/menu/level.png</file>
+		<file>ressources/img/menu/level_disabled.png</file>
         <file>ressources/img/menu/endgamebackground.png</file>
         <file>ressources/img/menu/endgamebutton.png</file>
     </qresource>
@@ -101,5 +102,9 @@
         <file>ressources/img/Deviation/2.png</file>
         <file>ressources/img/Deviation/3.png</file>
         <file>ressources/img/Deviation/4.png</file>
+    </qresource>
+	<qresource prefix="/translation">
+        <file>ressources/translation/traduction_en.qm</file>
+        <file>ressources/translation/traduction_fr.qm</file>
     </qresource>
 </RCC>

@@ -31,6 +31,7 @@ class MenuRadioButton;
 class MenuSliderCircle;
 class MenuCheckBox;
 class Option;
+class GameSoundPlayer;
 #include <QList>
 #include <QObject>
 #include <QPoint>
@@ -110,8 +111,10 @@ private:
 
     QPropertyAnimation *animation;
 
+    //Sons
+    GameSoundPlayer *player;
 signals:
-    void startLevel(Level *lvl);
+    void startLevelToGUI(Level *lvl, GameSoundPlayer *player);
 public slots:
     void moveViewToMenuOptions();
     void moveViewToMenuPrincipal();
@@ -119,6 +122,7 @@ public slots:
     void resetOption();
     void saveOption();
     void setChecked(MenuRadioButton*radioButton);
+    void startLevelFromButton(Level *lvl);
 
 };
 

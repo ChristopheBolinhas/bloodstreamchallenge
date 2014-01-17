@@ -2,18 +2,21 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QJsonValue>
 #include <QFile>
 #include <QTextStream>
 #include <QDebug>
 #include <QtGlobal>
 
-Level::Level(QString name, int score, QString path, int ordre)
+Level::Level(QString name, int score, QString path, int ordre, int unite, QString levelsPath)
 {
     this->setName(name);
     this->setScore(score);
-    this->pathJson = path+"/level.json";
+    this->nbUnite = unite;
+    this->path = path;
+    this->pathJson = QApplication::applicationDirPath()+"/"+levelsPath+path+"/level.json";
     //qDebug() << path;
-    this->setPathTileSet(path+"/tileset.png");
+    this->setPathTileSet(QApplication::applicationDirPath()+"/"+levelsPath+path+"/tileset.png");
     this->setOrder(ordre);
 
     // détermine si le niveau est bloqué ou pas
@@ -25,7 +28,7 @@ Level::Level(QString name, int score, QString path, int ordre)
 QList<Level*> Level::loadLevels()
 {
     QList<Level*> listLevels;
-    //TODO: changer le nom du chemin$
+    //TODO: changer le nom du chemin
 
     const QString LEVELS_FILENAME = QApplication::applicationDirPath() + "/ressources/levels.json"; //TODO: trouver une solution pour récupérer ce nom en relatif
     qDebug() << "Chemin des niveaux: " << LEVELS_FILENAME;
@@ -56,11 +59,53 @@ QList<Level*> Level::loadLevels()
     {
         QJsonObject jLevel = jArrayLevels.at(i).toObject();
          //qDebug() << jLevel.value("name").toString() <<  jLevel.value("score").toDouble() << QApplication::applicationDirPath()+"/"+levelsPath+jLevel.value("path").toString() << (int)jLevel.value("order").toDouble();
-        Level *lvl = new Level(jLevel.value("name").toString(), jLevel.value("score").toDouble(),QApplication::applicationDirPath()+"/"+levelsPath+jLevel.value("path").toString(),(int)jLevel.value("order").toDouble());
+        Level *lvl = new Level(jLevel.value("name").toString(), jLevel.value("score").toDouble(),jLevel.value("path").toString(),(int)jLevel.value("order").toDouble(), (int)jLevel.value("unite").toDouble() ,levelsPath);
         //if(lvl != 0)
         listLevels.append(lvl);
     }
     return listLevels;
+}
+
+bool Level::saveLevels(QList<Level *> listLevels)
+{
+    const QString LEVELS_FILENAME = QApplication::applicationDirPath() + "/ressources/levels.json"; //TODO: trouver une solution pour récupérer ce nom en relatif
+    qDebug() << "Chemin des niveaux: " << LEVELS_FILENAME;
+
+    QJsonDocument jsonLevels;
+    QJsonObject jObj;
+    jObj.insert("levelspath", QJsonValue(QString("/ressources/levels/"))); //TODO: valeur dynamique
+
+    jsonLevels.setObject(jObj);
+
+    QJsonArray jArr;
+    foreach (Level *lvl, listLevels) {
+        QJsonObject jObjInArray;
+        jObjInArray.insert("name", QJsonValue(QString(lvl->getName())));
+        jObjInArray.insert("score", QJsonValue(lvl->getScore()));
+        qDebug() << "lvl apth: " << lvl->getPath();
+        jObjInArray.insert("path", QJsonValue(QString(lvl->getPath())));
+        jObjInArray.insert("order", QJsonValue(lvl->getOrder()));
+        jObjInArray.insert("unite", QJsonValue(lvl->getNbUnite()));
+
+        jArr.append(jObjInArray);
+        jObj.insert("levels", QJsonValue(jArr));
+    }
+    jsonLevels.setObject(jObj);
+    qDebug() << "json construit: " << jsonLevels.toJson();
+
+    //Lecture du fichier levels.json
+    QFile *fileLevel = new QFile(LEVELS_FILENAME);
+    if(fileLevel->open(QIODevice::WriteOnly))
+    {QTextStream fileStream(fileLevel);
+        fileStream << jsonLevels.toJson();
+        fileLevel->close();
+        return true;
+    }
+    else
+    {
+        fileLevel->close();
+        return false;
+    }
 }
 
 bool Level::parseJsonLevel()
@@ -279,12 +324,12 @@ int Level::getMapHeight() const
     return mapHeight;
 }
 
-QString Level::getPath() const
+QString Level::getPathJson() const
 {
     return pathTileSet;
 }
 
-void Level::setPath(const QString &value)
+void Level::setPathJson(const QString &value)
 {
     pathTileSet = value;
 }
@@ -307,4 +352,19 @@ QString Level::getPathTileSet() const
 void Level::setPathTileSet(const QString &value)
 {
     pathTileSet = value;
+}
+
+QString Level::getPath() const
+{
+    return path;
+}
+
+int Level::getNbUnite() const
+{
+    return nbUnite;
+}
+
+void Level::setNbUnite(int value)
+{
+    nbUnite = value;
 }

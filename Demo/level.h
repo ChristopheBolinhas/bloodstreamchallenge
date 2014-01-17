@@ -15,7 +15,7 @@
 class Level
 {
 public:
-    Level(QString name, int score, QString pathJson, int ordre);
+    Level(QString name, int score, QString pathJson, int ordre, int unite, QString levelsPath);
 
     QString getName() const;
     void setName(const QString &value);
@@ -23,10 +23,13 @@ public:
     void setScore(int value);
     bool isLocked() const;
 
-    void setPath(const QString &value);
+    QString getPath() const;
+    void setPathJson(const QString &value);
     int getOrder() const;
     void setOrder(int value);
     QString getPathTileSet() const;
+    int getNbUnite() const;
+    void setNbUnite(int value);
     void setPathTileSet(const QString &value);
 
     int *getMapBackground() const;
@@ -43,6 +46,7 @@ public:
     int getMapHeight() const;
 
     static QList<Level *> loadLevels();
+	static bool saveLevels(QList<Level *> listLevels);
 
     int FLECHE_ROAD_1;
     int FLECHE_ROAD_2;
@@ -66,9 +70,11 @@ private:
     //Attributs pour la liste des  niveaux
     QString name;
     int score;
+	QString path;
     QString pathJson;
     int order;
     bool locked;
+	int nbUnite;
     QString pathTileSet;
 
     //Attributs pour le json généré par Tiled
@@ -87,8 +93,8 @@ private:
     int tileWidth;
     int tileHeight;
 
-    // Fonction à usage interne
-    QString getPath() const;
+    // Fonctions à usage interne
+	QString getPathJson() const;
     bool parseJsonLevel();
     int *parseJsonLayer(QString layerName, const QJsonDocument &jsonDocument);
     void parseJsonTileSet(QJsonDocument jsonDocument);

@@ -10,6 +10,7 @@ MenuLevelButton::MenuLevelButton(QPointF &position, Level *lvl)
 {
     this->level = lvl;
     this->image = new QPixmap(":/menu/ressources/img/menu/level.png");
+	this->imageLocked = new QPixmap(":/menu/ressources/img/menu/level_disabled.png");
     this->position = position;
     this->rectImage = new QRectF(position,QSize(this->image->width(),this->image->height()));
 
@@ -44,7 +45,10 @@ QRectF MenuLevelButton::boundingRect() const
 void MenuLevelButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     //Level image
-    painter->drawPixmap(position,*image);
+    if(level->isLocked() && level->getOrder() != 1)
+        painter->drawPixmap(position,*imageLocked);
+    else
+        painter->drawPixmap(position,*image);
 
     // Level order
     painter->setFont(QFont("LetterOMatic!",24));
@@ -70,7 +74,7 @@ void MenuLevelButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void MenuLevelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF downPos = event->pos();
-    if(isMouseReleaseInRectImage(downPos))
+    if(isMouseReleaseInRectImage(downPos) && (!level->isLocked() || level->getOrder()==1))
     {
         //qDebug() << "clic relaché";
         update();
