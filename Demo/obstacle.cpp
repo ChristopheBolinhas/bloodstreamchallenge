@@ -80,7 +80,26 @@ void Obstacle::paint( QPainter *painter, const QStyleOptionGraphicsItem*,QWidget
     if(images != 0)
     {
         QPixmap *currentPixmap = images->at(etat);
-        painter->drawPixmap(0,0,width,height, *currentPixmap);
+        QTransform t;
+        t.rotate(180);
+        //currentPixmap->tr
+        if(orientation == 8)
+        {
+            painter->drawPixmap(0,0,width,height, *currentPixmap);
+        }
+        else if(orientation == 2)
+        {
+            //painter->rotate(180);
+            painter->drawPixmap(0,0,width,height, currentPixmap->transformed(t));
+        }
+        else if(orientation == 4)
+        {
+
+        }
+        else if(orientation == 6)
+        {
+
+        }
     }
     else
     {

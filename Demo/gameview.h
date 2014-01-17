@@ -7,6 +7,8 @@ class VolumeButton;
 class PlayPauseButton;
 class CloseButton;
 class QLabel;
+class EndGameInfos;
+class MenuButton;
 class GameView : public QGraphicsView
 {
     Q_OBJECT
@@ -27,6 +29,8 @@ signals:
     void setUnitCount(QString count);
 public slots:
 
+    void setEndGame(bool victory);
+    void setStartInfo(int step);
 private:
     AbilityButton *abi1;
     AbilityButton *abi2;
@@ -40,12 +44,20 @@ private:
     QLabel *unitsCount;
     QLabel *scoreInfo;
     QLabel *unitInfo;
+    QLabel *startLabel;
     QList<QPixmap*> *acidImg;
     QList<QPixmap*> *bridgeImg;
     QList<QPixmap*> *deviationImg;
     QList<QPixmap*> *iceImg;
     QList<QPixmap*> *spikeImg;
 
+    //Ecran de fin de partie
+    /*QLabel *endGameResult;
+    QLabel *endGameScore;
+    QLabel *endGameScoreValue;
+    MenuButton *endGameRestart;
+    MenuButton *endGameMenu;*/
+    bool endGame;
 
 
 

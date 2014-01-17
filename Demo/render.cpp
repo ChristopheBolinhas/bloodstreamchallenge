@@ -8,6 +8,7 @@
 #include "caillot.h"
 #include "chute.h"
 #include "boost.h"
+#include "bacterie.h"
 #include "abilitybutton.h"
 #include "gameview.h"
 
@@ -39,20 +40,19 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
 
     view->setScene(this);
 
-    QList<QPixmap*> *pixmapList = new QList<QPixmap*>();
-    pixmapList->append(new QPixmap(":/ressources/img/unit.png"));
-    //unitCount = level.getNbUnits();
     unitCount = 5;
     unitToInit = unitCount;
     unitMinima = 1;
     listUnit = new QList<Unit*>();
     for(int i = 0;i < unitCount;i++)
     {
-        Unit *unit = new Unit(pixmapList,path);
+        Unit *unit = new Unit(unitsImages,path);
         this->addItem(dynamic_cast<QGraphicsItem*>(unit));
         listUnit->append(unit);
         connect(unit,SIGNAL(killUnit(Unit*)),this,SLOT(unitDie(Unit*)));
         connect(unit,SIGNAL(useUnit(Unit*)),this,SLOT(unitUse(Unit*)));
+        connect(unit,SIGNAL(winUnit(Unit*)),this,SLOT(unitWin(Unit*)));
+        connect(unit,SIGNAL(switchNext()),this,SLOT(switchNext()));
     }
 
     mainUnit = listUnit->first();
@@ -62,9 +62,6 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
     connect(this, SIGNAL(updateUnitCount(QString)),view,SIGNAL(setUnitCount(QString)));
     connect(view,SIGNAL(pauseGame(bool)),this,SLOT(toggleGame(bool)));
     emit updateUnitCount(QString::number(unitCount));
-    QGraphicsTextItem *test = new QGraphicsTextItem();
-    test->setPlainText("QGraphicsTextItem");
-    addItem(test);
 
     startTimer = new QTimer(this);
     connect(startTimer,SIGNAL(timeout()),this,SLOT(startGame()));
@@ -72,6 +69,7 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
     mainTimer = new QTimer(this);
     connect(mainTimer,SIGNAL(timeout()),this,SLOT(gameTimer()));
     startTimer->start(1000);
+    calculateScore();
 }
 
 Render::~Render()
@@ -81,6 +79,11 @@ Render::~Render()
 
     delete(mainTimer);
 
+
+
+    deleteImages(unitsImages);
+    delete(unitsImages);
+
     deleteImages(unitImages);
     delete(unitImages);
     deleteImages(boostImages);
@@ -89,7 +92,7 @@ Render::~Render()
     delete(caillotImages);
     deleteImages(deviationImages);
     delete(deviationImages);
-
+    disconnect(this);
     delete(this);
 }
 
@@ -127,6 +130,49 @@ void Render::deleteUnits(QList<Unit *> *list)
  * *******************************/
 void Render::loadImages()
 {
+    //Units images
+    unitsImages = new QList<QPixmap*>();
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Normal/unit_1.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Normal/unit_2.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Normal/unit_3.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Normal/unit_4.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Normal/unit_5.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Normal/unit_6.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Caillot/unit_1.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Caillot/unit_2.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Caillot/unit_3.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Caillot/unit_4.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Caillot/unit_5.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Caillot/unit_6.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_1.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_2.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_3.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_4.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_5.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_6.png"));
+
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Deviation/unit_1.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Deviation/unit_2.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Deviation/unit_3.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Deviation/unit_4.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Deviation/unit_5.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Deviation/unit_6.png"));
+
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Boost/unit_1.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Boost/unit_2.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Boost/unit_3.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Boost/unit_4.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Boost/unit_5.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Boost/unit_6.png"));
+
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Chute/unit_1.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Chute/unit_2.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Chute/unit_3.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Chute/unit_4.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Chute/unit_5.png"));
+    unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Chute/unit_6.png"));
+
+
 
 
     //Boost images
@@ -136,11 +182,30 @@ void Render::loadImages()
     boostImages->append(new QPixmap(":/boost/ressources/img/Boost/updown/trap_anim2.png"));
     boostImages->append(new QPixmap(":/boost/ressources/img/Boost/updown/trap_anim3.png"));
 
+    //Caillot images
     caillotImages = new QList<QPixmap*>();
     caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/updown/trap_on.png"));
     caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/updown/trap_anim1.png"));
     caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/updown/trap_anim2.png"));
     caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/updown/trap_anim3.png"));
+
+    //Deviation
+    deviationImages = new QList<QPixmap*>();
+    deviationImages->append(new QPixmap(":/deviation/ressources/img/Deviation/1.png"));
+    deviationImages->append(new QPixmap(":/deviation/ressources/img/Deviation/2.png"));
+    deviationImages->append(new QPixmap(":/deviation/ressources/img/Deviation/3.png"));
+    deviationImages->append(new QPixmap(":/deviation/ressources/img/Deviation/4.png"));
+
+    //Bacteries images
+    /*bacterieImages = new QList<QPixmap*>();
+    bacterieImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_1.png"));
+    bacterieImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_2.png"));
+    bacterieImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_1.png"));
+    bacterieImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_1.png"));
+    bacterieImages->append(new QPixmap(":/units/ressources/img/Unites/Bacterie/unit_1.png"));*/
+
+
+
 
 }
 
@@ -232,8 +297,8 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
                 SquareObstacle = new Caillot(currentX,currentY,orientationPrimary,caillotImages,level);
                 break;
             case 363:
-
-            break;
+                SquareObstacle = new Bacterie(currentX,currentY,orientationPrimary,0,level);
+                break;
             case 364:
                 SquareObstacle = new Chute(currentX,currentY,orientationPrimary,0,level);
                 break;
@@ -241,28 +306,28 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
                 isEndSquare = true;
                 break;
             case 389:
-                SquareObstacle = new Deviation(currentX,currentY, 6, 0, level);
+                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 6, deviationImages, level);
                 break;
             case 390:
-                SquareObstacle = new Deviation(currentX,currentY, 4, 0, level);
+                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 4, deviationImages, level);
                 break;
             case 391:
-                SquareObstacle = new Deviation(currentX,currentY, 8, 0, level);
+                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 8, deviationImages, level);
                 break;
             case 392:
-                SquareObstacle = new Deviation(currentX,currentY, 2, 0, level);
+                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 2, deviationImages, level);
                 break;
             case 393:
-                SquareObstacle = new Deviation(currentX,currentY, 1, 0, level);
+                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 1, deviationImages, level);
                 break;
             case 394:
-                SquareObstacle = new Deviation(currentX,currentY, 3, 0, level);
+                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 3, deviationImages, level);
                 break;
             case 395:
-                SquareObstacle = new Deviation(currentX,currentY, 7, 0, level);
+                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 7, deviationImages, level);
                 break;
             case 396:
-                SquareObstacle = new Deviation(currentX,currentY, 9, 0, level);
+                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 9, deviationImages, level);
                 break;
         }
 
@@ -288,7 +353,15 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
             {
                 addItem(dynamic_cast<Boost*>(SquareObstacle));
             }
-            //TODO Implémentation des autres obstacles
+            else if(typeid(*SquareObstacle) == typeid(Bacterie))
+            {
+                addItem(dynamic_cast<Bacterie*>(SquareObstacle));
+            }
+            else if(typeid(*SquareObstacle) == typeid(Chute))
+            {
+                addItem(dynamic_cast<Chute*>(SquareObstacle));
+            }
+
         }
 
         //Il faut maintenant lancer la generation récursive du principal et retourner l'objet actuel MapSquare
@@ -298,6 +371,8 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
             if(SecondaryNextSquare != 0)
             {
                 square = new MapSquare(PrimaryNextSquare,SecondaryNextSquare,currentX,currentY,SquareObstacle);
+                qDebug() << "Deviation @" << currentX << "|" <<currentY;
+
             }
             else
             {
@@ -384,8 +459,8 @@ int Render::yFromOrientation(int y, int orientation)
 
 void Render::calculateScore()
 {
-    int scoreCalc = ((unitCount-unitMinima)/(unitCount-unitUsed-unitDead))*1000 - 50 * unitDead;
-    emit updateScore(QString::number(scoreCalc));
+    score = (1+unitWon)*(100-unitDead-unitUsed/2);
+    emit updateScore(QString::number(score));
 }
 
 
@@ -410,14 +485,30 @@ void Render::unitDie(Unit *unit)
     unitDead++;
     listUnit->removeOne(unit);
     emit updateUnitCount(QString::number(unitCount));
-    if(listUnit->size() > 0)
+    /*if(listUnit->size() > 0)
     {
         mainUnit = listUnit->first();
-    }
+    }*/
     calculateScore();
 
 }
 
+void Render::unitWin(Unit *unit)
+{
+    unitCount--;
+    unitWon++;
+    listUnit->removeOne(unit);
+    emit updateUnitCount(QString::number(unitCount));
+    calculateScore();
+}
+
+void Render::switchNext()
+{
+    if(listUnit->size() > 1)
+    {
+        mainUnit = listUnit->at(1);
+    }
+}
 
 
 void Render::gameTimer()
@@ -429,6 +520,18 @@ void Render::gameTimer()
             view->centerOn(mainUnit);
             //advance();
             emit moveUnits();
+        }
+        else
+        {
+            if(unitWon > 0)
+            {
+                emit endGame(QString::number(score),true);
+            }
+            else
+            {
+                emit endGame(QString::number(score),false);
+            }
+            mainTimer->stop();
         }
     }
 }
@@ -442,6 +545,7 @@ void Render::startGame()
         mainTimer->start(1000/60);//60fps
 
         startCountDown--;
+        view->setStartInfo(startCountDown);
     }
     else if(startCountDown < 0)
     {
@@ -458,6 +562,7 @@ void Render::startGame()
     else
     {
         //view->scale(3,3);
+        view->setStartInfo(startCountDown);
         startCountDown--;
     }
 }

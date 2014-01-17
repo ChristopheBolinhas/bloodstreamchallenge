@@ -11,11 +11,13 @@ class QGraphicsScene;
 class QGraphicsView;
 class Render;
 class Option;
+class EndGameScreen;
 class Gui : public QWidget
 {
     Q_OBJECT
 public:
     explicit Gui(QWidget *parent = 0);
+
 private:
     QList<Level> *levels;
     void startLevel(Level *level);
@@ -24,12 +26,16 @@ private:
     GameView *view2;
     MenuContainer *menuContainer;
     Render *render;
+    EndGameScreen *endGameInfos;
+    Level *currentLevel;
+
 signals:
 
 public slots:
     void loadLevel(Level* lvl);
-    void closeRender();
-
+    void closeRender(); 
+    void retryLevel();
+    void endLevel(QString score, bool victory);
 };
 
 #endif // GUI_H

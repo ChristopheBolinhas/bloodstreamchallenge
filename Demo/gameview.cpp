@@ -5,6 +5,8 @@
 #include "volumebutton.h"
 #include "playpausebutton.h"
 #include "closebutton.h"
+#include "menubutton.h"
+
 
 GameView::GameView(QWidget *parent) :
     QGraphicsView(parent)
@@ -24,27 +26,45 @@ GameView::GameView(QWidget *parent) :
     connect(abi3,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
     connect(abi4,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
     connect(abi5,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
+    endGame = true;
     setMode(0);
+
+
+
+}
+
+void GameView::setStartInfo(int step)
+{
+    if(step > 0)
+    {
+        startLabel->setText(QString::number(step));
+        startLabel->show();
+    }
+    else
+    {
+        startLabel->hide();
+    }
 }
 
 void GameView::loadHudElements()
 {
 
+
     //Element coin supérieur gauche
         //Label d'affichages
     scoreInfo = new QLabel(tr("Score :"),this);
-    scoreInfo->setGeometry(10,10,100,50);
+    scoreInfo->setGeometry(10,10,100,40);
     scoreInfo->setFont(QFont("LetterOMatic!", 10));
-    unitInfo = new QLabel(tr("Unites restantes : "),this);
+    unitInfo = new QLabel(tr("Unités : "),this);
     unitInfo->setFont(QFont("LetterOMatic!", 10));
-    unitInfo->setGeometry(10,60,200,50);
+    unitInfo->setGeometry(10,50,200,50);
 
         //Labels d'information
     score = new QLabel(this);
     score->setFont(QFont("LetterOMatic!", 10));
-    score->setGeometry(110,10,100,50);
+    score->setGeometry(110,10,100,40);
     unitsCount = new QLabel(this);
-    unitsCount->setGeometry(10,60,100,50);
+    unitsCount->setGeometry(110,50,100,40);
     unitsCount->setFont(QFont("LetterOMatic!", 10));
 
 
@@ -55,13 +75,13 @@ void GameView::loadHudElements()
     abi2 = new AbilityButton(2,spikeImg,this);
     abi2->setGeometry(368,467,68,68);
 
-    abi3 = new AbilityButton(1,deviationImg,this);
+    abi3 = new AbilityButton(3,deviationImg,this);
     abi3->setGeometry(446,467,68,68);
 
-    abi4 = new AbilityButton(1,iceImg,this);
+    abi4 = new AbilityButton(4,iceImg,this);
     abi4->setGeometry(524,467,68,68);
 
-    abi5 = new AbilityButton(1,bridgeImg,this);
+    abi5 = new AbilityButton(5,bridgeImg,this);
     abi5->setGeometry(602,467,68,68);
 
 
@@ -72,6 +92,12 @@ void GameView::loadHudElements()
     volume->setGeometry(870,5,40,40);
     closeButton = new CloseButton(this);
     closeButton->setGeometry(915,5,40,40);
+
+    startLabel = new QLabel(this);
+    startLabel->move(960/2,540/2);
+    startLabel->hide();
+    startLabel->setFont(QFont("LetterOMatic!", 30));
+
 }
 
 
@@ -79,15 +105,17 @@ void GameView::loadHudElements()
 void GameView::paintEvent(QPaintEvent *event)
 {
     QGraphicsView::paintEvent(event);
-
-    QPainter painter(viewport());
-
-    //painter.drawText(300,300,"yolo");
 }
 
 void GameView::update()
 {
     QGraphicsView::update();
+}
+
+void GameView::setEndGame(bool victory)
+{
+
+
 }
 
 //Mode de la vue, permet d'afficher/masquer les bouttons du hud
@@ -108,6 +136,8 @@ void GameView::setMode(int mode)
         scoreInfo->hide();
         unitInfo->hide();
         unitsCount->hide();
+        startLabel->hide();
+
         break;
     case 1:
         abi1->show();
@@ -124,6 +154,7 @@ void GameView::setMode(int mode)
         scoreInfo->show();
         unitInfo->show();
         unitsCount->show();
+        startLabel->hide();
         break;
     }
 }

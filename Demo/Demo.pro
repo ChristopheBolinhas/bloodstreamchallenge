@@ -38,7 +38,9 @@ SOURCES += main.cpp\
     menucheckbox.cpp \
     menuslidercircle.cpp \
     option.cpp \
-    bacterie.cpp
+    bacterie.cpp \
+    endgamescreen.cpp \
+    endgamebutton.cpp
 
 HEADERS  += mainwindow.h \
     gui.h \
@@ -65,7 +67,9 @@ HEADERS  += mainwindow.h \
     menucheckbox.h \
     menuslidercircle.h \
     option.h \
-    bacterie.h
+    bacterie.h \
+    endgamescreen.h \
+    endgamebutton.h
 
 RESOURCES += \
     temp.qrc

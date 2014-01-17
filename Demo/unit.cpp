@@ -19,13 +19,19 @@ Unit::Unit(QList<QPixmap *> *_pixmapList, MapSquare *path, QGraphicsItem *parent
     paces = 0;
     setPos(path->getX()*40, path->getY()*40);
     setZValue(3);
-    animation = new QPropertyAnimation(this,"pos",this);
+    deathAnimationState = 0;
+    deathTimer = new QTimer(this);
+    deathTimer->setInterval(100);
+    connect(deathTimer,SIGNAL(timeout()),this,SLOT(animateDeath()));
+    paceMax = 12;
+    ability = 0;
     //calcultateNextMove();
 
 }
 
 Unit::~Unit()
 {
+    delete(deathTimer);
     delete(this);
 }
 
@@ -37,7 +43,13 @@ QRectF Unit::boundingRect() const
 void Unit::paint( QPainter *painter, const QStyleOptionGraphicsItem*,QWidget *)
 {
     if(isAlive)
-        painter->drawPixmap(0,0,40,40,*pixmapList->first());
+    {
+        painter->drawPixmap(0,0,40,40,*pixmapList->at(0+ability*6));
+    }
+    else if(deathAnimationState < 6)
+    {
+        painter->drawPixmap(0,0,40,40,*pixmapList->at(deathAnimationState+ability*6));
+    }
 }
 
 
@@ -56,132 +68,130 @@ void Unit::calcultateNextMove(int _speed, int _paces)
 
 void Unit::moveUnit()
 {
-    int paceMax = 20;
-    QPoint point();
-    qreal xMove = 0;
-    qreal yMove = 0;
-
     //if(currentSquare->getNext()->getHasNext() && isAlive && animation->state() == QPropertyAnimation::Stopped)
-    if(currentSquare->getNext()->getHasNext() && isAlive)
+
+    if(currentSquare->getNext()->getHasNext())
     {
-        if(paces > 0)
+        if(currentSquare->getNext()->getIsEnd() && isAlive)
         {
-            paces--;
-            moveBy(xmove,ymove);
+            finish();
         }
-        else
+        if(isAlive)
         {
-            paces = paceMax;
-        }
-
-        if(paces == paceMax)
-        {
-            currentSquare = currentSquare->getNext();
-            //Implémentation obstacles avec currentSquare
-            //TODO
-            calcultateNextMove(speed, paceMax);
-            //On test que le prochain n'ai pas d'obstacle
-            if(currentSquare->getNext()->hasObstacle())
+            if(paces > 0)
             {
-                if(currentSquare->getNext()->getObstacle()->isEnabled())
+                paces--;
+                moveBy(xmove,ymove);
+            }
+            else
+            {
+                paces = paceMax-speed;
+            }
+
+            if(paces == paceMax-speed)
+            {
+
+                //On test que le prochain n'ai pas d'obstacle
+                if(currentSquare->getNext()->hasObstacle())
                 {
-
-                    if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Caillot))
+                    if(currentSquare->getNext()->getObstacle()->isEnabled())
+                    //if(currentSquare->getObstacle()->isEnabled())
                     {
-                        if(ability == 1)
+                        Obstacle *obs = currentSquare->getNext()->getObstacle();
+                        //Obstacle *obs = currentSquare->getObstacle();
+                        if(typeid(*(obs)) == typeid(Caillot))
                         {
-                            currentSquare->getNext()->getObstacle()->disable();
-                            ability = 0;
+                            if(ability == 1)
+                            {
+                                use();
+                                obs->disable();
+                                //ability = 0;
+
+                            }
+                            else
+                            {
+                                //die();
+                            }
+                        }
+                        else if(typeid(*(obs)) == typeid(Bacterie))
+                        {
+                            if(ability == 2)
+                            {
+                                use();
+                                obs->disable();
+                                //ability = 0;
+                            }
+                            else
+                            {
+                                //die();
+
+                            }
+                        }
+                        else if(typeid(*(obs)) == typeid(Deviation))
+                        {
+                            if(ability == 3)
+                            {
+                                use();
+                                dynamic_cast<Deviation*>(obs)->switchPath(currentSquare->getNext());
+                                //currentSquare->getNext()->activateDeviation();
+                                //ability = 0;
+                            }
+                        }
+                        else if(typeid(*(obs)) == typeid(Boost))
+                        {
+                            if(ability == 4)
+                            {
+                                use();
+                                obs->disable();
+                                //ability = 0;
+                            }
+                            else
+                            {
+                                speed++;
+                            }
 
                         }
-                        else
+                        else if(typeid(*(obs)) == typeid(Chute))
                         {
-                            //die();
-                        }
-                    }
-                    else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Bacterie))
-                    {
-                        if(ability == 2)
-                        {
-                            use();
-                            currentSquare->getNext()->getObstacle()->disable();
-                            ability = 0;
-                        }
-                        else
-                        {
-                            //die();
+                            if(ability == 5)
+                            {
+                                use();
+                                obs->disable();
+                                //ability = 0;
+                            }
+                            else
+                            {
+                                //die();
+                            }
 
                         }
-                    }
-                    else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Deviation))
-                    {
-                        if(ability == 3)
-                        {
-                            use();
-                            currentSquare->activateDeviation();
-                            ability = 0;
-                        }
-                    }
-                    else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Boost))
-                    {
-                        if(ability == 4)
-                        {
-                            use();
-                            currentSquare->getNext()->getObstacle()->disable();
-                            ability = 0;
-                        }
-                        else
-                        {
-                            speed++;
-                        }
-
-                    }
-                    else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Chute))
-                    {
-                        if(ability == 5)
-                        {
-                            use();
-                            currentSquare->getNext()->getObstacle()->disable();
-                            ability = 0;
-                        }
-                        else
-                        {
-                            //die();
-                            qDebug() << "Chute BOOM";
-                        }
-
                     }
                 }
+                currentSquare = currentSquare->getNext();
+                //Implémentation obstacles avec currentSquare
+                calcultateNextMove(speed, paceMax);
             }
-            xMove = ((currentSquare->getNext()->getX()*40)-pos().x())/(paceMax-2*speed);
-            yMove = ((currentSquare->getNext()->getY()*40)-pos().y())/(paceMax-2*speed);
         }
-
-
-        //Remplacement animation
-        /*animation->setDuration(200-speed*40);
-        animation->setStartValue(QPoint(currentSquare->getX()*40,currentSquare->getY()*40));
-        animation->setEndValue(QPoint(currentSquare->getNext()->getX()*40,currentSquare->getNext()->getY()*40));
-        animation->setEasingCurve(QEasingCurve::OutBounce);*/
-        //connect(animation,SIGNAL(finished()),this,SLOT(moveUnit()));
-        //animation->start();
-
     }
-
-
 }
 
-
-void Unit::unlockObstacle()
+void Unit::animateDeath()
 {
-    /*switch(capaciteUnit)
+    if(deathAnimationState < 6)
     {
-        case EnumObstacle::deviation:
-            currentSquare->getNext()->removePrimary();
-            break;
-
-    }*/
+        deathAnimationState++;
+        update();
+    }
+    else
+    {
+        if(deathMode)
+            emit killUnit(this);
+        else
+            emit useUnit(this);
+        deathTimer->stop();
+    }
 }
+
 int Unit::getAbility() const
 {
     return ability;
@@ -189,70 +199,32 @@ int Unit::getAbility() const
 
 void Unit::setAbility(int value)
 {
-    ability = value;
+    if(ability == 0)
+        ability = value;
 }
 
 void Unit::die()
 {
 
     isAlive = false;
-    emit killUnit(this);
+    deathMode = true;
+    emit switchNext();
+    deathTimer->start();
+
 }
 void Unit::use()
 {
 
     isAlive = false;
-    emit useUnit(this);
+    deathMode = false;
+    emit switchNext();
+    deathTimer->start();
+    //emit useUnit(this);
 }
 
-
-
-/*void Unit::moveUnit()
+void Unit::finish()
 {
-    /*int xmove;
-    int ymove;
-
-    if(currentSquare->getNext()->getHasNext() && isAlive)
-    {
-        if(x() == currentSquare->getNext()->getX()*40 && y() == currentSquare->getNext()->getY()*40)
-        {
-            currentSquare = currentSquare->getNext();
-            //Implémentation obstacles avec currentSquare
-            //TODO
-            calcultateNextMove();
-            //On test que le prochain n'ai pas d'obstacle
-            if(currentSquare->getNext()->hasObstacle())
-            {
-                if(currentSquare->getNext()->getObstacle()->isEnabled())
-                {
-                    if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Deviation))
-                    {
-                        if(ability == 1)
-                        {
-                            currentSquare->activateDeviation();
-                            ability = 0;
-                        }
-                    }
-                    else if(typeid(*(currentSquare->getNext()->getObstacle())) == typeid(Caillot))
-                    {
-                        if(ability == 2)
-                        {
-                            dynamic_cast<Caillot*>(currentSquare->getNext()->getObstacle())->destroy();
-                            ability = 0;
-                        }
-                        else
-                            die();
-                    }
-                }
-            }
-
-        }
-
-
-
-
-
-        moveBy(xmove,ymove);
-    }
+    isAlive = false;
+    emit switchNext();
+    emit winUnit(this);
 }
-*/

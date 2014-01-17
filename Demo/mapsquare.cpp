@@ -70,6 +70,7 @@ MapSquare* MapSquare::getNext()
 {
     if(takeSecondary)
     {
+        qDebug() << secondaryNext->getX() << "|" << secondaryNext->getY();
         return secondaryNext;
     }
     else
@@ -114,5 +115,8 @@ bool MapSquare::hasObstacle()
 void MapSquare::activateDeviation()
 {
     if(hasSecondary)
+    {
         takeSecondary = true;
+        qDebug() << "Deviation Activated" << secondaryNext->getX() << "|" << secondaryNext->getY();
+    }
 }

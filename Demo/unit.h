@@ -28,19 +28,28 @@ private:
     QList<QPixmap*> *pixmapList;
     qreal xmove;
     qreal ymove;
+    bool deathMode;
     void calcultateNextMove(int _speed, int _paces);
-    void unlockObstacle();
     int ability;
     int speed;
     int paces;
+    int deathAnimationState;
+    QTimer *deathTimer;
     bool isAlive = true;
+    bool won = false;
+    int paceMax = 15;
     void die();
     void use();
+    void finish();
 signals:
     void useUnit(Unit *unit);
     void killUnit(Unit *unit);
+    void switchNext();
+    void winUnit(Unit *unit);
 public slots:
     void moveUnit();
+private slots:
+    void animateDeath();
 
 
 };

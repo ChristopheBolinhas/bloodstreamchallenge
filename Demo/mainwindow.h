@@ -4,6 +4,8 @@
 #include <QMainWindow>
 
 class Gui;
+class EndGameInfos;
+class EndGameScreen;
 class MainWindow : public QMainWindow
 {
     Q_OBJECT
@@ -14,6 +16,8 @@ public:
 
 private:
     Gui *gui;
+    EndGameInfos *endGameInfos;
+    EndGameScreen *endGame;
 };
 
 #endif // MAINWINDOW_H

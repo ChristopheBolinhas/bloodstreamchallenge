@@ -4,7 +4,6 @@
 AbilityButton::AbilityButton(int _abilityId, QList<QPixmap*> *images, QWidget *parent) :
     QPushButton(parent)
 {
-    //setGeometry(0,0,68,68);
     abilityId = _abilityId;
     releasedImg = images->at(0);
     pressedImg = images->at(1);
@@ -30,15 +29,13 @@ void AbilityButton::mousePressEvent(QMouseEvent *e)
 {
     etat = true;
     buttonAnim->start();
+    update();
     emit pressAbility(abilityId);
-
-    qDebug() << "PRESSED";
 }
 
 void AbilityButton::releasedAnim()
 {
     etat = false;
     update();
-    qDebug() << "Released";
     buttonAnim->stop();
 }

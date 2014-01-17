@@ -29,6 +29,8 @@
         <file>ressources/img/menu/checked.png</file>
         <file>ressources/img/menu/unchecked.png</file>
         <file>ressources/img/menu/level.png</file>
+        <file>ressources/img/menu/endgamebackground.png</file>
+        <file>ressources/img/menu/endgamebutton.png</file>
     </qresource>
     <qresource prefix="/font">
         <file>ressources/font/ltromatic.ttf</file>
@@ -55,5 +57,49 @@
         <file>ressources/img/Caillot/updown/trap_anim2.png</file>
         <file>ressources/img/Caillot/updown/trap_anim3.png</file>
         <file>ressources/img/Caillot/updown/trap_on.png</file>
+    </qresource>
+    <qresource prefix="/units">
+        <file>ressources/img/Unites/Normal/unit_1.png</file>
+        <file>ressources/img/Unites/Normal/unit_2.png</file>
+        <file>ressources/img/Unites/Normal/unit_3.png</file>
+        <file>ressources/img/Unites/Normal/unit_4.png</file>
+        <file>ressources/img/Unites/Normal/unit_5.png</file>
+        <file>ressources/img/Unites/Normal/unit_6.png</file>
+        <file>ressources/img/Unites/Caillot/unit_1.png</file>
+        <file>ressources/img/Unites/Caillot/unit_2.png</file>
+        <file>ressources/img/Unites/Caillot/unit_3.png</file>
+        <file>ressources/img/Unites/Caillot/unit_4.png</file>
+        <file>ressources/img/Unites/Caillot/unit_5.png</file>
+        <file>ressources/img/Unites/Caillot/unit_6.png</file>
+        <file>ressources/img/Unites/Bacterie/unit_1.png</file>
+        <file>ressources/img/Unites/Bacterie/unit_2.png</file>
+        <file>ressources/img/Unites/Bacterie/unit_3.png</file>
+        <file>ressources/img/Unites/Bacterie/unit_4.png</file>
+        <file>ressources/img/Unites/Bacterie/unit_5.png</file>
+        <file>ressources/img/Unites/Bacterie/unit_6.png</file>
+        <file>ressources/img/Unites/Deviation/unit_1.png</file>
+        <file>ressources/img/Unites/Deviation/unit_2.png</file>
+        <file>ressources/img/Unites/Deviation/unit_3.png</file>
+        <file>ressources/img/Unites/Deviation/unit_4.png</file>
+        <file>ressources/img/Unites/Deviation/unit_5.png</file>
+        <file>ressources/img/Unites/Deviation/unit_6.png</file>
+        <file>ressources/img/Unites/Boost/unit_1.png</file>
+        <file>ressources/img/Unites/Boost/unit_2.png</file>
+        <file>ressources/img/Unites/Boost/unit_3.png</file>
+        <file>ressources/img/Unites/Boost/unit_4.png</file>
+        <file>ressources/img/Unites/Boost/unit_5.png</file>
+        <file>ressources/img/Unites/Boost/unit_6.png</file>
+        <file>ressources/img/Unites/Chute/unit_1.png</file>
+        <file>ressources/img/Unites/Chute/unit_2.png</file>
+        <file>ressources/img/Unites/Chute/unit_3.png</file>
+        <file>ressources/img/Unites/Chute/unit_4.png</file>
+        <file>ressources/img/Unites/Chute/unit_5.png</file>
+        <file>ressources/img/Unites/Chute/unit_6.png</file>
+    </qresource>
+    <qresource prefix="/deviation">
+        <file>ressources/img/Deviation/1.png</file>
+        <file>ressources/img/Deviation/2.png</file>
+        <file>ressources/img/Deviation/3.png</file>
+        <file>ressources/img/Deviation/4.png</file>
     </qresource>
 </RCC>

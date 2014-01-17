@@ -20,14 +20,18 @@ public:
     explicit Render(GameView *_view, Level *level, QWidget *parent = 0);
     ~Render();
 
+
 signals:
     void moveUnits();
     void updateScore(QString score);
     void updateUnitCount(QString count);
+    void endGame(QString score, bool victory);
 public slots:
     void setAbilitySlot(int id);
     void unitUse(Unit *unit);
     void unitDie(Unit *unit);
+    void unitWin(Unit *unit);
+    void switchNext();
 private slots:
     void gameTimer();
     void startGame();
@@ -53,10 +57,13 @@ private:
     int unitUsed = 0;
     int unitMinima;
     int unitToInit;
+    int unitWon = 0;
 
+    int winUnits = 0;
     bool play;
 
-    int score; //Score = (total-minima / survivants) *1000 - 50*deces
+
+    int score = 0; //Score = (total-minima / survivants) *1000 - 50*deces
               //Score initial
 
     //Tableaux des images des composants
@@ -64,6 +71,9 @@ private:
     QList<QPixmap*> *boostImages;
     QList<QPixmap*> *caillotImages;
     QList<QPixmap*> *deviationImages;
+    QList<QPixmap*> *bacterieImages;
+    QList<QPixmap*> *unitsImages;
+
 
     void calculateScore();
     void loadImages();
