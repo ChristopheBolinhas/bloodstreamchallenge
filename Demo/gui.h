@@ -32,11 +32,12 @@ private:
 	void initTraduction();
     QString fichierTraduction;
     QTranslator translator;
+    GameSoundPlayer *player;
 
 signals:
 
 public slots:
-    void loadLevel(Level* lvl, GameSoundPlayer *player);
+    void loadLevel(Level* lvl);
     void closeRender(); 
     void retryLevel();
     void endLevel(QString score, bool victory);

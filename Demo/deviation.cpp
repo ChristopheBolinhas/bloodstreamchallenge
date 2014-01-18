@@ -13,6 +13,13 @@ Deviation::Deviation(int _x, int _y, int _orientationPrimary,int _orientationSec
     setPos(_x*level->getTileWidth(),_y*level->getTileHeight());
 }
 
+Deviation::~Deviation()
+{
+    deviationTimer->stop();
+    delete(deviationTimer);
+}
+
+
 void Deviation::animation()
 {
     if(anim < 3)

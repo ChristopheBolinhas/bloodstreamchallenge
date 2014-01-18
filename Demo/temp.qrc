@@ -1,16 +1,6 @@
 <RCC>
     <qresource prefix="/">
         <file>ressources/levels.json</file>
-        <file>ressources/img/unit.png</file>
-        <file>ressources/img/button.png</file>
-        <file>ressources/img/disc.png</file>
-        <file>ressources/img/logo.png</file>
-        <file>ressources/img/1.png</file>
-        <file>ressources/img/volumemute.png</file>
-        <file>ressources/img/volumeunmute.png</file>
-        <file>ressources/img/pause.png</file>
-        <file>ressources/img/play.png</file>
-        <file>ressources/img/close.png</file>
         <file>ressources/font/SnackerComic.ttf</file>
     </qresource>
     <qresource prefix="/boost">
@@ -18,6 +8,10 @@
         <file>ressources/img/Boost/updown/trap_anim2.png</file>
         <file>ressources/img/Boost/updown/trap_anim3.png</file>
         <file>ressources/img/Boost/updown/trap_on.png</file>
+        <file>ressources/img/Boost/leftright/trap_anim1.png</file>
+        <file>ressources/img/Boost/leftright/trap_anim2.png</file>
+        <file>ressources/img/Boost/leftright/trap_anim3.png</file>
+        <file>ressources/img/Boost/leftright/trap_on.png</file>
     </qresource>
     <qresource prefix="/menu">
         <file>ressources/img/menu/background.png</file>
@@ -29,7 +23,7 @@
         <file>ressources/img/menu/checked.png</file>
         <file>ressources/img/menu/unchecked.png</file>
         <file>ressources/img/menu/level.png</file>
-		<file>ressources/img/menu/level_disabled.png</file>
+        <file>ressources/img/menu/level_disabled.png</file>
         <file>ressources/img/menu/endgamebackground.png</file>
         <file>ressources/img/menu/endgamebutton.png</file>
     </qresource>
@@ -58,6 +52,10 @@
         <file>ressources/img/Caillot/updown/trap_anim2.png</file>
         <file>ressources/img/Caillot/updown/trap_anim3.png</file>
         <file>ressources/img/Caillot/updown/trap_on.png</file>
+        <file>ressources/img/Caillot/leftright/trap_anim1.png</file>
+        <file>ressources/img/Caillot/leftright/trap_anim3.png</file>
+        <file>ressources/img/Caillot/leftright/trap_anim4.png</file>
+        <file>ressources/img/Caillot/leftright/trap_on.png</file>
     </qresource>
     <qresource prefix="/units">
         <file>ressources/img/Unites/Normal/unit_1.png</file>
@@ -103,8 +101,28 @@
         <file>ressources/img/Deviation/3.png</file>
         <file>ressources/img/Deviation/4.png</file>
     </qresource>
-	<qresource prefix="/translation">
+    <qresource prefix="/translation">
         <file>ressources/translation/traduction_en.qm</file>
         <file>ressources/translation/traduction_fr.qm</file>
+    </qresource>
+    <qresource prefix="/chute">
+        <file>ressources/img/Chute/leftright/trap_anim1.png</file>
+        <file>ressources/img/Chute/leftright/trap_anim2.png</file>
+        <file>ressources/img/Chute/leftright/trap_anim3.png</file>
+        <file>ressources/img/Chute/leftright/trap_on.png</file>
+        <file>ressources/img/Chute/updown/trap_anim1.png</file>
+        <file>ressources/img/Chute/updown/trap_anim3.png</file>
+        <file>ressources/img/Chute/updown/trap_anim4.png</file>
+        <file>ressources/img/Chute/updown/trap_on.png</file>
+    </qresource>
+    <qresource prefix="/bacterie">
+        <file>ressources/img/Bacterie/leftright/trap_anim1.png</file>
+        <file>ressources/img/Bacterie/leftright/trap_anim2.png</file>
+        <file>ressources/img/Bacterie/leftright/trap_anim3.png</file>
+        <file>ressources/img/Bacterie/leftright/trap_on.png</file>
+        <file>ressources/img/Bacterie/updown/trap_anim1.png</file>
+        <file>ressources/img/Bacterie/updown/trap_anim2.png</file>
+        <file>ressources/img/Bacterie/updown/trap_anim3.png</file>
+        <file>ressources/img/Bacterie/updown/trap_on.png</file>
     </qresource>
 </RCC>

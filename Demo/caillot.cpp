@@ -8,3 +8,4 @@ Caillot::Caillot(int _x, int _y, int _orientation, QList<QPixmap*> *_images, Lev
 
 
 
+

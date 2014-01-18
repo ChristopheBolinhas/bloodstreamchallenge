@@ -5,12 +5,6 @@ Chute::Chute(int _x, int _y, int _orientation, QList<QPixmap*> *_images, Level *
 {
 }
 
-Chute::~Chute()
-{
 
-}
 
-void Chute::destroy()
-{
-    enabled = false;
-}
+

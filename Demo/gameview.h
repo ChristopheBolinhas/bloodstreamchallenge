@@ -16,17 +16,15 @@ public:
     explicit GameView(QWidget *parent = 0);
     void paintEvent(QPaintEvent *event);
     void update();
-    void setMode(int mode);
-    void wheelEvent ( QWheelEvent * event )
-    {
-    //None
-    }
+    void setMode(int mode, bool sound);
+    void wheelEvent ( QWheelEvent * event );
 signals:
     void sendAbility(int id);
     void closeRender();
     void pauseGame(bool pause);
     void setScore(QString score);
     void setUnitCount(QString count);
+    void setSound(bool mute);
 public slots:
 
     void setEndGame(bool victory);
@@ -37,7 +35,7 @@ private:
     AbilityButton *abi3;
     AbilityButton *abi4;
     AbilityButton *abi5;
-    VolumeButton *volume;
+    VolumeButton *volumeButton;
     PlayPauseButton *playButton;
     CloseButton *closeButton;
     QLabel *score;
@@ -51,12 +49,6 @@ private:
     QList<QPixmap*> *iceImg;
     QList<QPixmap*> *spikeImg;
 
-    //Ecran de fin de partie
-    /*QLabel *endGameResult;
-    QLabel *endGameScore;
-    QLabel *endGameScoreValue;
-    MenuButton *endGameRestart;
-    MenuButton *endGameMenu;*/
     bool endGame;
 
 

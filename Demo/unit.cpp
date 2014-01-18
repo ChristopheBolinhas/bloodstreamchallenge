@@ -23,16 +23,25 @@ Unit::Unit(QList<QPixmap *> *_pixmapList, MapSquare *path, QGraphicsItem *parent
     deathTimer = new QTimer(this);
     deathTimer->setInterval(100);
     connect(deathTimer,SIGNAL(timeout()),this,SLOT(animateDeath()));
-    paceMax = 12;
+    paceMax = 25;
     ability = 0;
     //calcultateNextMove();
 
 }
 
+void Unit::destroy()
+{
+    deathTimer->stop();
+
+    delete(deathTimer);
+    qDebug() << "Destroy unit";
+    //delete(this);
+
+}
+
 Unit::~Unit()
 {
-    delete(deathTimer);
-    delete(this);
+    destroy();
 }
 
 QRectF Unit::boundingRect() const

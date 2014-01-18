@@ -8,16 +8,12 @@ EndGameScreen::EndGameScreen(QWidget *parent) :
 {
 
     setFixedSize(640,360);
-    scoreDisplay = new QLabel(tr("Score :"), this);
-    scoreDisplay->setFont(QFont("LetterOMatic!", 20));
-    scoreDisplay->move(10,100);
-    scoreValue = new QLabel("0", this);
+    scoreValue = new QLabel("XXXX", this);
     scoreValue->setFont(QFont("LetterOMatic!", 20));
-    scoreValue->move(scoreDisplay->width()+60,100);
-    resultLabel = new QLabel("Victoire !", this);
+    scoreValue->move(640/2-scoreValue->width(),100);
+    resultLabel = new QLabel(tr("Victoire !"), this);
     resultLabel->setFont(QFont("LetterOMatic!", 30));
-   // resultLabel->setGeometry(640/2-resultLabel->width()/2,10,resultLabel->width(),resultLabel->height());
-    resultLabel->move(640/2-resultLabel->width()/2-20,10);
+    resultLabel->move(640/2-resultLabel->width(),10);
 
 
 
@@ -47,14 +43,12 @@ void EndGameScreen::setScreen(QString score, int victory)
     if(victory)
     {
         resultLabel->setText(tr("Victoire !"));
-        scoreValue->setText(score);
-        scoreDisplay->show();
+        scoreValue->setText(tr("Score : ") + score);
         scoreValue->show();
     }
     else
     {
         resultLabel->setText(tr("Defaite !"));
-        scoreDisplay->hide();
         scoreValue->hide();
     }
 }

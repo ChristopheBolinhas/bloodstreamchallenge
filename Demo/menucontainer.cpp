@@ -21,8 +21,8 @@ MenuContainer::MenuContainer(QGraphicsView *_view, Option *_option)
 {
     this->option = _option;
 
-    player = new GameSoundPlayer(GameSoundPlayer::SOUND_MENU,option,true);
-    player->play();
+
+    //player->play();
 	
     setupScene();
 
@@ -128,7 +128,7 @@ void MenuContainer::setChecked(MenuRadioButton *mrbtn)
 
 void MenuContainer::startLevelFromButton(Level *lvl)
 {
-    emit startLevelToGUI(lvl, this->player);
+    emit startLevelToGUI(lvl);
 }
 void MenuContainer::addGameLogo()
 {

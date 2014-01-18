@@ -48,23 +48,6 @@ public:
     static QList<Level *> loadLevels();
 	static bool saveLevels(QList<Level *> listLevels);
 
-    int FLECHE_ROAD_1;
-    int FLECHE_ROAD_2;
-    int FLECHE_ROAD_3;
-    int FLECHE_ROAD_4;
-    int FLECHE_ROAD_6;
-    int FLECHE_ROAD_7;
-    int FLECHE_ROAD_8;
-    int FLECHE_ROAD_9;
-
-    int FLECHE_OBSTACLE_1;
-    int FLECHE_OBSTACLE_2;
-    int FLECHE_OBSTACLE_3;
-    int FLECHE_OBSTACLE_4;
-    int FLECHE_OBSTACLE_6;
-    int FLECHE_OBSTACLE_7;
-    int FLECHE_OBSTACLE_8;
-    int FLECHE_OBSTACLE_9;
 
 private:
     //Attributs pour la liste des  niveaux

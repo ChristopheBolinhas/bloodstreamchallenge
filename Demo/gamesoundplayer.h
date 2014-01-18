@@ -9,8 +9,10 @@ class GameSoundPlayer : public QWidget
     Q_OBJECT
 public:
     GameSoundPlayer(QString sound, Option *option, bool loop, QWidget *parent = 0);
+    GameSoundPlayer(Option *option, QWidget *parent = 0);
     ~GameSoundPlayer();
 
+    void playSound(QString sound);
     // Bruitages
     static const QString GAME_STARTED;
     static const QString UNIT_KILLED;
@@ -22,15 +24,18 @@ public:
     // Sons d'ambiance
     static const QString SOUND_MENU;
     static const QString SOUND_IN_GAME;
+    enum SoundMode {menu, in_game};
+    void setMode(SoundMode mode);
+
 
 public slots:
     void setMuted(bool muted);
-    void play();
-    void stop();
-    void pause();
 
 private:
-    QMediaPlayer *player;
+    QList<QMediaPlayer*> *playerList;
+    QMediaPlaylist *backgroundPlaylist;
+    Option *option;
+    QMediaPlayer *backgroundPlayer;
     QString currentDir;
 
 };

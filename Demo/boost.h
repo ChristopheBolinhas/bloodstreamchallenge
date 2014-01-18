@@ -9,11 +9,8 @@
 class Level;
 class Boost : public Obstacle
 {
-
-    Q_OBJECT
 public:
     Boost(int _x, int _y, int _orientation, QList<QPixmap *> *_images, Level *level);
-    ~Boost();
 };
 
 #endif // BOOST_H

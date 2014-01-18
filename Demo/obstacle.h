@@ -11,7 +11,7 @@ class Obstacle : public QGraphicsObject
 public:
     Obstacle(int _x, int _y, int _orientation, QList<QPixmap *> *_images, Level *level);
     bool isEnabled();
-    virtual ~Obstacle();
+    ~Obstacle();
 
     int getOrientation();
     QRectF boundingRect() const;

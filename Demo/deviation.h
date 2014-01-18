@@ -12,11 +12,9 @@ class Deviation : public Obstacle//, public QGraphicsObject
     Q_OBJECT
 public:
     Deviation(int _x, int _y, int _orientationPrimary, int _orientationSecondary, QList<QPixmap *> *_images, Level *level);
-    //void traitement(MapSquare *square);
     void switchPath(MapSquare *currentSquare);
     void paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidget *);
-
-
+    ~Deviation();
 private slots:
     void animation();
 private:

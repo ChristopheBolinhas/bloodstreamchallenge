@@ -15,12 +15,10 @@ Level::Level(QString name, int score, QString path, int ordre, int unite, QStrin
     this->nbUnite = unite;
     this->path = path;
     this->pathJson = QApplication::applicationDirPath()+"/"+levelsPath+path+"/level.json";
-    //qDebug() << path;
     this->setPathTileSet(QApplication::applicationDirPath()+"/"+levelsPath+path+"/tileset.png");
     this->setOrder(ordre);
 
     // détermine si le niveau est bloqué ou pas
-    //TODO: faire une exception pour le niveau 1 (score a 0 mais pas locked)
     this->getScore()== 0 ? this->locked=true : this->locked=false;
     this->parseJsonLevel();
 }
@@ -41,14 +39,11 @@ QList<Level*> Level::loadLevels()
         QTextStream fileStream(fileLevel);
         QString dataFromJson = fileStream.readAll();
         jsonLevels = QJsonDocument::fromJson(dataFromJson.toUtf8());
-        //qDebug() << jsonLevels.toJson();
         fileLevel->close();
     }
     else
     {
         fileLevel->close();
-        //qDebug() << "Error: cannot load options !" << LEVELS_FILENAME;
-        //return NULL;
     }
 
     QJsonObject jObject = jsonLevels.object();
@@ -58,9 +53,7 @@ QList<Level*> Level::loadLevels()
     for(int i = 0; i < numberOfLevels; i++)
     {
         QJsonObject jLevel = jArrayLevels.at(i).toObject();
-         //qDebug() << jLevel.value("name").toString() <<  jLevel.value("score").toDouble() << QApplication::applicationDirPath()+"/"+levelsPath+jLevel.value("path").toString() << (int)jLevel.value("order").toDouble();
         Level *lvl = new Level(jLevel.value("name").toString(), jLevel.value("score").toDouble(),jLevel.value("path").toString(),(int)jLevel.value("order").toDouble(), (int)jLevel.value("unite").toDouble() ,levelsPath);
-        //if(lvl != 0)
         listLevels.append(lvl);
     }
     return listLevels;
@@ -91,7 +84,6 @@ bool Level::saveLevels(QList<Level *> listLevels)
         jObj.insert("levels", QJsonValue(jArr));
     }
     jsonLevels.setObject(jObj);
-    qDebug() << "json construit: " << jsonLevels.toJson();
 
     //Lecture du fichier levels.json
     QFile *fileLevel = new QFile(LEVELS_FILENAME);
@@ -112,11 +104,7 @@ bool Level::parseJsonLevel()
 {
     //Lecture du fichier JSON généré par Tiled
     QJsonDocument jsonLevelTiled;
-    //QString levelNumber = this->getName().replace(0,7,"level"); // "Niveau 1" --> "level1"
-    //QString levelFilename = QString(levelPath+levelNumber+"/level.json");
-    //qDebug() << levelFilename;
 
-    //QFile *fileLevel = new QFile(levelFilename);
     QFile *fileLevel = new QFile(this->pathJson);
     if(fileLevel->open(QIODevice::ReadOnly))
     {
@@ -126,37 +114,37 @@ bool Level::parseJsonLevel()
         {
             dataFromJson.append(fileStream.readLine());
         }
-        //qDebug() << dataFromJson;
         jsonLevelTiled = QJsonDocument::fromJson(dataFromJson.toUtf8());
         fileLevel->close();
     }
     else
     {
-        //fileLevel->close();
-        //qDebug() << "Error: cannot load level !";
         return false;
     }
 
     // Affectation des propriétés du niveau à l'instance Level
     mapBackground = parseJsonLayer("Background", jsonLevelTiled);
     mapForeground = parseJsonLayer("Foreground", jsonLevelTiled);
-    //TODO: transformer les 384,381,... (numeros utilisés pour les flèches) en numero de déplacement [1-9]\5
     mapRoad = parseJsonLayer("Road", jsonLevelTiled);
     mapObstacle = parseJsonLayer("Obstacle", jsonLevelTiled);
     mapDecors = parseJsonLayer("Decor",jsonLevelTiled);
     mapAnimation = parseJsonLayer("Animation",jsonLevelTiled);
     this->mapWidth = jsonLevelTiled.object().value("width").toDouble();
     this->mapHeight = jsonLevelTiled.object().value("height").toDouble();
-    //qDebug() << "map width: " << this->mapWidth << "map height: " << this->mapHeight;
 
     parseJsonTileSet(jsonLevelTiled);
+
+    qDebug() << " obstacle: " << sizeof(this->mapObstacle)/sizeof(int);
+    qDebug() << "road: " << sizeof(this->mapRoad)/sizeof(int);
+
+
 
     return true;
 }
 
 int* Level::parseJsonLayer(QString layerName, const QJsonDocument &jsonDocument)
 {
-    QJsonObject jObj = jsonDocument.object(); // jObj utilisé comme outil, son contenu n'est pas fiable
+    QJsonObject jObj = jsonDocument.object();
     QJsonArray jLayers = jObj.value("layers").toArray();
 
     int *data;
@@ -183,7 +171,6 @@ int* Level::parseJsonLayer(QString layerName, const QJsonDocument &jsonDocument)
         data[i] = list.at(i).toInt();
         tmpShowData.append(QString::number(data[i])+" ");
     }
-    //qDebug() << tmpShowData;
     return data;
 
 }
@@ -197,43 +184,9 @@ void Level::parseJsonTileSet(QJsonDocument jsonDocument)
     this->tileSetHeight = jTileSet.value("imageheight").toDouble();
     this->tileWidth = jTileSet.value("tilewidth").toDouble();
     this->tileHeight = jTileSet.value("tileheight").toDouble();
-
-    //parseFleches(jTileSet);
-    //qDebug() << "w: " << tileSetWidth << " h: " << tileSetHeight << "lala: " << tileWidth << "lolo: " << tileHeight;
 }
 
-void Level::parseFleches(/*QJsonObject jTileSet*/)
-{
-    /*
-    QJsonObject jObj = jTileSet.value("tileproperties").Object;
-    foreach (QString key, jObj.keys()) {
-        jObj.value(keys);
-    }
-    */
 
-    /* C'est pas la peine de les récupérer dynamiquement dans le JSON
-     * et donc d'utiliser les propriétés dans Tiled. Par contre,
-     * en cas de changement c'est la seule place où faut les changer et
-     * c'est l'endroit le plus approprié, en tout cas plus que dans Render.
-    */
-    FLECHE_ROAD_1 = 385;
-    FLECHE_ROAD_2 = 384;
-    FLECHE_ROAD_3 = 386;
-    FLECHE_ROAD_4 = 382;
-    FLECHE_ROAD_6 = 381;
-    FLECHE_ROAD_7 = 387;
-    FLECHE_ROAD_8 = 383;
-    FLECHE_ROAD_9 = 388;
-
-    FLECHE_OBSTACLE_1 = 393;
-    FLECHE_OBSTACLE_2 = 392;
-    FLECHE_OBSTACLE_3 = 394;
-    FLECHE_OBSTACLE_4 = 390;
-    FLECHE_OBSTACLE_6 = 389;
-    FLECHE_OBSTACLE_7 = 395;
-    FLECHE_OBSTACLE_8 = 391;
-    FLECHE_OBSTACLE_9 = 396;
-}
 
 
 /*

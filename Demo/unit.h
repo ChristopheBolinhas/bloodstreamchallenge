@@ -22,6 +22,7 @@ public:
     int getAbility() const;
     void setAbility(int value);
 
+    void destroy();
 private:
     MapSquare *currentSquare;
     QPropertyAnimation *animation;

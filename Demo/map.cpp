@@ -40,7 +40,7 @@ Map::Map(QGraphicsScene *scene, Level *level)
 
         if(*(level->getMapObstacle()+i) == 365)
         {
-            startPoint = new QPoint(i%level->getMapWidth(),i/level->getMapHeight());
+            startPoint = new QPoint(i%level->getMapWidth(),i/level->getMapWidth());
         }
     }
 
@@ -67,7 +67,7 @@ QPoint* Map::getStartPoint()
 QPoint* Map::getPoint(int id, Level *level)
 {
     int x = id%level->getMapWidth()*level->getTileWidth();
-    int y = id/level->getMapHeight()*level->getTileHeight();
+    int y = id/level->getMapWidth()*level->getTileHeight();
     return new QPoint(x,y);
 
 }

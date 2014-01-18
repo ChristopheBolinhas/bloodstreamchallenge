@@ -21,6 +21,7 @@ public:
     ~Render();
 
 
+    void destroy();
 signals:
     void moveUnits();
     void updateScore(QString score);
@@ -70,10 +71,13 @@ private:
     QList<QPixmap*> *unitImages;
     QList<QPixmap*> *boostImages;
     QList<QPixmap*> *caillotImages;
+    QList<QPixmap*> *chuteImages;
     QList<QPixmap*> *deviationImages;
     QList<QPixmap*> *bacterieImages;
     QList<QPixmap*> *unitsImages;
 
+
+    QList<Obstacle*> *listObstacles;
 
     void calculateScore();
     void loadImages();

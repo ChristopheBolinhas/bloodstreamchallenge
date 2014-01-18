@@ -7,7 +7,6 @@
 #include "closebutton.h"
 #include "menubutton.h"
 
-
 GameView::GameView(QWidget *parent) :
     QGraphicsView(parent)
 {
@@ -20,6 +19,7 @@ GameView::GameView(QWidget *parent) :
     connect(this, SIGNAL(setUnitCount(QString)),unitsCount,SLOT(setText(QString)));
 
     connect(playButton,SIGNAL(setPlayPause(bool)),SIGNAL(pauseGame(bool)));
+    connect(volumeButton,SIGNAL(setSound(bool)),this,SIGNAL(setSound(bool)));
     connect(closeButton, SIGNAL(clicked()),this,SIGNAL(closeRender()));
     connect(abi1,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
     connect(abi2,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
@@ -27,7 +27,7 @@ GameView::GameView(QWidget *parent) :
     connect(abi4,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
     connect(abi5,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
     endGame = true;
-    setMode(0);
+    setMode(0,true);
 
 
 
@@ -88,8 +88,8 @@ void GameView::loadHudElements()
     //Boutons de contrôle coin supérieur droit
     playButton = new PlayPauseButton(this);
     playButton->setGeometry(825,5,40,40);
-    volume = new VolumeButton(this);
-    volume->setGeometry(870,5,40,40);
+    volumeButton = new VolumeButton(this);
+    volumeButton->setGeometry(870,5,40,40);
     closeButton = new CloseButton(this);
     closeButton->setGeometry(915,5,40,40);
 
@@ -119,7 +119,7 @@ void GameView::setEndGame(bool victory)
 }
 
 //Mode de la vue, permet d'afficher/masquer les bouttons du hud
-void GameView::setMode(int mode)
+void GameView::setMode(int mode, bool sound)
 {
     switch(mode)
     {
@@ -129,7 +129,7 @@ void GameView::setMode(int mode)
         abi3->hide();
         abi4->hide();
         abi5->hide();
-        volume->hide();
+        volumeButton->hide();
         playButton->hide();
         closeButton->hide();
         score->hide();
@@ -145,8 +145,8 @@ void GameView::setMode(int mode)
         abi3->show();
         abi4->show();
         abi5->show();
-        volume->show();
-        volume->setMode(true); //TODO
+        volumeButton->show();
+        volumeButton->setMode(sound);
         playButton->show();
         playButton->setMode(true);
         closeButton->show();
@@ -157,6 +157,11 @@ void GameView::setMode(int mode)
         startLabel->hide();
         break;
     }
+}
+
+void GameView::wheelEvent(QWheelEvent *event)
+{
+
 }
 
 void GameView::loadHudImages()

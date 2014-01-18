@@ -6,8 +6,5 @@ Boost::Boost(int _x, int _y, int _orientation, QList<QPixmap*> *_images, Level *
 
 }
 
-Boost::~Boost()
-{
 
-}
 

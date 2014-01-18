@@ -114,7 +114,7 @@ private:
     //Sons
     GameSoundPlayer *player;
 signals:
-    void startLevelToGUI(Level *lvl, GameSoundPlayer *player);
+    void startLevelToGUI(Level *lvl);
 public slots:
     void moveViewToMenuOptions();
     void moveViewToMenuPrincipal();

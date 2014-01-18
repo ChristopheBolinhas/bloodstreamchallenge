@@ -19,7 +19,6 @@ public slots:
 
 private:
     QLabel *resultLabel;
-    QLabel *scoreDisplay;
     QLabel *scoreValue;
     EndGameButton *btnRetry;
     EndGameButton *btnHome;

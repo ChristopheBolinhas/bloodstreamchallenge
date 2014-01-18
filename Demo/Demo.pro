@@ -23,7 +23,6 @@ SOURCES += main.cpp\
     render.cpp \
     obstacle.cpp \
     deviation.cpp \
-    hud.cpp \
     menucontainer.cpp \
     menulevelbutton.cpp \
     menubutton.cpp \
@@ -53,7 +52,6 @@ HEADERS  += mainwindow.h \
     render.h \
     obstacle.h \
     deviation.h \
-    hud.h \
     menucontainer.h \
     menubutton.h \
     menulevelbutton.h \

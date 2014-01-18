@@ -31,15 +31,18 @@ Gui::Gui(QWidget *parent) :
     view2->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     view2->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
     //view2->setSceneRect(0,0,960,540);
-    view2->setMode(0);
+    view2->setMode(0, true);
     //view->setSi
     //view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     //view->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
 
+
+
     option = new Option();
 	initTraduction();
     menuContainer = new MenuContainer(view2, option);
-    connect(menuContainer, SIGNAL(startLevelToGUI(Level*,GameSoundPlayer*)), this, SLOT(loadLevel(Level*,GameSoundPlayer*)));
+    player = new GameSoundPlayer(option);
+    connect(menuContainer, SIGNAL(startLevelToGUI(Level*)), this, SLOT(loadLevel(Level*)));
     connect(view2,SIGNAL(closeRender()),this,SLOT(closeRender()));
     endGameInfos = new EndGameScreen(this);
     endGameInfos->setGeometry(160,90,640,360);
@@ -51,7 +54,8 @@ void Gui::startLevel(Level *level)
 {
     view2->setFixedSize(960,540);
     view2->setSceneRect(0,0,0,0);
-    view2->setMode(1);
+    view2->setMode(1,true);
+    player->setMode(GameSoundPlayer::in_game);
     currentLevel = level;
     render = new Render(view2,level,this);
     connect(render,SIGNAL(endGame(QString,bool)),this,SLOT(endLevel(QString,bool)));
@@ -61,7 +65,6 @@ void Gui::startLevel(Level *level)
 
 void Gui::initTraduction()
 {
-    qDebug() << "Langue: " << option->getLanguage();
     switch(option->getLanguage())
     {
     case Option::english:
@@ -80,20 +83,17 @@ void Gui::initTraduction()
     qApp->installTranslator(&translator);
 }
 
-
-//TODO: a modifier selon tes envies. Je voulais pas trop dénaturer ton code
-void Gui::loadLevel(Level *lvl, GameSoundPlayer *player)
+void Gui::loadLevel(Level *lvl)
 {
 	//on arrete la musique du menu
-    player->stop();
-    delete player;
+    //player->stop();
     startLevel(lvl);
 }
 
 void Gui::endLevel(QString score, bool victory)
 {
     endGameInfos->setScreen(score,victory);
-    currentLevel->setScore(score.toInt());//SES ICI LA SCORE
+    currentLevel->setScore(score.toInt());
     endGameInfos->show();
 }
 
@@ -108,8 +108,10 @@ void Gui::closeRender()
     endGameInfos->hide();
     menuContainer = new MenuContainer(view2, option);
     //view->centerOn(menuContainer->);
-    connect(menuContainer, SIGNAL(startLevelToGUI(Level*,GameSoundPlayer*)), this, SLOT(loadLevel(Level*,GameSoundPlayer*)));
-    view2->setMode(0);
+    connect(menuContainer, SIGNAL(startLevelToGUI(Level*)), this, SLOT(loadLevel(Level*)));
+    view2->setMode(0,true);
+    player->setMode(GameSoundPlayer::menu);
     //view2->scale((qreal)10/8,(qreal)10/8);
-    destroy(render);
+    delete(render);
+    //render->destroy();
 }
