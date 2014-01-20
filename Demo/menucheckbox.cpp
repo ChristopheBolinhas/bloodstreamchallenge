@@ -7,6 +7,9 @@ MenuCheckBox::MenuCheckBox(QRectF rect, bool _checked)
 {
     this->rect = rect;
     this->checked = _checked;
+
+    imgChecked = new QPixmap(":/menu/ressources/img/menu/checked.png");
+    imgUnchecked = new QPixmap(":/menu/ressources/img/menu/unchecked.png");
 }
 
 MenuCheckBox::~MenuCheckBox()
@@ -21,11 +24,11 @@ QRectF MenuCheckBox::boundingRect() const
 
 void MenuCheckBox::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    QRectF rect = boundingRect();
+    QRect rect = boundingRect().toRect();
     if(checked)
-        painter->drawPixmap(rect.toRect(), QPixmap(":/menu/ressources/img/menu/checked.png"));
+        painter->drawPixmap(rect, *imgChecked);
     else
-        painter->drawPixmap(rect.toRect(), QPixmap(":/menu/ressources/img/menu/unchecked.png"));
+        painter->drawPixmap(rect, *imgUnchecked);
 
 }
 

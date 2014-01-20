@@ -24,6 +24,8 @@ protected:
 private:
     QRectF rect;
     bool checked;
+    QPixmap *imgOn;
+    QPixmap *imgOff;
 
 signals:
     void checkStateChanged(MenuRadioButton *mrbtn);

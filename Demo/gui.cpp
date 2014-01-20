@@ -19,31 +19,22 @@
 Gui::Gui(QWidget *parent) :
     QWidget(parent)
 {
-    //On récupère la liste des niveaux
-
-    //QList<Level*> leveltest = Level::loadLevels();
-
     setFixedSize(960,540);
     parent->setFixedSize(960,540); // Pour la fenetre principale, ou le faire dans MainWindow.cpp
 
-    view2 = new GameView(this);
-    view2->setAlignment(Qt::AlignLeft | Qt::AlignTop);
-    view2->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    view2->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
-    //view2->setSceneRect(0,0,960,540);
-    view2->setMode(0, true);
-    //view->setSi
-    //view->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
-    //view->setViewportUpdateMode(QGraphicsView::SmartViewportUpdate);
-
-
+    view = new GameView(this);
+    view->setAlignment(Qt::AlignLeft | Qt::AlignTop);
+    view->setVerticalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    view->setHorizontalScrollBarPolicy( Qt::ScrollBarAlwaysOff );
+    view->setMode(0, true);
 
     option = new Option();
+    listLevels = Level::loadLevels();
 	initTraduction();
-    menuContainer = new MenuContainer(view2, option);
+    menuContainer = new MenuContainer(view, option, listLevels);
     player = new GameSoundPlayer(option);
     connect(menuContainer, SIGNAL(startLevelToGUI(Level*)), this, SLOT(loadLevel(Level*)));
-    connect(view2,SIGNAL(closeRender()),this,SLOT(closeRender()));
+    connect(view,SIGNAL(closeRender()),this,SLOT(closeRender()));
     endGameInfos = new EndGameScreen(this);
     endGameInfos->setGeometry(160,90,640,360);
     endGameInfos->hide();
@@ -52,12 +43,12 @@ Gui::Gui(QWidget *parent) :
 }
 void Gui::startLevel(Level *level)
 {
-    view2->setFixedSize(960,540);
-    view2->setSceneRect(0,0,0,0);
-    view2->setMode(1,true);
+    view->setFixedSize(960,540);
+    view->setSceneRect(0,0,0,0);
+    view->setMode(1,true);
     player->setMode(GameSoundPlayer::in_game);
     currentLevel = level;
-    render = new Render(view2,level,this);
+    render = new Render(view,level,this);
     connect(render,SIGNAL(endGame(QString,bool)),this,SLOT(endLevel(QString,bool)));
     destroy(menuContainer);
 
@@ -85,15 +76,17 @@ void Gui::initTraduction()
 
 void Gui::loadLevel(Level *lvl)
 {
-	//on arrete la musique du menu
-    //player->stop();
     startLevel(lvl);
 }
 
 void Gui::endLevel(QString score, bool victory)
 {
     endGameInfos->setScreen(score,victory);
-    currentLevel->setScore(score.toInt());
+    if(victory)
+    {
+        currentLevel->setScore(score.toInt());
+        Level::saveLevels(*listLevels);
+    }
     endGameInfos->show();
 }
 
@@ -106,12 +99,10 @@ void Gui::retryLevel()
 void Gui::closeRender()
 {
     endGameInfos->hide();
-    menuContainer = new MenuContainer(view2, option);
-    //view->centerOn(menuContainer->);
+    menuContainer = new MenuContainer(view, option, listLevels);
+    view->centerOn(0,0); // recentre la vue car elle a été modifiée par Render
     connect(menuContainer, SIGNAL(startLevelToGUI(Level*)), this, SLOT(loadLevel(Level*)));
-    view2->setMode(0,true);
+    view->setMode(0,true);
     player->setMode(GameSoundPlayer::menu);
-    //view2->scale((qreal)10/8,(qreal)10/8);
     delete(render);
-    //render->destroy();
 }

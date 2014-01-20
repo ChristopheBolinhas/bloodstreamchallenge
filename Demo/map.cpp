@@ -18,17 +18,13 @@ Map::Map(QGraphicsScene *scene, Level *level)
     finalForeground->fill(Qt::transparent);
     finalDecors->fill(Qt::transparent);
 
-
     QPainter painterBackground(finalBackground);
     QPainter painterDecors(finalDecors);
     QPainter painterForeground(finalForeground);
 
-
-
     for(int i = 0;i < level->getMapWidth()*level->getMapHeight();i++)
     {
         painterBackground.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapBackground()+i)-1,level)));
-        //painterBackground.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapDecors()+i)-1,level)));
         if(*(level->getMapForeground()+i)-1 > 0)
         {
             painterForeground.drawPixmap(*getPoint(i,level),p.copy(*getRect(*(level->getMapForeground()+i)-1,level)));
@@ -45,7 +41,6 @@ Map::Map(QGraphicsScene *scene, Level *level)
     }
 
     //Generation du foreground Z = 5
-
     QGraphicsItem *it = scene->addPixmap(*finalBackground);
     it->setZValue(1);
 
@@ -62,14 +57,11 @@ QPoint* Map::getStartPoint()
     return startPoint;
 }
 
-
-
 QPoint* Map::getPoint(int id, Level *level)
 {
     int x = id%level->getMapWidth()*level->getTileWidth();
     int y = id/level->getMapWidth()*level->getTileHeight();
     return new QPoint(x,y);
-
 }
 
 

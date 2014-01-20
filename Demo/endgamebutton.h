@@ -13,6 +13,8 @@ signals:
 
 public slots:
 
+private:
+    QPixmap *img;
 };
 
 #endif // ENDGAMEBUTTON_H

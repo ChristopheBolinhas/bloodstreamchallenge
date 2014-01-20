@@ -43,6 +43,9 @@ private:
     int lenght;
     QPoint position;
     QGraphicsScene *scene;
+
+    QPixmap *imgSliderBar;
+    QPixmap *imgSliderDot;
 };
 
 #endif // MENUSLIDERCIRCLE_H

@@ -9,7 +9,6 @@ class Map
 {
 public:
     Map(QGraphicsScene *scene, Level *level);
-    //Map(QGraphicsScene *scene, Level *level)
     QPoint *getStartPoint();
 
 private:

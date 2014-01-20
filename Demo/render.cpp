@@ -29,6 +29,8 @@
 Render::Render(GameView *_view, Level *level, QWidget *parent) :
     QGraphicsScene(parent)
 {
+    initializeGame();
+
     view = _view;
     connect(view,SIGNAL(sendAbility(int)),this,SLOT(setAbilitySlot(int)));
     loadImages();
@@ -36,18 +38,13 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
 
     //Génération de la map (Layer 1)
     Map m(this,level);
-    qDebug() << "Map";
-    qDebug() << m.getStartPoint()->x() << " | " << m.getStartPoint()->y();
-    qDebug() << *(level->getMapObstacle() + m.getStartPoint()->x()+m.getStartPoint()->y()*level->getMapWidth());
-    qDebug() << *(level->getMapRoad() + m.getStartPoint()->x()+m.getStartPoint()->y()*level->getMapWidth());
+
+    listSquares = new QList<MapSquare*>();
     MapSquare *path = generatePath(m.getStartPoint()->x(),m.getStartPoint()->y(),level);
-    qDebug() << "Path";
     view->setScene(this);
 
-    qDebug() << level->getNbUnite();
     unitCount = level->getNbUnite();
     unitToInit = unitCount;
-    unitMinima = 1;
     listUnit = new QList<Unit*>();
 
     for(int i = 0;i < unitCount;i++)
@@ -59,9 +56,7 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
         connect(unit,SIGNAL(useUnit(Unit*)),this,SLOT(unitUse(Unit*)));
         connect(unit,SIGNAL(winUnit(Unit*)),this,SLOT(unitWin(Unit*)));
         connect(unit,SIGNAL(switchNext()),this,SLOT(switchNext()));
-        qDebug() << "Unit " << i;
     }
-    qDebug() << "Units";
     mainUnit = listUnit->first();
     connect(this, SIGNAL(updateScore(QString)),view,SIGNAL(setScore(QString)));
     connect(this, SIGNAL(updateUnitCount(QString)),view,SIGNAL(setUnitCount(QString)));
@@ -94,10 +89,7 @@ Render::~Render()
     destroy();
 }
 
-void Render::initializeGame()
-{
-    //connect(this,SIGNAL(moveUnits()),dynamic_cast<QObject*>(unit),SLOT(moveUnit()));
-}
+
 
 void Render::deleteImages(QList<QPixmap *> *list)
 {
@@ -172,9 +164,6 @@ void Render::loadImages()
     unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Chute/unit_5.png"));
     unitsImages->append(new QPixmap(":/units/ressources/img/Unites/Chute/unit_6.png"));
 
-
-
-
     //Boost images
     boostImages = new QList<QPixmap*>();
     boostImages->append(new QPixmap(":/boost/ressources/img/Boost/updown/trap_on.png"));
@@ -196,7 +185,6 @@ void Render::loadImages()
     caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/leftright/trap_anim1.png"));
     caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/leftright/trap_anim2.png"));
     caillotImages->append(new QPixmap(":/caillot/ressources/img/Caillot/leftright/trap_anim3.png"));
-
 
     //Deviation
     deviationImages = new QList<QPixmap*>();
@@ -226,13 +214,17 @@ void Render::loadImages()
     chuteImages->append(new QPixmap(":/chute/ressources/img/Chute/leftright/trap_anim1.png"));
     chuteImages->append(new QPixmap(":/chute/ressources/img/Chute/leftright/trap_anim2.png"));
     chuteImages->append(new QPixmap(":/chute/ressources/img/Chute/leftright/trap_anim3.png"));
-
-
-
-
 }
 
-
+void Render::initializeGame()
+{
+    startCountDown = 3;
+    unitDead = 0;
+    unitUsed = 0;
+    unitWon = 0;
+    winUnits = 0;
+    score = 0;
+}
 
 
 void Render::setAbilitySlot(int id)
@@ -248,53 +240,59 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
         int tabPos = currentX+currentY*level->getMapWidth();
         int fleche = *(level->getMapRoad()+tabPos);
         int orientationPrimary = 0;
+        int orientationSecondary = 0;
         int obstacle = *(level->getMapObstacle()+tabPos);
-        qDebug() << "obtsacle est: " << obstacle;
+
         bool isEndSquare = false;
+
+        int primaryX;
+        int primaryY;
+        int secondaryX;
+        int secondaryY;
 
         Obstacle *SquareObstacle = 0;
         MapSquare *PrimaryNextSquare = 0;
         MapSquare *SecondaryNextSquare = 0;
-
-        //GESTION OBSTACLES
+        MapSquare *tempSquare = 0;
 
         //On analyse la flèche pour savoir quelle est son orientation
         if(fleche!=0)
         {
             switch(fleche)
             {
-                case 381: //Fleche droite
-                    orientationPrimary = 6;
-                    break;
-                case 382: //Fleche gauche
-                    orientationPrimary = 4;
-                    break;
-                case 383: //Fleche bas
-                    orientationPrimary = 8;
-                    break;
-                case 384: //Fleche haut
-                    orientationPrimary = 2;
-                    break;
-                case 385: //Fleche haut-gauche
-                    orientationPrimary = 1;
-                    break;
-                case 386: //Fleche haut-droite
-                    orientationPrimary = 3;
-                    break;
-                case 387: //Fleche bas-gauche
-                    orientationPrimary = 7;
-                    break;
-                case 388: //Fleche bas-droite
-                    orientationPrimary = 9;
-                    break;
-                default:
-                    return PrimaryNextSquare;
+            case 381: //Fleche droite
+                orientationPrimary = 6;
+                break;
+            case 382: //Fleche gauche
+                orientationPrimary = 4;
+                break;
+            case 383: //Fleche bas
+                orientationPrimary = 8;
+                break;
+            case 384: //Fleche haut
+                orientationPrimary = 2;
+                break;
+            case 385: //Fleche haut-gauche
+                orientationPrimary = 1;
+                break;
+            case 386: //Fleche haut-droite
+                orientationPrimary = 3;
+                break;
+            case 387: //Fleche bas-gauche
+                orientationPrimary = 7;
+                break;
+            case 388: //Fleche bas-droite
+                orientationPrimary = 9;
+                break;
+            default:
+                return PrimaryNextSquare;
             }
         }
         else
         {
             return PrimaryNextSquare;
         }
+
         //Boost - Rouge - 361
         //Caillot - Jaune - 362
         //Bacterie - Vert - 363
@@ -305,105 +303,134 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
 
         switch(obstacle)
         {
-            case 361:
-                SquareObstacle = new Boost(currentX, currentY,orientationPrimary,boostImages, level);
-                break;
-            case 362:
-                SquareObstacle = new Caillot(currentX,currentY,orientationPrimary,caillotImages,level);
-                break;
-            case 363:
-                SquareObstacle = new Bacterie(currentX,currentY,orientationPrimary,bacterieImages,level);
-                break;
-            case 364:
-                SquareObstacle = new Chute(currentX,currentY,orientationPrimary,chuteImages,level);
-                break;
-            case 366:
-                isEndSquare = true;
-                break;
-            case 389:
-                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 6, deviationImages, level);
-                break;
-            case 390:
-                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 4, deviationImages, level);
-                break;
-            case 391:
-                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 8, deviationImages, level);
-                break;
-            case 392:
-                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 2, deviationImages, level);
-                break;
-            case 393:
-                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 1, deviationImages, level);
-                break;
-            case 394:
-                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 3, deviationImages, level);
-                break;
-            case 395:
-                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 7, deviationImages, level);
-                break;
-            case 396:
-                SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, 9, deviationImages, level);
-                break;
+        case 361:
+            SquareObstacle = new Boost(currentX, currentY,orientationPrimary,boostImages, level);
+            break;
+        case 362:
+            SquareObstacle = new Caillot(currentX,currentY,orientationPrimary,caillotImages,level);
+            break;
+        case 363:
+            SquareObstacle = new Bacterie(currentX,currentY,orientationPrimary,bacterieImages,level);
+            break;
+        case 364:
+            SquareObstacle = new Chute(currentX,currentY,orientationPrimary,chuteImages,level);
+            break;
+        case 366:
+            isEndSquare = true;
+            break;
+        case 389:
+            orientationSecondary = 6;
+
+            break;
+        case 390:
+            orientationSecondary = 4;
+
+            break;
+        case 391:
+            orientationSecondary = 8;
+
+            break;
+        case 392:
+            orientationSecondary = 2;
+
+            break;
+        case 393:
+            orientationSecondary = 1;
+
+            break;
+        case 394:
+            orientationSecondary = 3;
+
+            break;
+        case 395:
+            orientationSecondary = 7;
+
+            break;
+        case 396:
+            orientationSecondary = 9;
+
+            break;
         }
 
-        //Si l'obstacle est != 0 on va devoir traiter le cas de deviation
+        if(orientationSecondary != 0)
+        {
+            SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, orientationSecondary, deviationImages, level);
+        }
         if(SquareObstacle != 0)
         {
-            //qDebug() << "OBSTACLE JEUNE BLANC";
-            //Si l'obstacle est une déviation
-
             if(typeid(*SquareObstacle) == typeid(Deviation))
             {
                 //Vu que l'objet est une déviation, il faut traiter le chemin secondaire
                 //On génére donc le chemin alternatif que l'on génère ici
-                SecondaryNextSquare = generatePath(xFromOrientation(currentX,dynamic_cast<Deviation*>(SquareObstacle)->getOrientation()),yFromOrientation(currentY,dynamic_cast<Deviation*>(SquareObstacle)->getOrientation()),level);
-                addItem(dynamic_cast<Deviation*>(SquareObstacle));
+                secondaryX = xFromOrientation(currentX,orientationSecondary);
+                secondaryY = yFromOrientation(currentY,orientationSecondary);
+                tempSquare = checkSquare(secondaryX,secondaryY);
+                if(tempSquare == 0)
+                {
+                    SecondaryNextSquare = generatePath(secondaryX,secondaryY,level);
+                    addItem(dynamic_cast<Deviation*>(SquareObstacle));
+                }
+                else
+                {
+                    SecondaryNextSquare = tempSquare;
+                }
             }
-            else if(typeid(*SquareObstacle) == typeid(Caillot))
+            else
             {
-                addItem(dynamic_cast<Caillot*>(SquareObstacle));
-                //dynamic_cast<Caillot*>(SquareObstacle)->setPos(currentX*level->getTileWidth(),currentY*level->getTileHeight());
-            }
-            else if(typeid(*SquareObstacle) == typeid(Boost))
-            {
-                addItem(dynamic_cast<Boost*>(SquareObstacle));
-            }
-            else if(typeid(*SquareObstacle) == typeid(Bacterie))
-            {
-                addItem(dynamic_cast<Bacterie*>(SquareObstacle));
-            }
-            else if(typeid(*SquareObstacle) == typeid(Chute))
-            {
-                addItem(dynamic_cast<Chute*>(SquareObstacle));
+                addItem(SquareObstacle);
             }
 
         }
 
         //Il faut maintenant lancer la generation récursive du principal et retourner l'objet actuel MapSquare
+        primaryX = xFromOrientation(currentX,orientationPrimary);
+        primaryY = yFromOrientation(currentY,orientationPrimary);
+        tempSquare = checkSquare(primaryX,primaryY);
+        if(tempSquare == 0)
+        {
+            PrimaryNextSquare = generatePath(primaryX,primaryY,level);
+        }
+        else
+        {
+            PrimaryNextSquare = tempSquare;
+        }
 
-            PrimaryNextSquare = generatePath(xFromOrientation(currentX,orientationPrimary),yFromOrientation(currentY,orientationPrimary),level);
-            MapSquare *square;
-            if(SecondaryNextSquare != 0)
+
+        MapSquare *square;
+        if(SecondaryNextSquare != 0)
+        {
+            square = new MapSquare(PrimaryNextSquare,SecondaryNextSquare,currentX,currentY,SquareObstacle);
+
+
+        }
+        else
+        {
+            if(!isEndSquare)
             {
-                square = new MapSquare(PrimaryNextSquare,SecondaryNextSquare,currentX,currentY,SquareObstacle);
-                qDebug() << "Deviation @" << currentX << "|" <<currentY;
-
+                square = new MapSquare(PrimaryNextSquare,currentX,currentY,SquareObstacle);
             }
             else
             {
-                if(!isEndSquare)
-                {
-                    square = new MapSquare(PrimaryNextSquare,currentX,currentY,SquareObstacle);
-                }
-                else
-                {
-                    square = new MapSquare(PrimaryNextSquare,currentX,currentY,SquareObstacle,true);
-                }
+                square = new MapSquare(PrimaryNextSquare,currentX,currentY,SquareObstacle,true);
             }
+        }
+        listSquares->append(square);
+        return square;
+
+
+
+    }
+    return 0;
+}
+
+MapSquare* Render::checkSquare(int x, int y)
+{
+    foreach(MapSquare *square, *listSquares)
+    {
+        if(square->getX() == x && square->getY() == y)
+        {
             return square;
-
-
-
+        }
     }
     return 0;
 }
@@ -414,21 +441,21 @@ void Render::keyPressEvent(QKeyEvent *event)
 {
     switch(event->key())
     {
-        case Qt::Key_1:
-            mainUnit->setAbility(1);
+    case Qt::Key_1:
+        mainUnit->setAbility(1);
         break;
-        case Qt::Key_2:
-            mainUnit->setAbility(2);
-            break;
-        case Qt::Key_3:
-            mainUnit->setAbility(3);
+    case Qt::Key_2:
+        mainUnit->setAbility(2);
         break;
-        case Qt::Key_4:
-            mainUnit->setAbility(4);
-            break;
-        case Qt::Key_5:
-            mainUnit->setAbility(5);
-            break;
+    case Qt::Key_3:
+        mainUnit->setAbility(3);
+        break;
+    case Qt::Key_4:
+        mainUnit->setAbility(4);
+        break;
+    case Qt::Key_5:
+        mainUnit->setAbility(5);
+        break;
     }
 }
 
@@ -436,20 +463,19 @@ int Render::xFromOrientation(int x, int orientation)
 {
     switch(orientation)
     {
-        case 1:
-        case 4:
-        case 7:
-            return x-1;
-        case 2:
-        case 5:
-        case 8:
-            return x;
-        case 3:
-        case 6:
-        case 9:
-            return x+1;
+    case 1:
+    case 4:
+    case 7:
+        return x-1;
+    case 2:
+    case 5:
+    case 8:
+        return x;
+    case 3:
+    case 6:
+    case 9:
+        return x+1;
     }
-    qDebug() << "END X, -1";
     return 0;
 }
 
@@ -457,17 +483,17 @@ int Render::yFromOrientation(int y, int orientation)
 {
     switch(orientation)
     {
-        case 1:
-        case 2:
-        case 3:
-            return y-1;
-        case 4:
-        case 6:
-            return y;
-        case 7:
-        case 8:
-        case 9:
-            return y+1;
+    case 1:
+    case 2:
+    case 3:
+        return y-1;
+    case 4:
+    case 6:
+        return y;
+    case 7:
+    case 8:
+    case 9:
+        return y+1;
     }
     return 0;
 }
@@ -484,7 +510,6 @@ void Render::unitUse(Unit *unit)
     unitCount--;
     unitUsed++;
     listUnit->removeOne(unit);
-    //listUnit->removeFirst();
     emit updateUnitCount(QString::number(unitCount));
     if(listUnit->size() >0)
     {
@@ -500,10 +525,6 @@ void Render::unitDie(Unit *unit)
     unitDead++;
     listUnit->removeOne(unit);
     emit updateUnitCount(QString::number(unitCount));
-    /*if(listUnit->size() > 0)
-    {
-        mainUnit = listUnit->first();
-    }*/
     calculateScore();
 
 }
@@ -534,7 +555,6 @@ void Render::gameTimer()
         {
             if(unitWon == 0)
                 view->centerOn(mainUnit);
-            //advance();
             emit moveUnits();
         }
         else
@@ -555,37 +575,43 @@ void Render::gameTimer()
 void Render::startGame()
 {
     view->centerOn(mainUnit);
-    if(startCountDown == 0)
+    if(play)
     {
-
-        mainTimer->start(1000/60);//60fps
-
-        startCountDown--;
-        view->setStartInfo(startCountDown);
-    }
-    else if(startCountDown < 0)
-    {
-        if(unitToInit > 0)
+        if(startCountDown == 0)
         {
-            connect(this,SIGNAL(moveUnits()),dynamic_cast<QObject*>(listUnit->at(unitCount-unitToInit)),SLOT(moveUnit()));
-            unitToInit--;
+
+            mainTimer->start(1000/60);//60fps
+
+            startCountDown--;
+            view->setStartInfo(startCountDown);
+        }
+        else if(startCountDown < 0)
+        {
+            if(unitToInit > 0)
+            {
+                connect(this,SIGNAL(moveUnits()),dynamic_cast<QObject*>(listUnit->at(unitCount-unitToInit)),SLOT(moveUnit()));
+                unitToInit--;
+            }
+            else
+            {
+                startTimer->stop();
+            }
         }
         else
         {
-            startTimer->stop();
+            view->setStartInfo(startCountDown);
+            startCountDown--;
         }
-    }
-    else
-    {
-        //view->scale(3,3);
-        view->setStartInfo(startCountDown);
-        startCountDown--;
     }
 }
 
 void Render::toggleGame(bool _play)
 {
     play = _play;
+    if(!play && startCountDown < 0)
+        startTimer->stop();
+    else
+        startTimer->start();
 
 }
 

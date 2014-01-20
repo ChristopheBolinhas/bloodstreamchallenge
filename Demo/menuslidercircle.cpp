@@ -15,6 +15,9 @@ MenuSliderCircle::MenuSliderCircle(QPoint position, int size, int minimum, int m
     this->maximum = maximum;
     this->lenght = lenght;
     this->scene = scene;
+
+    this->imgSliderBar = new QPixmap(":/menu/ressources/img/menu/Slider_bar.png");
+    this->imgSliderDot = new QPixmap(":/menu/ressources/img/menu/Slider_dot.png");
 }
 
 MenuSliderCircle::~MenuSliderCircle()
@@ -29,8 +32,8 @@ QRectF MenuSliderCircle::boundingRect() const
 
 void MenuSliderCircle::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
-    painter->drawPixmap(position.x()-pos().x()+size/2,position.y()-pos().y(),QPixmap(":/menu/ressources/img/menu/Slider_bar.png"));
-    painter->drawPixmap(position.x(), position.y()-size/4,QPixmap(":/menu/ressources/img/menu/Slider_dot.png"));
+    painter->drawPixmap(position.x()-pos().x()+size/2,position.y()-pos().y(),*imgSliderBar);
+    painter->drawPixmap(position.x(), position.y()-size/4,*imgSliderDot);
 }
 
 int MenuSliderCircle::getValue() const

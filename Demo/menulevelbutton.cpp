@@ -38,7 +38,6 @@ void MenuLevelButton::setImage(QPixmap *value)
 
 QRectF MenuLevelButton::boundingRect() const
 {
-    //return *rectImageMargin;
     return this->rectImage->toRect();
 }
 
@@ -66,7 +65,6 @@ void MenuLevelButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 
 void MenuLevelButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    //qDebug() << "clic pressé";
     update();
     QGraphicsItem::mousePressEvent(event);
 }
@@ -76,10 +74,8 @@ void MenuLevelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QPointF downPos = event->pos();
     if(isMouseReleaseInRectImage(downPos) && (!level->isLocked() || level->getOrder()==1))
     {
-        //qDebug() << "clic relaché";
         update();
         QGraphicsItem::mouseReleaseEvent(event);
-        //qDebug() << "before emit " << this->level->getName();
         emit startLevel(level);
     }
 }

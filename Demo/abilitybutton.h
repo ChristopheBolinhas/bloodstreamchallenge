@@ -11,10 +11,10 @@ public:
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *e);
 private:
-    int abilityId = 0;
+    int abilityId;
     QPixmap *releasedImg;
     QPixmap *pressedImg;
-    bool etat = false;
+    bool etat;
     QTimer *buttonAnim;
 
 signals:

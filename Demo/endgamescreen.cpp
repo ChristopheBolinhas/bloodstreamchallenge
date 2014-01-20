@@ -27,14 +27,14 @@ EndGameScreen::EndGameScreen(QWidget *parent) :
 
     connect(btnHome,SIGNAL(clicked()),this,SIGNAL(homeSignal()));
     connect(btnRetry,SIGNAL(clicked()),this,SIGNAL(retrySignal()));
+    bg = new QPixmap(":/menu/ressources/img/menu/endgamebackground.png");
 
 }
 
 void EndGameScreen::paintEvent(QPaintEvent *)
 {
     QPainter painter(this);
-    QPixmap bg(":/menu/ressources/img/menu/endgamebackground.png");
-    painter.drawPixmap(0,0,640,360,bg);
+    painter.drawPixmap(0,0,640,360,*bg);
 
 }
 

@@ -7,7 +7,7 @@
 #include <QGraphicsItem>
 #include <QGraphicsObject>
 
-class Deviation : public Obstacle//, public QGraphicsObject
+class Deviation : public Obstacle
 {
     Q_OBJECT
 public:

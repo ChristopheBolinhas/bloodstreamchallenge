@@ -6,11 +6,13 @@ Deviation::Deviation(int _x, int _y, int _orientationPrimary,int _orientationSec
 {
     secondaryOrientation = _orientationSecondary;
     deviationTimer=new QTimer(this);
-    connect(deviationTimer,SIGNAL(timeout()),this,SLOT(animation()));
+
     deviationTimer->setInterval(100);
     deviationTimer->start();
     anim = 0;
+
     setPos(_x*level->getTileWidth(),_y*level->getTileHeight());
+    connect(deviationTimer,SIGNAL(timeout()),this,SLOT(animation()));
 }
 
 Deviation::~Deviation()
@@ -38,6 +40,7 @@ void Deviation::switchPath(MapSquare *currentSquare)
     {
         currentSquare->activateDeviation();
         enabled = false;
+        timerAnim->start();
     }
 }
 
@@ -78,7 +81,7 @@ void Deviation::paint(QPainter *painter, const QStyleOptionGraphicsItem *, QWidg
             oriUse = secondaryOrientation;
         else
             oriUse = orientation;
-        if(etat == 0)
+        if(etat == 0 || etat == 3)
         {
             t.rotate(angleFromOrientation(oriUse));
         }

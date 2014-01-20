@@ -10,7 +10,6 @@
 GameView::GameView(QWidget *parent) :
     QGraphicsView(parent)
 {
-
     loadHudImages();
     loadHudElements();
 
@@ -28,9 +27,6 @@ GameView::GameView(QWidget *parent) :
     connect(abi5,SIGNAL(pressAbility(int)),this,SIGNAL(sendAbility(int)));
     endGame = true;
     setMode(0,true);
-
-
-
 }
 
 void GameView::setStartInfo(int step)
@@ -48,18 +44,16 @@ void GameView::setStartInfo(int step)
 
 void GameView::loadHudElements()
 {
-
-
     //Element coin supérieur gauche
-        //Label d'affichages
+    //Label d'affichages
     scoreInfo = new QLabel(tr("Score :"),this);
     scoreInfo->setGeometry(10,10,100,40);
     scoreInfo->setFont(QFont("LetterOMatic!", 10));
-    unitInfo = new QLabel(tr("Unités : "),this);
+    unitInfo = new QLabel(tr("Unites : "),this);
     unitInfo->setFont(QFont("LetterOMatic!", 10));
     unitInfo->setGeometry(10,50,200,50);
 
-        //Labels d'information
+    //Labels d'information
     score = new QLabel(this);
     score->setFont(QFont("LetterOMatic!", 10));
     score->setGeometry(110,10,100,40);
@@ -97,25 +91,6 @@ void GameView::loadHudElements()
     startLabel->move(960/2,540/2);
     startLabel->hide();
     startLabel->setFont(QFont("LetterOMatic!", 30));
-
-}
-
-
-
-void GameView::paintEvent(QPaintEvent *event)
-{
-    QGraphicsView::paintEvent(event);
-}
-
-void GameView::update()
-{
-    QGraphicsView::update();
-}
-
-void GameView::setEndGame(bool victory)
-{
-
-
 }
 
 //Mode de la vue, permet d'afficher/masquer les bouttons du hud
@@ -159,6 +134,7 @@ void GameView::setMode(int mode, bool sound)
     }
 }
 
+// Evite le scroll sur la scène.
 void GameView::wheelEvent(QWheelEvent *event)
 {
 
@@ -186,7 +162,4 @@ void GameView::loadHudImages()
 
     spikeImg->append(new QPixmap(":/hud/ressources/img/HUD_Icon/spike_1.png"));
     spikeImg->append(new QPixmap(":/hud/ressources/img/HUD_Icon/spike_2.png"));
-
-
-
 }

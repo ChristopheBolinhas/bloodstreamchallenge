@@ -2,13 +2,13 @@
 #define GAMESOUNDPLAYER_H
 
 #include <QtWidgets>
-class Option;
 #include <QMediaPlayer>
+
+class Option;
 class GameSoundPlayer : public QWidget
 {
     Q_OBJECT
 public:
-    GameSoundPlayer(QString sound, Option *option, bool loop, QWidget *parent = 0);
     GameSoundPlayer(Option *option, QWidget *parent = 0);
     ~GameSoundPlayer();
 

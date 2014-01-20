@@ -7,6 +7,9 @@ MenuRadioButton::MenuRadioButton(QRectF rect, bool _checked)
 {
     this->rect = rect;
     this->checked = _checked;
+
+    imgOn = new QPixmap(":/menu/ressources/img/menu/Combo_on.png");
+    imgOff = new QPixmap(":/menu/ressources/img/menu/Combo_off.png");
 }
 
 MenuRadioButton::~MenuRadioButton()
@@ -23,16 +26,15 @@ void MenuRadioButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *o
 {
     QRectF rect = boundingRect();
     if(checked)
-        painter->drawPixmap(rect.toRect(), QPixmap(":/menu/ressources/img/menu/Combo_on.png"));
+        painter->drawPixmap(rect.toRect(), *imgOn);
     else
-        painter->drawPixmap(rect.toRect(), QPixmap(":/menu/ressources/img/menu/Combo_off.png"));
+        painter->drawPixmap(rect.toRect(), *imgOff);
 }
 
 void MenuRadioButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
     update();
     QGraphicsItem::mousePressEvent(event);
-    qDebug() << "signal emit";
     emit checkStateChanged(this);
 }
 

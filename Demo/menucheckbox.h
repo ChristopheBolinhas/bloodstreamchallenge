@@ -22,6 +22,9 @@ protected:
 private:
     QRectF rect;
     bool checked;
+
+    QPixmap *imgChecked;
+    QPixmap *imgUnchecked;
 };
 
 #endif // MENUCHECKBOX_H

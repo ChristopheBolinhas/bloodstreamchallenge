@@ -22,6 +22,8 @@ private:
     QLabel *scoreValue;
     EndGameButton *btnRetry;
     EndGameButton *btnHome;
+
+    QPixmap *bg;
 };
 
 #endif // ENDGAMESCREEN_H

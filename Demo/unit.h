@@ -14,11 +14,10 @@ class Unit : public QGraphicsObject
 
 public:
     explicit Unit(QList<QPixmap*> *_pixmapList, MapSquare *path,QGraphicsItem *parent = 0);
-    //void advance (int phase);
     virtual ~Unit();
-    QRectF boundingRect() const override;
+    QRectF boundingRect() const;
 
-    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget) override;
+    void paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget);
     int getAbility() const;
     void setAbility(int value);
 
@@ -36,12 +35,14 @@ private:
     int paces;
     int deathAnimationState;
     QTimer *deathTimer;
-    bool isAlive = true;
-    bool won = false;
-    int paceMax = 15;
+    bool isAlive;
+    bool won;
+    int paceMax;
     void die();
     void use();
     void finish();
+    void initUnit();
+
 signals:
     void useUnit(Unit *unit);
     void killUnit(Unit *unit);

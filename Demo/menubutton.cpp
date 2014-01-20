@@ -43,7 +43,6 @@ void MenuButton::setLabel(const QString &value)
 
 void MenuButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
 {
-    //qDebug() << "clic pressé " << this->getLabel();
     update();
     QGraphicsItem::mousePressEvent(event);
 }
@@ -53,7 +52,6 @@ void MenuButton::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
     QPointF downPos = event->pos();
     if(event->button()==Qt::LeftButton && isMouseReleaseInRectImage(downPos))
     {
-        //qDebug() << "clic relaché " << this->getLabel();
         update();
         QGraphicsItem::mouseReleaseEvent(event);
         emit clicked();

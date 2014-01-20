@@ -4,6 +4,7 @@
 AbilityButton::AbilityButton(int _abilityId, QList<QPixmap*> *images, QWidget *parent) :
     QPushButton(parent)
 {
+    etat = false;
     abilityId = _abilityId;
     releasedImg = images->at(0);
     pressedImg = images->at(1);

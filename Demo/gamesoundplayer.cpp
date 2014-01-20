@@ -1,11 +1,10 @@
-#include "gamesoundplayer.h"
 #include <QMediaPlayer>
-
 #include <QMediaPlaylist>
+#include <QDebug>
 
+#include "gamesoundplayer.h"
 #include "option.h"
 
-#include <QDebug>
 
 const QString GameSoundPlayer::GAME_STARTED = "/ressources/sounds/game_started.wav";
 const QString GameSoundPlayer::UNIT_KILLED = "/ressources/sounds/gamestarted.wav"; //TODO
@@ -14,66 +13,36 @@ const QString GameSoundPlayer::GAME_OVER = "/ressources/sounds/gamestarted.wav";
 const QString GameSoundPlayer::TRAP_DISABLED = "/ressources/sounds/trap_disabled.wav";
 const QString GameSoundPlayer::ABILITY_ENABLED = "/ressources/sounds/chop.wav"; //TODO
 
-const QString GameSoundPlayer::SOUND_IN_GAME = "/ressources/sounds/trap_disabled.wav";
+const QString GameSoundPlayer::SOUND_IN_GAME = "/ressources/sounds/ingamesound.wav";
 const QString GameSoundPlayer::SOUND_MENU = "/ressources/sounds/HumanHeartBeat.wav"; //TODO
-
-GameSoundPlayer::GameSoundPlayer(QString sound, Option *option, bool loop, QWidget *parent) : QWidget(parent)
-{
-
-
-
-    /*player = new QMediaPlayer();
-    player->setVolume(option->getVolume());
-    player->setMuted(option->isMute());
-    player->setMedia(QMediaContent(QUrl::fromLocalFile(currentDir+sound)));
-
-    if(loop)
-    {
-        QMediaPlaylist *playlist = new QMediaPlaylist();
-        playlist->addMedia(player->media());
-        playlist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
-        player->setPlaylist(playlist);
-    }*/
-
-
-}
 
 GameSoundPlayer::GameSoundPlayer(Option *option, QWidget *parent) : QWidget(parent)
 {
-    playerList = new QList<QMediaPlayer*>();
-    backgroundPlayer = new QMediaPlayer();
-    playerList->append(backgroundPlayer);
+    this->option = option;
     currentDir = QApplication::applicationDirPath();
+
+    backgroundPlayer = new QMediaPlayer();
+    playerList = new QList<QMediaPlayer*>();
+
     backgroundPlaylist = new QMediaPlaylist();
 
     backgroundPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(currentDir+SOUND_MENU)));
-    backgroundPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(currentDir+SOUND_IN_GAME)));
+    //backgroundPlaylist->addMedia(QMediaContent(QUrl::fromLocalFile(currentDir+SOUND_IN_GAME)));
     backgroundPlaylist->setPlaybackMode(QMediaPlaylist::CurrentItemInLoop);
     backgroundPlaylist->setCurrentIndex(0);
-
-
-
-     qDebug() << "Playlist yolo" << currentDir+SOUND_MENU;
-    this->option = option;
-    qDebug() << "Playlist yolo";
     backgroundPlayer->setPlaylist(backgroundPlaylist);
     backgroundPlayer->setVolume(option->getVolume());
     backgroundPlayer->setMuted(option->isMute());
-    qDebug() << "Play background bitch0";
     backgroundPlayer->play();
-    qDebug() << "Play background bitch";
+
 }
 
 GameSoundPlayer::~GameSoundPlayer()
 {
-    //playlist
-    //player
 }
 
 void GameSoundPlayer::playSound(QString sound)
 {
-    currentDir = QApplication::applicationDirPath();
-
     QMediaPlayer *soundPlayer = new QMediaPlayer();
     playerList->append(soundPlayer);
 
@@ -86,7 +55,11 @@ void GameSoundPlayer::playSound(QString sound)
 
 void GameSoundPlayer::setMuted(bool muted)
 {
-    //backgroundPlaylist->currentMedia()
+    backgroundPlayer->setMuted(muted);
+    foreach (QMediaPlayer *src, *playerList) {
+        if(src->state() == QMediaPlayer::PlayingState)
+            src->setMuted(muted);
+    }
 
 }
 
@@ -104,6 +77,6 @@ void GameSoundPlayer::setMode(SoundMode mode)
 
     }
     backgroundPlayer->playlist()->next();
-    //qDeleteAll(*playerList);
+    qDeleteAll(*playerList);
 }
 

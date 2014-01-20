@@ -11,33 +11,33 @@ Obstacle::Obstacle(int _x, int _y, int _orientation, QList<QPixmap *> *_images, 
     {
 
 
-        case 1:
-        case 9:
-            rotation = 2;
-        case 3:
-        case 7:
-            rotation++;
-            x = _x-1;
-            y = _y-1;
-            width = 120;
-            height = 120;
-            rotation = 1;
+    case 1:
+    case 9:
+        rotation = 2;
+    case 3:
+    case 7:
+        rotation++;
+        x = _x-1;
+        y = _y-1;
+        width = 120;
+        height = 120;
+        rotation = 1;
 
-            break;
-        case 2:
-        case 8:
-            x = _x-1;
-            y = _y;
-            height = 40;
-            width = 120;
-            break;
-        case 4:
-        case 6:
-            x = _x;
-            y = _y-1;
-            height = 120;
-            width = 40;
-            break;
+        break;
+    case 2:
+    case 8:
+        x = _x-1;
+        y = _y;
+        height = 40;
+        width = 120;
+        break;
+    case 4:
+    case 6:
+        x = _x;
+        y = _y-1;
+        height = 120;
+        width = 40;
+        break;
     }
     timerAnim = new QTimer(this);
     timerAnim->setInterval(200);
@@ -50,7 +50,6 @@ Obstacle::Obstacle(int _x, int _y, int _orientation, QList<QPixmap *> *_images, 
 
 Obstacle::~Obstacle()
 {
-    qDebug() << "Delete obstacle";
     timerAnim->stop();
     delete(timerAnim);
 }
@@ -82,10 +81,8 @@ void Obstacle::paint( QPainter *painter, const QStyleOptionGraphicsItem*,QWidget
 {
     if(images != 0)
     {
-
         QTransform t;
         t.rotate(180);
-        //currentPixmap->tr
         if(orientation == 8)
         {
             QPixmap *currentPixmap = images->at(etat);

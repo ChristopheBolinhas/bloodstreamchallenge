@@ -47,24 +47,23 @@ private:
     Unit *mainUnit;
     QTimer *mainTimer;
     QTimer *startTimer;
-    int startCountDown = 3;
+    int startCountDown;
     void keyPressEvent(QKeyEvent *event);
     int xFromOrientation(int x, int orientation);
     int yFromOrientation(int y, int orientation);
 
     //Configuration partie
     int unitCount;
-    int unitDead = 0;
-    int unitUsed = 0;
-    int unitMinima;
+    int unitDead;
+    int unitUsed;
     int unitToInit;
-    int unitWon = 0;
+    int unitWon;
 
-    int winUnits = 0;
+    int winUnits;
     bool play;
 
 
-    int score = 0; //Score = (total-minima / survivants) *1000 - 50*deces
+    int score; //Score = (total-minima / survivants) *1000 - 50*deces
               //Score initial
 
     //Tableaux des images des composants
@@ -79,11 +78,14 @@ private:
 
     QList<Obstacle*> *listObstacles;
 
+    QList<MapSquare*> *listSquares;
+
     void calculateScore();
     void loadImages();
     void initializeGame();
     void deleteImages(QList<QPixmap*> *list);
     void deleteUnits(QList<Unit *> *list);
+    MapSquare *checkSquare(int x, int y);
 };
 
 #endif // RENDER_H

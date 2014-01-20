@@ -12,7 +12,7 @@
 Unit::Unit(QList<QPixmap *> *_pixmapList, MapSquare *path, QGraphicsItem *parent)
     : QGraphicsObject(parent)
 {
-
+    initUnit();
     pixmapList = _pixmapList;
     currentSquare = path;
     speed = 0;
@@ -23,20 +23,14 @@ Unit::Unit(QList<QPixmap *> *_pixmapList, MapSquare *path, QGraphicsItem *parent
     deathTimer = new QTimer(this);
     deathTimer->setInterval(100);
     connect(deathTimer,SIGNAL(timeout()),this,SLOT(animateDeath()));
-    paceMax = 25;
+    paceMax = 18;//Vitesse de base
     ability = 0;
-    //calcultateNextMove();
-
 }
 
 void Unit::destroy()
 {
     deathTimer->stop();
-
     delete(deathTimer);
-    qDebug() << "Destroy unit";
-    //delete(this);
-
 }
 
 Unit::~Unit()
@@ -77,8 +71,6 @@ void Unit::calcultateNextMove(int _speed, int _paces)
 
 void Unit::moveUnit()
 {
-    //if(currentSquare->getNext()->getHasNext() && isAlive && animation->state() == QPropertyAnimation::Stopped)
-
     if(currentSquare->getNext()->getHasNext())
     {
         if(currentSquare->getNext()->getIsEnd() && isAlive)
@@ -100,26 +92,21 @@ void Unit::moveUnit()
             if(paces == paceMax-speed)
             {
 
-                //On test que le prochain n'ai pas d'obstacle
                 if(currentSquare->getNext()->hasObstacle())
                 {
                     if(currentSquare->getNext()->getObstacle()->isEnabled())
-                    //if(currentSquare->getObstacle()->isEnabled())
                     {
                         Obstacle *obs = currentSquare->getNext()->getObstacle();
-                        //Obstacle *obs = currentSquare->getObstacle();
                         if(typeid(*(obs)) == typeid(Caillot))
                         {
                             if(ability == 1)
                             {
                                 use();
                                 obs->disable();
-                                //ability = 0;
-
                             }
                             else
                             {
-                                //die();
+                                die();
                             }
                         }
                         else if(typeid(*(obs)) == typeid(Bacterie))
@@ -128,11 +115,10 @@ void Unit::moveUnit()
                             {
                                 use();
                                 obs->disable();
-                                //ability = 0;
                             }
                             else
                             {
-                                //die();
+                                die();
 
                             }
                         }
@@ -142,8 +128,7 @@ void Unit::moveUnit()
                             {
                                 use();
                                 dynamic_cast<Deviation*>(obs)->switchPath(currentSquare->getNext());
-                                //currentSquare->getNext()->activateDeviation();
-                                //ability = 0;
+
                             }
                         }
                         else if(typeid(*(obs)) == typeid(Boost))
@@ -152,7 +137,6 @@ void Unit::moveUnit()
                             {
                                 use();
                                 obs->disable();
-                                //ability = 0;
                             }
                             else
                             {
@@ -166,18 +150,16 @@ void Unit::moveUnit()
                             {
                                 use();
                                 obs->disable();
-                                //ability = 0;
                             }
                             else
                             {
-                                //die();
+                                die();
                             }
 
                         }
                     }
                 }
                 currentSquare = currentSquare->getNext();
-                //Implémentation obstacles avec currentSquare
                 calcultateNextMove(speed, paceMax);
             }
         }
@@ -228,7 +210,6 @@ void Unit::use()
     deathMode = false;
     emit switchNext();
     deathTimer->start();
-    //emit useUnit(this);
 }
 
 void Unit::finish()
@@ -236,4 +217,11 @@ void Unit::finish()
     isAlive = false;
     emit switchNext();
     emit winUnit(this);
+}
+
+void Unit::initUnit()
+{
+    isAlive = true;
+    won = false;
+    paceMax = 15;
 }

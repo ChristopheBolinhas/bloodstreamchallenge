@@ -5,6 +5,7 @@
 
 MapSquare::MapSquare(MapSquare *_primary, int _x, int _y, Obstacle *_obstacle)
 {
+    initVariables();
     x = _x;
     y = _y;
     if(_primary != 0)
@@ -17,6 +18,7 @@ MapSquare::MapSquare(MapSquare *_primary, int _x, int _y, Obstacle *_obstacle)
 
 MapSquare::MapSquare(MapSquare *_primary, int _x, int _y, Obstacle *_obstacle, bool _isEnd)
 {
+    initVariables();
     x = _x;
     y = _y;
     if(_primary != 0)
@@ -31,6 +33,7 @@ MapSquare::MapSquare(MapSquare *_primary, int _x, int _y, Obstacle *_obstacle, b
 
 MapSquare::MapSquare(MapSquare *_primary, MapSquare *_secondary, int _x, int _y, Obstacle *_obstacle)
 {
+    initVariables();
     x = _x;
     y = _y;
     if(_primary != 0)
@@ -46,12 +49,7 @@ MapSquare::MapSquare(MapSquare *_primary, MapSquare *_secondary, int _x, int _y,
 
     }
     setObstacle(_obstacle);
-}
 
-MapSquare::MapSquare(int _x, int _y)
-{
-    x = _y;
-    y = _y;
 }
 
 
@@ -65,12 +63,20 @@ void MapSquare::setObstacle(Obstacle *_obstacle)
     }
 }
 
+void MapSquare::initVariables()
+{
+    hasSecondary = false;
+    takeSecondary = false;
+    obstacle = 0;
+    hasNext = false;
+    isEnd = false;
+}
+
 
 MapSquare* MapSquare::getNext()
 {
     if(takeSecondary)
     {
-        qDebug() << secondaryNext->getX() << "|" << secondaryNext->getY();
         return secondaryNext;
     }
     else
@@ -117,6 +123,5 @@ void MapSquare::activateDeviation()
     if(hasSecondary)
     {
         takeSecondary = true;
-        qDebug() << "Deviation Activated" << secondaryNext->getX() << "|" << secondaryNext->getY();
     }
 }

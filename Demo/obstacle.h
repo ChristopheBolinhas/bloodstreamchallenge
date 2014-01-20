@@ -28,7 +28,7 @@ protected:
     int orientation;
     int width;
     int height;
-    int rotation; //0 - 0, 1-45°, 2-90°, 3-135°
+    int rotation;
     QList<QPixmap*> *images;
     int etat = 0;
     QTimer *timerAnim;

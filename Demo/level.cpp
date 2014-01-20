@@ -23,12 +23,11 @@ Level::Level(QString name, int score, QString path, int ordre, int unite, QStrin
     this->parseJsonLevel();
 }
 
-QList<Level*> Level::loadLevels()
+QList<Level*>* Level::loadLevels()
 {
-    QList<Level*> listLevels;
-    //TODO: changer le nom du chemin
+    QList<Level*> *listLevels = new QList<Level*>();
 
-    const QString LEVELS_FILENAME = QApplication::applicationDirPath() + "/ressources/levels.json"; //TODO: trouver une solution pour récupérer ce nom en relatif
+    const QString LEVELS_FILENAME = QApplication::applicationDirPath() + "/ressources/levels.json";
     qDebug() << "Chemin des niveaux: " << LEVELS_FILENAME;
     QJsonDocument jsonLevels;
 
@@ -54,19 +53,19 @@ QList<Level*> Level::loadLevels()
     {
         QJsonObject jLevel = jArrayLevels.at(i).toObject();
         Level *lvl = new Level(jLevel.value("name").toString(), jLevel.value("score").toDouble(),jLevel.value("path").toString(),(int)jLevel.value("order").toDouble(), (int)jLevel.value("unite").toDouble() ,levelsPath);
-        listLevels.append(lvl);
+        listLevels->append(lvl);
     }
     return listLevels;
 }
 
 bool Level::saveLevels(QList<Level *> listLevels)
 {
-    const QString LEVELS_FILENAME = QApplication::applicationDirPath() + "/ressources/levels.json"; //TODO: trouver une solution pour récupérer ce nom en relatif
+    const QString LEVELS_FILENAME = QApplication::applicationDirPath() + "/ressources/levels.json";
     qDebug() << "Chemin des niveaux: " << LEVELS_FILENAME;
 
     QJsonDocument jsonLevels;
     QJsonObject jObj;
-    jObj.insert("levelspath", QJsonValue(QString("/ressources/levels/"))); //TODO: valeur dynamique
+    jObj.insert("levelspath", QJsonValue(QString("/ressources/levels/")));
 
     jsonLevels.setObject(jObj);
 
@@ -75,7 +74,6 @@ bool Level::saveLevels(QList<Level *> listLevels)
         QJsonObject jObjInArray;
         jObjInArray.insert("name", QJsonValue(QString(lvl->getName())));
         jObjInArray.insert("score", QJsonValue(lvl->getScore()));
-        qDebug() << "lvl apth: " << lvl->getPath();
         jObjInArray.insert("path", QJsonValue(QString(lvl->getPath())));
         jObjInArray.insert("order", QJsonValue(lvl->getOrder()));
         jObjInArray.insert("unite", QJsonValue(lvl->getNbUnite()));
@@ -134,11 +132,6 @@ bool Level::parseJsonLevel()
 
     parseJsonTileSet(jsonLevelTiled);
 
-    qDebug() << " obstacle: " << sizeof(this->mapObstacle)/sizeof(int);
-    qDebug() << "road: " << sizeof(this->mapRoad)/sizeof(int);
-
-
-
     return true;
 }
 
@@ -185,9 +178,6 @@ void Level::parseJsonTileSet(QJsonDocument jsonDocument)
     this->tileWidth = jTileSet.value("tilewidth").toDouble();
     this->tileHeight = jTileSet.value("tileheight").toDouble();
 }
-
-
-
 
 /*
  * GETTERS AND SETTERS

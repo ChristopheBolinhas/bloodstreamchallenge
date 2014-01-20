@@ -31,6 +31,6 @@ void PlayPauseButton::paintEvent(QPaintEvent *)
 
 void PlayPauseButton::mousePressEvent(QMouseEvent *e)
 {
-    play = play ? false : true;
+    play = !play;
     emit setPlayPause(play);
 }

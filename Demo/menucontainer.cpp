@@ -17,24 +17,17 @@
 
 #include <QDebug>
 
-MenuContainer::MenuContainer(QGraphicsView *_view, Option *_option)
+MenuContainer::MenuContainer(QGraphicsView *_view, Option *_option, QList<Level*> *listLevel)
 {
     this->option = _option;
+    this->listLevel = listLevel;
 
-
-    //player->play();
-	
     setupScene();
 
     addGameLogo();
 
-    QList<Level*> listLevels = Level::loadLevels();
-    addLevelButtons(listLevels);
+    addLevelButtons(*listLevel);
 
-    //listLevels.at(0)->setName("popopo");
-    Level *lvl = listLevels.at(0);
-    lvl->setScore(1230);
-    Level::saveLevels(listLevels);
     addQuitOptionsButtons();
 
     addMenuOptions();
@@ -59,7 +52,6 @@ void MenuContainer::moveViewToMenuOptions()
 {
     animation->setStartValue(QRect(0,0,SCENE_SIZE_X/2,SCENE_SIZE_Y));
     animation->setEndValue(QRect(SCENE_SIZE_X/2,0,SCENE_SIZE_X/2,SCENE_SIZE_Y));
-    //animation->setEasingCurve(QEasingCurve::InBack);
     animation->start();
 }
 
@@ -67,7 +59,6 @@ void MenuContainer::moveViewToMenuPrincipal()
 {
     animation->setStartValue(QRect(SCENE_SIZE_X/2,0,SCENE_SIZE_X/2,SCENE_SIZE_Y));
     animation->setEndValue(QRect(0,0,SCENE_SIZE_X/2,SCENE_SIZE_Y));
-    //animation->setEasingCurve(QEasingCurve::InBack);
     animation->start();
 }
 
@@ -126,10 +117,6 @@ void MenuContainer::setChecked(MenuRadioButton *mrbtn)
     mrbtn->setChecked(true);
 }
 
-void MenuContainer::startLevelFromButton(Level *lvl)
-{
-    emit startLevelToGUI(lvl);
-}
 void MenuContainer::addGameLogo()
 {
     this->scene->addPixmap(QPixmap(":/menu/ressources/img/menu/background.png"));
@@ -149,7 +136,7 @@ void MenuContainer::addLevelButtons(QList<Level *> listLevels)
         Level *lvl = listLevels.at(i);
         MenuLevelButton *btn = new MenuLevelButton(positionLevel, lvl);
 
-        connect(btn, SIGNAL(startLevel(Level*)), this, SLOT(startLevelFromButton(Level*)));
+        connect(btn, SIGNAL(startLevel(Level*)), this, SIGNAL(startLevelToGUI(Level*)));
         scene->addItem(btn);
     }
 }
@@ -219,8 +206,6 @@ void MenuContainer::addMenuOptions()
         scene->addItem(listMenuRadioButton.at(i));
     }
     scene->addItem(mscVolume);
-    scene->addItem(mrbtnLangueFrancais);
-    scene->addItem(mrbtnLangueAnglais);
     scene->addItem(mcbxMute);
     scene->addItem(labelOptionLangueFrancais);
     scene->addItem(labelOptionLangueAnglais);
@@ -252,5 +237,5 @@ void MenuContainer::initializationAnimation()
 void MenuContainer::setupScene()
 {
     scene = new QGraphicsScene();
-    qDebug() << "Font importée ?: " << QFontDatabase::addApplicationFont(":/font/ressources/font/ltromatic.ttf");
+    QFontDatabase::addApplicationFont(":/font/ressources/font/ltromatic.ttf");
 }

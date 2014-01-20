@@ -16,6 +16,7 @@ class EndGameScreen;
 class Gui : public QWidget
 {
     Q_OBJECT
+
 public:
     explicit Gui(QWidget *parent = 0);
 
@@ -23,22 +24,22 @@ private:
     QList<Level> *levels;
     void startLevel(Level *level);
     Option *option;
-    QGraphicsView *view;
-    GameView *view2;
+    GameView *view;
     MenuContainer *menuContainer;
     Render *render;
     EndGameScreen *endGameInfos;
     Level *currentLevel;
-	void initTraduction();
+    void initTraduction();
     QString fichierTraduction;
     QTranslator translator;
     GameSoundPlayer *player;
+    QList<Level*> *listLevels;
 
 signals:
 
 public slots:
     void loadLevel(Level* lvl);
-    void closeRender(); 
+    void closeRender();
     void retryLevel();
     void endLevel(QString score, bool victory);
 };

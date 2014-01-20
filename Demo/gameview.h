@@ -14,8 +14,6 @@ class GameView : public QGraphicsView
     Q_OBJECT
 public:
     explicit GameView(QWidget *parent = 0);
-    void paintEvent(QPaintEvent *event);
-    void update();
     void setMode(int mode, bool sound);
     void wheelEvent ( QWheelEvent * event );
 signals:
@@ -26,8 +24,6 @@ signals:
     void setUnitCount(QString count);
     void setSound(bool mute);
 public slots:
-
-    void setEndGame(bool victory);
     void setStartInfo(int step);
 private:
     AbilityButton *abi1;
@@ -50,9 +46,6 @@ private:
     QList<QPixmap*> *spikeImg;
 
     bool endGame;
-
-
-
 
     void loadHudImages();
     void loadHudElements();

@@ -72,7 +72,7 @@ bool Option::saveOption()
     jsonDocument.setObject(jsonSingleValue);
 
     fileOption = new QFile(this->jsonFilename);
-    if(fileOption->open(QIODevice::WriteOnly)) // TODO: Ajouter le flag pour dire que l'on efface le fichier avant d'y écrire
+    if(fileOption->open(QIODevice::WriteOnly))
     {
         QTextStream fileStream(fileOption);
         fileStream << jsonDocument.toJson();

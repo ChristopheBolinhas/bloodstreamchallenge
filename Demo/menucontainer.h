@@ -1,27 +1,12 @@
-/**
-  TODO:
-  - Chargement du niveau au clic --> Renvoie une instance de Level --> Connecter signal -> signal (MenuContainer) et signal -> slot (GUI)
-  - Griser les niveaux inaccessibles
-  - Bouton Options (Clic sur option --> bascule la vue sur les options et vice versa (animation)) --> Fait !
-  - Bouton Quitter --> Fait
-  - Menu Options
-    * Interaction avec la classe Option (sauvegarde, chargement, reset !)
-    * Basculement vers le menu principal (animation) --> Fait
-    * Implémentation de l'interface
-        * Création de boutons radios pour les langues (MenuRadioButton)
-        * Création d'un slider pour le volume (MenuSlider)
-        * Création d'une case à cocher pour rendre le jeu muet (MenuCheckBox)
-    * Se pencher sur la gestion des langues
-
-    Une seule scène instanciée par MenuContainer et utilisé, DANS LE FUTUR, par MenuPrincipal et MenuOption
-    La navigation se fait en déplacant la scène sur un menu ou l'autre.
-  **/
-
 #ifndef MENUPRINCIPAL_H
 #define MENUPRINCIPAL_H
 
 #include "menulevelbutton.h"
 #include "menubutton.h"
+#include <QList>
+#include <QObject>
+#include <QPoint>
+#include <QRect>
 class QGraphicsView;
 class QGraphicsScene;
 class QPixmap;
@@ -32,17 +17,12 @@ class MenuSliderCircle;
 class MenuCheckBox;
 class Option;
 class GameSoundPlayer;
-#include <QList>
-#include <QObject>
-#include <QPoint>
-#include <QRect>
-
 
 class MenuContainer : public QObject
 {
     Q_OBJECT
 public:
-    MenuContainer(QGraphicsView *m_view, Option *_option);
+    MenuContainer(QGraphicsView *m_view, Option *_option, QList<Level *> *listLevel);
     virtual ~MenuContainer();
 
     QGraphicsScene *getScene() const;
@@ -59,6 +39,7 @@ private:
     QGraphicsView *view;
     QGraphicsScene *scene;
     Option *option;
+    QList<Level*> *listLevel;
 
     //Menu principal
     QPixmap *gameLogo;
@@ -79,8 +60,6 @@ private:
     MenuSliderCircle *mscVolume;
     MenuCheckBox *mcbxMute;
 
-
-    //QGraphicsTextItem *labelOptionTitle;
     QGraphicsTextItem *labelOptionLangue;
     QGraphicsTextItem *labelOptionLangueFrancais;
     QGraphicsTextItem *labelOptionLangueAnglais;
@@ -122,7 +101,6 @@ public slots:
     void resetOption();
     void saveOption();
     void setChecked(MenuRadioButton*radioButton);
-    void startLevelFromButton(Level *lvl);
 
 };
 

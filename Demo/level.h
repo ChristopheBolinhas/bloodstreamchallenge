@@ -1,10 +1,6 @@
 /**
   Utilisation:
   - charger les niveaux: Level::loadLevels(); --> List<Level>
-  - Pour connaitre la correspondance des flèches dans le
-    tableau int du layer obstacles et de road, il y a
-    les int FLECHE_ROAD_X et FLECHE_OBSTACLE_X où X est une valeur
-    de 1 à 9 correspondant au cadran de déaplacement.
   */
 
 #ifndef LEVEL_H
@@ -45,7 +41,7 @@ public:
     int getMapWidth() const;
     int getMapHeight() const;
 
-    static QList<Level *> loadLevels();
+    static QList<Level *> *loadLevels();
 	static bool saveLevels(QList<Level *> listLevels);
 
 

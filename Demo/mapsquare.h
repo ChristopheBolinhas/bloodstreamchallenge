@@ -9,7 +9,6 @@ public:
     MapSquare(MapSquare *_primary = 0, int _x = 0, int _y = 0, Obstacle *_obstacle = 0);
     MapSquare(MapSquare *_primary = 0, MapSquare *_secondary = 0, int x = 0, int y = 0, Obstacle *_obstacle = 0);
     MapSquare(MapSquare *_primary, int _x, int _y, Obstacle *_obstacle, bool _isEnd);
-    MapSquare(int _x, int _y);
 
 
     MapSquare* getNext();
@@ -24,14 +23,17 @@ public:
 private:
     MapSquare *primaryNext;
     MapSquare *secondaryNext;
-    bool hasSecondary = false;
-    bool takeSecondary = false;
+    bool hasSecondary;
+    bool takeSecondary;
     int x;
     int y;
-    Obstacle *obstacle = 0;
-    bool hasNext = false;
-    bool isEnd = false;
+    Obstacle *obstacle;
+    bool hasNext;
+    bool isEnd;
     void setObstacle(Obstacle *_obstacle);
+
+    void initVariables();
+
 };
 
 #endif // MAPSQUARE_H

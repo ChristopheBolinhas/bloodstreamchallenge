@@ -31,6 +31,6 @@ void VolumeButton::paintEvent(QPaintEvent *)
 
 void VolumeButton::mousePressEvent(QMouseEvent *e)
 {
-    sound = sound ? false : true;
+    sound = !sound;
     emit setSound(sound);
 }
