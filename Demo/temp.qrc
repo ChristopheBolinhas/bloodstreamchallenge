@@ -2,6 +2,7 @@
     <qresource prefix="/">
         <file>ressources/levels.json</file>
         <file>ressources/font/SnackerComic.ttf</file>
+        <file>ressources/img/icon.png</file>
     </qresource>
     <qresource prefix="/boost">
         <file>ressources/img/Boost/updown/trap_anim1.png</file>

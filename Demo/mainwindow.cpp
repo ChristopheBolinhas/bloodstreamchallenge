@@ -9,6 +9,8 @@ MainWindow::MainWindow(QWidget *parent)
     //Chargement de la fenêtre principal gérant le jeu
     gui = new Gui(this);
     setCentralWidget(gui);
+    icon = new QIcon("://ressources/img/icon.png");
+    setWindowIcon(*icon);
 }
 
 MainWindow::~MainWindow()

@@ -14,6 +14,7 @@ public:
 
 private:
     Gui *gui;
+    QIcon *icon;
 };
 
 #endif // MAINWINDOW_H
