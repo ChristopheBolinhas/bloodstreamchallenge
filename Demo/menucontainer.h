@@ -94,6 +94,7 @@ private:
     GameSoundPlayer *player;
 signals:
     void startLevelToGUI(Level *lvl);
+    void updateSound(int volume, bool muted);
 public slots:
     void moveViewToMenuOptions();
     void moveViewToMenuPrincipal();

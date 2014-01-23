@@ -79,15 +79,7 @@ void Unit::moveUnit()
         }
         if(isAlive)
         {
-            if(paces > 0)
-            {
-                paces--;
-                moveBy(xmove,ymove);
-            }
-            else
-            {
-                paces = paceMax-speed;
-            }
+
 
             if(paces == paceMax-speed)
             {
@@ -140,7 +132,7 @@ void Unit::moveUnit()
                             }
                             else
                             {
-                                speed++;
+                                if(speed < 12) speed++;
                             }
 
                         }
@@ -161,6 +153,15 @@ void Unit::moveUnit()
                 }
                 currentSquare = currentSquare->getNext();
                 calcultateNextMove(speed, paceMax);
+            }
+            if(paces > 0)
+            {
+                paces--;
+                moveBy(xmove,ymove);
+            }
+            else
+            {
+                paces = paceMax-speed;
             }
         }
     }
@@ -199,7 +200,7 @@ void Unit::die()
 
     isAlive = false;
     deathMode = true;
-    emit switchNext();
+    emit switchNext(0);
     deathTimer->start();
 
 }
@@ -208,14 +209,14 @@ void Unit::use()
 
     isAlive = false;
     deathMode = false;
-    emit switchNext();
+    emit switchNext(ability);
     deathTimer->start();
 }
 
 void Unit::finish()
 {
     isAlive = false;
-    emit switchNext();
+    emit switchNext(10);
     emit winUnit(this);
 }
 

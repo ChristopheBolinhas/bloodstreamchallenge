@@ -16,14 +16,14 @@ bool Option::loadOption()
 {
     QJsonDocument jsonDocument;
 
-    qDebug() << jsonFilename;
+
     fileOption = new QFile(this->jsonFilename);
     if(fileOption->open(QIODevice::ReadOnly))
     {
         QTextStream fileStream(fileOption);
         QString dataFromJson = fileStream.readAll();
         jsonDocument = QJsonDocument::fromJson(dataFromJson.toUtf8());
-        qDebug() << jsonDocument.toJson();
+
 
         QJsonObject jobjOption = jsonDocument.object();
 
@@ -33,7 +33,7 @@ bool Option::loadOption()
             this->language = Option::english;
         else
         {
-            qDebug() << "Unsupported language, English has been set";
+
             this->language = Option::english;
         }
 
@@ -46,7 +46,7 @@ bool Option::loadOption()
     else
     {
         fileOption->close();
-        qDebug() << "Error: cannot load options !";
+
         return false;
     }
 
@@ -83,7 +83,7 @@ bool Option::saveOption()
     else
     {
         fileOption->close();
-        qDebug() << "Error: cannot save options !";
+
         return false;
     }
 }

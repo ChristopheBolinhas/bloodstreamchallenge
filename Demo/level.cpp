@@ -28,7 +28,7 @@ QList<Level*>* Level::loadLevels()
     QList<Level*> *listLevels = new QList<Level*>();
 
     const QString LEVELS_FILENAME = QApplication::applicationDirPath() + "/ressources/levels.json";
-    qDebug() << "Chemin des niveaux: " << LEVELS_FILENAME;
+
     QJsonDocument jsonLevels;
 
     //Lecture du fichier levels.json
@@ -61,7 +61,7 @@ QList<Level*>* Level::loadLevels()
 bool Level::saveLevels(QList<Level *> listLevels)
 {
     const QString LEVELS_FILENAME = QApplication::applicationDirPath() + "/ressources/levels.json";
-    qDebug() << "Chemin des niveaux: " << LEVELS_FILENAME;
+
 
     QJsonDocument jsonLevels;
     QJsonObject jObj;

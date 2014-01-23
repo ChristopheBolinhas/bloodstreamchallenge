@@ -6,7 +6,7 @@ class VolumeButton : public QPushButton
 {
     Q_OBJECT
 public:
-    explicit VolumeButton(QWidget *parent = 0);
+    explicit VolumeButton(bool muted, QWidget *parent = 0);
     void paintEvent(QPaintEvent *);
     void mousePressEvent(QMouseEvent *e);
     void setMode(bool _sound);

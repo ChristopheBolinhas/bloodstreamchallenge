@@ -40,7 +40,7 @@ MenuContainer::MenuContainer(QGraphicsView *_view, Option *_option, QList<Level*
 
 MenuContainer::~MenuContainer()
 {
-    //TODO: ...
+
 }
 
 QGraphicsScene *MenuContainer::getScene() const
@@ -103,7 +103,7 @@ void MenuContainer::saveOption()
         this->option->setLanguage(Option::french);
 
     this->option->saveOption();
-
+    emit updateSound(mscVolume->getValue(),mcbxMute->getChecked());
 	QMessageBox::information(NULL,tr("Modification de la langue"),tr("Si vous avez changer la langue, veuillez relancer le jeu."),QMessageBox::Ok);
     moveViewToMenuPrincipal();
 }
@@ -129,15 +129,17 @@ void MenuContainer::addLevelButtons(QList<Level *> listLevels)
     labelChooseLevel->moveBy(50,220);
 
     scene->addItem(labelChooseLevel);
-
+    bool nextLevelLocked = false;
     for (int i = 0; i < listLevels.size(); i++)
     {
         QPointF positionLevel = QPointF(MENU_LEVEL_BUTTON_COOR_X+i%LEVEL_BY_LINE*MENU_LEVEL_BUTTON_MARGE_X,MENU_LEVEL_BUTTON_COOR_Y+i/LEVEL_BY_LINE*MENU_LEVEL_BUTTON_MARGE_Y);
         Level *lvl = listLevels.at(i);
-        MenuLevelButton *btn = new MenuLevelButton(positionLevel, lvl);
+
+        MenuLevelButton *btn = new MenuLevelButton(positionLevel, lvl, nextLevelLocked);
 
         connect(btn, SIGNAL(startLevel(Level*)), this, SIGNAL(startLevelToGUI(Level*)));
         scene->addItem(btn);
+        nextLevelLocked = lvl->getScore() > 0 ? false : true;
     }
 }
 

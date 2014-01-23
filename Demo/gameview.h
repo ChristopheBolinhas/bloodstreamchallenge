@@ -16,6 +16,7 @@ public:
     explicit GameView(QWidget *parent = 0);
     void setMode(int mode, bool sound);
     void wheelEvent ( QWheelEvent * event );
+    void setMuted(bool muted);
 signals:
     void sendAbility(int id);
     void closeRender();

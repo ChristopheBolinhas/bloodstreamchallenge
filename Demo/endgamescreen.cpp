@@ -9,6 +9,7 @@ EndGameScreen::EndGameScreen(QWidget *parent) :
 
     setFixedSize(640,360);
     scoreValue = new QLabel("XXXX", this);
+    //scoreValue->setFixedWidth(500);
     scoreValue->setFont(QFont("LetterOMatic!", 20));
     scoreValue->move(640/2-scoreValue->width(),100);
     resultLabel = new QLabel(tr("Victoire !"), this);

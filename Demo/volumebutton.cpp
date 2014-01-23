@@ -1,12 +1,12 @@
 #include "volumebutton.h"
 #include <QtWidgets>
 
-VolumeButton::VolumeButton(QWidget *parent) :
+VolumeButton::VolumeButton(bool muted,QWidget *parent) :
     QPushButton(parent)
 {
     muteImg = new QPixmap(":/hud/ressources/img/HUD_Icon/volume_off.png");
     unmuteImg = new QPixmap(":/hud/ressources/img/HUD_Icon/volume_on.png");
-    setMode(true);
+    setMode(muted);
 }
 
 void VolumeButton::setMode(bool _sound)

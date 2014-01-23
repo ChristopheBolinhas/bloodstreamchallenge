@@ -4,9 +4,24 @@
 	[
 		{ 
 			"name": "niveau 1", 
-			"score": 1500,
+			"score": 0,
 			"path" : "level1",
-			"order" : 1
+			"order" : 1,
+			"unite" : 12
+		},
+		{ 
+			"name": "niveau 2", 
+			"score": 0,
+			"path" : "level2",
+			"order" : 2,
+			"unite" : 18
+		},
+		{ 
+			"name": "niveau 3", 
+			"score": 0,
+			"path" : "level3",
+			"order" : 3,
+			"unite" : 18
 		}
 	]    
 }

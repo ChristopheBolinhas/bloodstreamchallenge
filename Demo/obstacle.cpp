@@ -96,7 +96,7 @@ void Obstacle::paint( QPainter *painter, const QStyleOptionGraphicsItem*,QWidget
         else if(orientation == 4)
         {
             QPixmap *currentPixmap = images->at(etat+4);
-            painter->drawPixmap(0,0,width,height, currentPixmap->transformed(t));
+            painter->drawPixmap(0,-5,width,height, currentPixmap->transformed(t));
         }
         else if(orientation == 6)
         {

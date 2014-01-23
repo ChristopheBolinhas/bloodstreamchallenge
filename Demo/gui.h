@@ -36,7 +36,7 @@ private:
     QList<Level*> *listLevels;
 
 signals:
-
+    void updateLocks(Level *level);
 public slots:
     void loadLevel(Level* lvl);
     void closeRender();

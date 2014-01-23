@@ -6,8 +6,9 @@
 #include <QRect>
 #include <QPainter>
 
-MenuLevelButton::MenuLevelButton(QPointF &position, Level *lvl)
+MenuLevelButton::MenuLevelButton(QPointF &position, Level *lvl, bool locked)
 {
+    this->locked = locked;
     this->level = lvl;
     this->image = new QPixmap(":/menu/ressources/img/menu/level.png");
 	this->imageLocked = new QPixmap(":/menu/ressources/img/menu/level_disabled.png");
@@ -44,7 +45,7 @@ QRectF MenuLevelButton::boundingRect() const
 void MenuLevelButton::paint(QPainter *painter, const QStyleOptionGraphicsItem *option, QWidget *widget)
 {
     //Level image
-    if(level->isLocked() && level->getOrder() != 1)
+    if(locked && level->getOrder() != 1)
         painter->drawPixmap(position,*imageLocked);
     else
         painter->drawPixmap(position,*image);
@@ -72,7 +73,7 @@ void MenuLevelButton::mousePressEvent(QGraphicsSceneMouseEvent *event)
 void MenuLevelButton::mouseReleaseEvent(QGraphicsSceneMouseEvent *event)
 {
     QPointF downPos = event->pos();
-    if(isMouseReleaseInRectImage(downPos) && (!level->isLocked() || level->getOrder()==1))
+    if(isMouseReleaseInRectImage(downPos) && (!locked || level->getOrder()==1))
     {
         update();
         QGraphicsItem::mouseReleaseEvent(event);

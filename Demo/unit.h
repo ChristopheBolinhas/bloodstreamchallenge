@@ -46,7 +46,7 @@ private:
 signals:
     void useUnit(Unit *unit);
     void killUnit(Unit *unit);
-    void switchNext();
+    void switchNext(int ability);
     void winUnit(Unit *unit);
 public slots:
     void moveUnit();

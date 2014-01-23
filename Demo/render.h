@@ -12,12 +12,14 @@ class Unit;
 class Obstacle;
 class QTimer;
 class GameView;
+class GameSoundPlayer;
+class Map;
 class Render : public QGraphicsScene
 {
     Q_OBJECT
 
 public:
-    explicit Render(GameView *_view, Level *level, QWidget *parent = 0);
+    explicit Render(GameView *_view, Level *level, GameSoundPlayer *player, QWidget *parent = 0);
     ~Render();
 
 
@@ -32,7 +34,7 @@ public slots:
     void unitUse(Unit *unit);
     void unitDie(Unit *unit);
     void unitWin(Unit *unit);
-    void switchNext();
+    void switchNext(int ability);
 private slots:
     void gameTimer();
     void startGame();
@@ -43,10 +45,12 @@ private:
     MapSquare* generatePath(int currentX, int currentY, Level *level);
     Level *renderedLevel;
     GameView *view;
+    GameSoundPlayer *player;
     QList<Unit*> *listUnit;
     Unit *mainUnit;
     QTimer *mainTimer;
     QTimer *startTimer;
+    Map *map;
     int startCountDown;
     void keyPressEvent(QKeyEvent *event);
     int xFromOrientation(int x, int orientation);
@@ -86,6 +90,7 @@ private:
     void deleteImages(QList<QPixmap*> *list);
     void deleteUnits(QList<Unit *> *list);
     MapSquare *checkSquare(int x, int y);
+    void playSound(int ability);
 };
 
 #endif // RENDER_H

@@ -54,8 +54,8 @@
         <file>ressources/img/Caillot/updown/trap_on.png</file>
         <file>ressources/img/Caillot/leftright/trap_anim1.png</file>
         <file>ressources/img/Caillot/leftright/trap_anim3.png</file>
-        <file>ressources/img/Caillot/leftright/trap_anim4.png</file>
         <file>ressources/img/Caillot/leftright/trap_on.png</file>
+        <file>ressources/img/Caillot/leftright/trap_anim2.png</file>
     </qresource>
     <qresource prefix="/units">
         <file>ressources/img/Unites/Normal/unit_1.png</file>
@@ -112,8 +112,8 @@
         <file>ressources/img/Chute/leftright/trap_on.png</file>
         <file>ressources/img/Chute/updown/trap_anim1.png</file>
         <file>ressources/img/Chute/updown/trap_anim3.png</file>
-        <file>ressources/img/Chute/updown/trap_anim4.png</file>
         <file>ressources/img/Chute/updown/trap_on.png</file>
+        <file>ressources/img/Chute/updown/trap_anim2.png</file>
     </qresource>
     <qresource prefix="/bacterie">
         <file>ressources/img/Bacterie/leftright/trap_anim1.png</file>

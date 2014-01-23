@@ -13,13 +13,14 @@ public:
     ~GameSoundPlayer();
 
     void playSound(QString sound);
+
     // Bruitages
-    static const QString GAME_STARTED;
-    static const QString UNIT_KILLED;
-    static const QString ENEMY_KILLED;
-    static const QString GAME_OVER;
-    static const QString TRAP_DISABLED;
-    static const QString ABILITY_ENABLED;
+    static const QString BOOST_USE;
+    static const QString CHUTE_USE;
+    static const QString DEVIATION_USE;
+    static const QString BACTERIE_USE;
+    static const QString CAILLOT_USE;
+    static const QString DEATH_UNIT;
 
     // Sons d'ambiance
     static const QString SOUND_MENU;
@@ -30,13 +31,16 @@ public:
 
 public slots:
     void setMuted(bool muted);
-
+    void setSound(int volume, bool muted);
 private:
     QList<QMediaPlayer*> *playerList;
     QMediaPlaylist *backgroundPlaylist;
     Option *option;
     QMediaPlayer *backgroundPlayer;
     QString currentDir;
+    int volume;
+    bool muted;
+
 
 };
 

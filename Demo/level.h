@@ -44,7 +44,6 @@ public:
     static QList<Level *> *loadLevels();
 	static bool saveLevels(QList<Level *> listLevels);
 
-
 private:
     //Attributs pour la liste des  niveaux
     QString name;

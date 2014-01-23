@@ -11,6 +11,7 @@
 #include "bacterie.h"
 #include "abilitybutton.h"
 #include "gameview.h"
+#include "gamesoundplayer.h"
 
 #include <typeinfo>
 #include <QtGui>
@@ -26,23 +27,31 @@
 #include <QGraphicsProxyWidget>
 #include <QtAlgorithms>
 
-Render::Render(GameView *_view, Level *level, QWidget *parent) :
+Render::Render(GameView *_view, Level *level,GameSoundPlayer *player , QWidget *parent) :
     QGraphicsScene(parent)
 {
+    //Initialisation des variables
     initializeGame();
 
+    //Récupération du pointeur sur la vue
     view = _view;
-    connect(view,SIGNAL(sendAbility(int)),this,SLOT(setAbilitySlot(int)));
+
+    //Chargement des images des unités et des obstacles
     loadImages();
-    play = true;
 
-    //Génération de la map (Layer 1)
-    Map m(this,level);
+    this->player = player;
+    //Génération de la map
+    map = new Map(this,level);
 
+    //Génération du chemin
     listSquares = new QList<MapSquare*>();
-    MapSquare *path = generatePath(m.getStartPoint()->x(),m.getStartPoint()->y(),level);
+    MapSquare *path = generatePath(map->getStartPoint()->x(),map->getStartPoint()->y(),level);
+
+
+    //On change la scène de la vue
     view->setScene(this);
 
+    //On instancie les unités
     unitCount = level->getNbUnite();
     unitToInit = unitCount;
     listUnit = new QList<Unit*>();
@@ -55,14 +64,16 @@ Render::Render(GameView *_view, Level *level, QWidget *parent) :
         connect(unit,SIGNAL(killUnit(Unit*)),this,SLOT(unitDie(Unit*)));
         connect(unit,SIGNAL(useUnit(Unit*)),this,SLOT(unitUse(Unit*)));
         connect(unit,SIGNAL(winUnit(Unit*)),this,SLOT(unitWin(Unit*)));
-        connect(unit,SIGNAL(switchNext()),this,SLOT(switchNext()));
+        connect(unit,SIGNAL(switchNext(int)),this,SLOT(switchNext(int)));
     }
+    //On défini la première unité comme l'unité principal
     mainUnit = listUnit->first();
     connect(this, SIGNAL(updateScore(QString)),view,SIGNAL(setScore(QString)));
     connect(this, SIGNAL(updateUnitCount(QString)),view,SIGNAL(setUnitCount(QString)));
     connect(view,SIGNAL(pauseGame(bool)),this,SLOT(toggleGame(bool)));
     emit updateUnitCount(QString::number(unitCount));
 
+    //Initilisation des timers
     startTimer = new QTimer(this);
     connect(startTimer,SIGNAL(timeout()),this,SLOT(startGame()));
     //Initialisation du timer
@@ -82,6 +93,7 @@ void Render::destroy()
     qDeleteAll(*listUnit);
     delete(listUnit);
     qDeleteAll(items());
+    delete(map);
 }
 
 Render::~Render()
@@ -224,6 +236,7 @@ void Render::initializeGame()
     unitWon = 0;
     winUnits = 0;
     score = 0;
+    play = true;
 }
 
 
@@ -234,9 +247,10 @@ void Render::setAbilitySlot(int id)
 
 MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
 {
+    //Si la case est valide
     if(currentX >= 0 && currentY >=0 && currentY < level->getMapHeight() && currentX < level->getMapWidth())
     {
-
+        //Récupération des informations de la case
         int tabPos = currentX+currentY*level->getMapWidth();
         int fleche = *(level->getMapRoad()+tabPos);
         int orientationPrimary = 0;
@@ -300,7 +314,7 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
         //Start - Blanc - 365
         //End - Violet - 366
 
-
+        //On analyse l'obstacle pour ensuite l'ajoute à la case
         switch(obstacle)
         {
         case 361:
@@ -352,6 +366,7 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
             break;
         }
 
+        //Si on a un obstacle de type déviation
         if(orientationSecondary != 0)
         {
             SquareObstacle = new Deviation(currentX,currentY,orientationPrimary, orientationSecondary, deviationImages, level);
@@ -377,6 +392,7 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
             }
             else
             {
+                //Ajout de l'obstacle à la scène
                 addItem(SquareObstacle);
             }
 
@@ -395,7 +411,7 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
             PrimaryNextSquare = tempSquare;
         }
 
-
+        //On génére le carré actuel
         MapSquare *square;
         if(SecondaryNextSquare != 0)
         {
@@ -414,7 +430,9 @@ MapSquare* Render::generatePath(int currentX, int currentY, Level *level)
                 square = new MapSquare(PrimaryNextSquare,currentX,currentY,SquareObstacle,true);
             }
         }
+        //On ajoute à la liste des cases
         listSquares->append(square);
+        //On retourne cette case
         return square;
 
 
@@ -500,7 +518,7 @@ int Render::yFromOrientation(int y, int orientation)
 
 void Render::calculateScore()
 {
-    score = (1+unitWon)*(100-unitDead-unitUsed/2);
+    score = (unitWon)*(100-unitDead-unitUsed/2);
     emit updateScore(QString::number(score));
 }
 
@@ -526,7 +544,6 @@ void Render::unitDie(Unit *unit)
     listUnit->removeOne(unit);
     emit updateUnitCount(QString::number(unitCount));
     calculateScore();
-
 }
 
 void Render::unitWin(Unit *unit)
@@ -538,12 +555,13 @@ void Render::unitWin(Unit *unit)
     calculateScore();
 }
 
-void Render::switchNext()
+void Render::switchNext(int ability)
 {
     if(listUnit->size() > 1)
     {
         mainUnit = listUnit->at(1);
     }
+    playSound(ability);
 }
 
 
@@ -554,13 +572,20 @@ void Render::gameTimer()
         if(listUnit->size() > 0)
         {
             if(unitWon == 0)
+            {
                 view->centerOn(mainUnit);
+            }
+            else
+            {
+                mainTimer->setInterval(1000/200);
+            }
             emit moveUnits();
         }
         else
         {
             if(unitWon > 0)
             {
+
                 emit endGame(QString::number(score),true);
             }
             else
@@ -579,9 +604,10 @@ void Render::startGame()
     {
         if(startCountDown == 0)
         {
-
-            mainTimer->start(1000/60);//60fps
-
+            //Démarrage du timer à 60fps
+            mainTimer->start(1000/60);
+            //Connexion du lancement de sorts
+            connect(view,SIGNAL(sendAbility(int)),this,SLOT(setAbilitySlot(int)));
             startCountDown--;
             view->setStartInfo(startCountDown);
         }
@@ -615,6 +641,30 @@ void Render::toggleGame(bool _play)
 
 }
 
+void Render::playSound(int ability)
+{
+    switch(ability)
+    {
+        case 0:
+            player->playSound(GameSoundPlayer::DEATH_UNIT);
+            break;
+        case 1:
+            player->playSound(GameSoundPlayer::CAILLOT_USE);
+            break;
+        case 2:
+            player->playSound(GameSoundPlayer::BACTERIE_USE);
+            break;
+        case 3:
+            player->playSound(GameSoundPlayer::DEVIATION_USE);
+            break;
+        case 4:
+            player->playSound(GameSoundPlayer::BOOST_USE);
+            break;
+        case 5:
+            player->playSound(GameSoundPlayer::CHUTE_USE);
+            break;
+    }
+}
 
 
 

@@ -7,16 +7,18 @@
 #include <QPainter>
 #include <QDebug>
 
+
 Map::Map(QGraphicsScene *scene, Level *level)
 {
     //Loading du tileset
     QPixmap p(level->getPathTileSet());
     //Generation de la map
-    QPixmap *finalBackground = new QPixmap(level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
-    QPixmap *finalDecors = new QPixmap(level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
-    QPixmap *finalForeground = new QPixmap(level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
+    finalBackground = new QPixmap(level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
+    finalDecors = new QPixmap(level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
+    finalForeground = new QPixmap(level->getMapWidth()*level->getTileWidth(),level->getMapHeight()*level->getTileHeight());
     finalForeground->fill(Qt::transparent);
     finalDecors->fill(Qt::transparent);
+
 
     QPainter painterBackground(finalBackground);
     QPainter painterDecors(finalDecors);
@@ -40,16 +42,27 @@ Map::Map(QGraphicsScene *scene, Level *level)
         }
     }
 
+
     //Generation du foreground Z = 5
     QGraphicsItem *it = scene->addPixmap(*finalBackground);
+
     it->setZValue(1);
 
     it = scene->addPixmap(*finalDecors);
     it->setZValue(2);
 
+
     it = scene->addPixmap(*finalForeground);
     it->setZValue(4);
 
+
+}
+
+Map::~Map()
+{
+    delete(finalBackground);
+    delete(finalDecors);
+    delete(finalForeground);
 }
 
 QPoint* Map::getStartPoint()

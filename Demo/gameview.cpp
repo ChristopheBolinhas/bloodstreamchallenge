@@ -82,7 +82,7 @@ void GameView::loadHudElements()
     //Boutons de contrôle coin supérieur droit
     playButton = new PlayPauseButton(this);
     playButton->setGeometry(825,5,40,40);
-    volumeButton = new VolumeButton(this);
+    volumeButton = new VolumeButton(true,this);
     volumeButton->setGeometry(870,5,40,40);
     closeButton = new CloseButton(this);
     closeButton->setGeometry(915,5,40,40);
@@ -91,6 +91,11 @@ void GameView::loadHudElements()
     startLabel->move(960/2,540/2);
     startLabel->hide();
     startLabel->setFont(QFont("LetterOMatic!", 30));
+}
+
+void GameView::setMuted(bool muted)
+{
+    volumeButton->setMode(muted);
 }
 
 //Mode de la vue, permet d'afficher/masquer les bouttons du hud

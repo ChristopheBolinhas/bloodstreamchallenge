@@ -13,7 +13,7 @@ class MenuLevelButton : public QObject, public QGraphicsItem
 {
     Q_OBJECT
 public:
-    MenuLevelButton(QPointF &position, Level *level);
+    MenuLevelButton(QPointF &position, Level *level, bool locked);
     virtual ~MenuLevelButton();
     QPixmap *getImage() const;
     void setImage(QPixmap *value);
@@ -30,7 +30,7 @@ private:
     static const int MARGE_TOP_BOTTOM = 15;
     QString labelScore;
     QString labelLevelOrder;
-
+    bool locked;
     Level* level;
 
     void createRectImageMargin(int marge);
