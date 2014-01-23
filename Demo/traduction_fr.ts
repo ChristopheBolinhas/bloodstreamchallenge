@@ -2,74 +2,117 @@
 <!DOCTYPE TS>
 <TS version="2.0" language="fr_FR">
 <context>
-    <name>GameView</name>
+    <name>EndGameScreen</name>
     <message>
-        <location filename="gameview.cpp" line="35"/>
-        <source>Score :</source>
-        <translation type="unfinished">Score: </translation>
+        <location filename="endgamescreen.cpp" line="15"/>
+        <location filename="endgamescreen.cpp" line="46"/>
+        <source>Victoire !</source>
+        <translation>Victoire !</translation>
     </message>
     <message>
-        <location filename="gameview.cpp" line="38"/>
+        <location filename="endgamescreen.cpp" line="22"/>
+        <source>Retour aux menus</source>
+        <translation>Retour aux menus</translation>
+    </message>
+    <message>
+        <location filename="endgamescreen.cpp" line="25"/>
+        <source>Reessayer</source>
+        <translation>Reessayer</translation>
+    </message>
+    <message>
+        <location filename="endgamescreen.cpp" line="47"/>
+        <source>Score : </source>
+        <translation>Score: </translation>
+    </message>
+    <message>
+        <location filename="endgamescreen.cpp" line="52"/>
+        <source>Defaite !</source>
+        <translation>Defaite !</translation>
+    </message>
+</context>
+<context>
+    <name>GameView</name>
+    <message>
+        <location filename="gameview.cpp" line="49"/>
+        <source>Score :</source>
+        <translation>Score: </translation>
+    </message>
+    <message>
+        <location filename="gameview.cpp" line="52"/>
+        <source>Unites : </source>
+        <translation>Unites: </translation>
+    </message>
+    <message>
         <source>Unites restantes : </source>
-        <translation type="unfinished">Unités restantes : </translation>
+        <translation type="obsolete">Unités restantes : </translation>
     </message>
 </context>
 <context>
     <name>MenuContainer</name>
     <message>
-        <location filename="menucontainer.cpp" line="132"/>
+        <location filename="menucontainer.cpp" line="107"/>
+        <source>Modification de la langue</source>
+        <translation>Modification de la langue</translation>
+    </message>
+    <message>
+        <location filename="menucontainer.cpp" line="107"/>
+        <source>Si vous avez changer la langue, veuillez relancer le jeu.</source>
+        <translation>Si vous avez changer la langue, veuillez relancer le jeu.</translation>
+    </message>
+    <message>
+        <location filename="menucontainer.cpp" line="127"/>
         <source>Choix du niveau: </source>
-        <translation type="unfinished">Choix du niveau: </translation>
+        <translation>Choix du niveau: </translation>
     </message>
     <message>
-        <location filename="menucontainer.cpp" line="151"/>
+        <location filename="menucontainer.cpp" line="148"/>
         <source>Quitter</source>
-        <translation type="unfinished">Quitter</translation>
+        <translation>Quitter</translation>
     </message>
     <message>
-        <location filename="menucontainer.cpp" line="152"/>
+        <location filename="menucontainer.cpp" line="149"/>
         <source>Options</source>
-        <translation type="unfinished">Options</translation>
+        <translation>Options</translation>
     </message>
     <message>
-        <location filename="menucontainer.cpp" line="163"/>
+        <location filename="menucontainer.cpp" line="160"/>
         <source>Valider</source>
-        <translation type="unfinished">Valider</translation>
+        <translation>Valider</translation>
+    </message>
+    <message>
+        <location filename="menucontainer.cpp" line="161"/>
+        <source>Annuler</source>
+        <translation>Annuler</translation>
+    </message>
+    <message>
+        <location filename="menucontainer.cpp" line="162"/>
+        <source>Reinitialiser</source>
+        <translation>Reinitialiser</translation>
     </message>
     <message>
         <location filename="menucontainer.cpp" line="164"/>
-        <source>Annuler</source>
-        <translation type="unfinished">Annuler</translation>
-    </message>
-    <message>
-        <location filename="menucontainer.cpp" line="165"/>
-        <source>Reinitialiser</source>
-        <translation type="unfinished">Reinitialiser</translation>
-    </message>
-    <message>
-        <location filename="menucontainer.cpp" line="167"/>
         <source>Langue:</source>
-        <translation type="unfinished">Langue: </translation>
+        <translation>Langue: </translation>
     </message>
     <message>
-        <location filename="menucontainer.cpp" line="174"/>
+        <location filename="menucontainer.cpp" line="171"/>
         <source>Francais</source>
-        <translation type="unfinished">Francais</translation>
+        <translation>Francais</translation>
     </message>
     <message>
-        <location filename="menucontainer.cpp" line="180"/>
+        <location filename="menucontainer.cpp" line="177"/>
         <source>Anglais</source>
-        <translation type="unfinished">Anglais</translation>
+        <translation>Anglais</translation>
     </message>
     <message>
-        <location filename="menucontainer.cpp" line="188"/>
+        <location filename="menucontainer.cpp" line="185"/>
         <source>Volume</source>
-        <translation type="unfinished">Volume</translation>
+        <translation>Volume</translation>
     </message>
     <message>
-        <location filename="menucontainer.cpp" line="194"/>
+        <location filename="menucontainer.cpp" line="191"/>
         <source>Muet: </source>
-        <translation type="unfinished">Muet: </translation>
+        <translation>Muet: </translation>
     </message>
 </context>
 </TS>
